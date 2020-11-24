@@ -20,3 +20,11 @@ Suggested name: DigDiscord
 Inspiration project
 
 https://github.com/Tyrrrz/DiscordChatExporter/wiki/Obtaining-Token-and-Channel-IDs
+
+install :
+
+```
+pip install djangorestframework
+pip install markdown
+pip install django-filter
+```
