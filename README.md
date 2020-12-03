@@ -24,7 +24,11 @@ https://github.com/Tyrrrz/DiscordChatExporter/wiki/Obtaining-Token-and-Channel-I
 install :
 
 ```
-pip install djangorestframework
-pip install markdown
-pip install django-filter
+python -m pip install djangorestframework
+python -m pip install markdown
+python -m pip install django-filter
+python -m pip install Pillow
+ python -m pip install mysqlclient
 ```
+
+modify settings
