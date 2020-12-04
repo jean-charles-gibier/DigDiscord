@@ -1,20 +1,22 @@
+"""
+getsrvmsg
+Commande de chargement des messages d'un ou plusieurs forum(s) d'un serveur
+identifié(s) par son/ses identifiant(s) de channel
+
+"""
 from django.core.management.base import BaseCommand, CommandError
 
 class Command(BaseCommand):
     help = 'Loads specified server messages'
 
     def add_arguments(self, parser):
-        parser.add_argument('id_servers', nargs='+', type=int)
+        parser.add_argument('id_channels', nargs='+', type=int)
 
     def handle(self, *args, **options):
-        for server_id in options['id_servers']:
+        for channel_id in options['id_channels']:
             try:
-                # poll = Poll.objects.get(pk=poll_id)
                 pass
-            except Exception : # Poll.DoesNotExistr
-                raise CommandError('Server id "%s" does not exist' % server_id)
+            except Exception :
+                raise CommandError('Channel id "%s" does not exist' % channel_id)
 
-            # poll.opened = False
-            # poll.save()
-
-            self.stdout.write(self.style.SUCCESS('Successfully  "%s"' % server_id))
+            self.stdout.write(self.style.SUCCESS('Successfully  "%s"' % channel_id))
