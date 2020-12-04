@@ -12,7 +12,7 @@ class CommandsTestCase(TestCase):
     def test_getsrvmsg_start(self):
         """ test if getsrvmsg responds """
 
-        args = ['10']
+        args = ['764519455984058398']
         opts = {}
         call_command('getsrvmsg', *args, **opts)
         self.assertGreaterEqual(10, 10)
