@@ -12,11 +12,14 @@ import json
 
 
 class Crawler:
+    STATUS_HTTP_DOWN = 500
+    MS_LATENCY = 300
 
-    def __init__(self, d_token: str, d_end_point: str):
+
+    def __init__(self, token: str, end_point: str):
         """ defines config properties"""
-        self.d_token = d_token
-        self.d_end_point = d_end_point
+        self.token = token
+        self.d_end_point = end_point
         self.msg_list = []
         self.channel = ""
 
@@ -42,8 +45,8 @@ class Crawler:
             except Exception:
                 raise
 
-            if do_retry or response.status_code >= 500:
-                sleep(300)
+            if do_retry or response.status_code >= Crawler.STATUS_HTTP_DOWN:
+                sleep(Crawler.MS_LATENCY)
                 return self._special_get(url, payload, headers, tries - 1)
 
         return response
@@ -57,7 +60,7 @@ class Crawler:
         """
         msg_counter = 0
         payload = {}
-        headers = {'Authorization': self.d_token}
+        headers = {'Authorization': self.token}
         self.channel = channel
         self.msg_list = []
 
@@ -99,8 +102,9 @@ class Crawler:
 
     def persist(self):
         """
-        write crawled content
-        :return:
+        Write crawled content on local file
+        name is suffixed by the channed id
+        :return: None
         """
         w = codecs.getwriter("utf-8")(sys.stdout.buffer)
         with open("fetch_{}.json".format(self.channel), 'w') as myfile:

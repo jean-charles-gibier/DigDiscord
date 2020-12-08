@@ -4,3 +4,4 @@ env
 venv/*
 venv
 *.pyc
+DigDiscord/*.json
