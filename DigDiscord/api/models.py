@@ -1,5 +1,6 @@
 from django.db import models
-
+# from django.db.models.signals import pre_init, post_init, class_prepared
+# from django.dispatch import receiver
 
 class Channel(models.Model):
     identifier = models.CharField(max_length=45, blank=True, null=True)
@@ -45,6 +46,7 @@ class Server(models.Model):
     name = models.CharField(max_length=200, blank=True, null=True)
     identifiant = models.CharField(max_length=45, blank=True, null=True)
 
+
     class Meta:
         verbose_name = "Server"
         ordering = ['name']
@@ -57,3 +59,29 @@ class User(models.Model):
     class Meta:
         verbose_name = "User"
         ordering = ['name']
+
+# # Debug
+# @receiver(pre_init, sender=Server)
+# def hear_signal(sender, *args, **kwargs):
+#
+#     print("==> Pre")
+#     pprint.pprint(kwargs)
+#
+#     return
+#
+# @receiver(post_init, sender=Server)
+# def hear_signal2(sender, instance, *args, **kwargs):
+#
+#     print("==> Post")
+#     pprint.pprint(instance)
+#
+#     return
+#
+# @receiver(class_prepared, sender=Server)
+# def hear_signal3(sender, *args, **kwargs):
+#
+#     print("==> class_prepared")
+#     pprint.pprint(sender)
+#
+#     return
+
