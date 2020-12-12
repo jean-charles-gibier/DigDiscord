@@ -26,6 +26,7 @@ class Crawler:
         self._channel_list = []
         self._channel_id = ""
         self._guild_id = ""
+        self._guild = ""
         self._end_point = ""
 
     def set_end_point(self, end_point: str):
@@ -106,7 +107,7 @@ class Crawler:
                 print("Unexpected error:", sys.exc_info()[0])
                 break
 
-    def persist_messages(self):
+    def store_messages(self):
         """
         Write crawled content on local file
         name is suffixed by the channed id
@@ -121,7 +122,7 @@ class Crawler:
         """
         get guild (server) info by id
         :param guild_id: id server
-        :return: nothing (set guild property)
+        :return: guild json properties
         """
         headers = {'Authorization': self._token}
         payload = {}
@@ -129,6 +130,7 @@ class Crawler:
             url_end_point = self._end_point.format(guild_id)
             response = self._special_get(url_end_point, str(payload), headers)
             self._guild = response.json()
+            self._guild_id = guild_id
 
         except AttributeError as err:
             print("Error: {0}".format(err))
@@ -136,13 +138,14 @@ class Crawler:
         except Exception:
             print("Unexpected error:", sys.exc_info()[0])
 
-    def fetch_channels(self, guild_id: str):
+        return self._guild
+
+    def get_channels(self, guild_id: str):
         """
         get all channels from specific guild
         :param channel: id guild
         :return: nothing (set channels list property)
         """
-        channels_counter = 0
         payload = {}
         headers = {'Authorization': self._token}
         self._guild_id = guild_id
@@ -151,11 +154,11 @@ class Crawler:
         try:
             url_end_point = self._end_point.format(guild_id)
             response = self._special_get(url_end_point, str(payload), headers)
-            data = response.json()
-            channels_counter = len(data)
+            self._channel_list = response.json()
+            channels_counter = len(self._channel_list)
 
             # if empty or if we get an error
-            if channels_counter == 0 or type(data) is not list:
+            if channels_counter == 0 or type(self._channel_list) is not list:
                 raise Exception('No channel found')
 
         except AttributeError as err:
@@ -163,3 +166,17 @@ class Crawler:
 
         except Exception:
             print("Unexpected error:", sys.exc_info()[0])
+
+        return self._channel_list
+
+
+    def store_channels(self):
+        """
+        Write crawled content on local file
+        name is suffixed by the channed id
+        :return: nothing
+        """
+        local_name = "fetch_{}.json".format(self._guild_id)
+        full_path = os.path.join(self._path, local_name)
+        with open(full_path, 'w') as myfile:
+            myfile.write(json.dumps(self._channel_list, ensure_ascii=False).encode('utf8').decode())

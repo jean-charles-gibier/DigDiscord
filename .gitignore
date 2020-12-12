@@ -5,3 +5,4 @@ venv/*
 venv
 *.pyc
 DigDiscord/*.json
+DigDiscord/data/*.json

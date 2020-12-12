@@ -32,3 +32,8 @@ python -m pip install mysqlclient
 ```
 
 modify settings
+modify charset
+````
+ALTER TABLE `digdiscord`.`api_channel` 
+CHARACTER SET = utf8mb4 ;
+````
