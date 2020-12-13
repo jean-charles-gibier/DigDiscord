@@ -6,6 +6,12 @@ import json
 import api.constants
 import api.core.factory as acf
 
+import logging as lg
+# import sys
+from sys import (stdout, path)
+logger = lg.getLogger(__name__)
+
+
 import pprint
 
 class Configuration:
@@ -17,6 +23,20 @@ class Configuration:
     def __init__(self):
         """ defines config properties"""
         self.values = []
+
+    @classmethod
+    def set_logger(cls):
+        """set log environement."""
+        # Set logging stuff
+        fh = lg.StreamHandler(stdout)
+        formatter = lg.Formatter('%(asctime)s - %(levelname)s -'
+                                 ' %(filename)s - %(funcName)s - %(message)s')
+        fh.setFormatter(formatter)
+        logger = lg.getLogger()
+
+        logger.addHandler(fh)
+        logger.setLevel(lg.DEBUG)
+
 
     @classmethod
     def findenv(cls, name: str, value: str = '') -> str:

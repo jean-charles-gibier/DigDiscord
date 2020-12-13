@@ -7,7 +7,8 @@ ou channels d'un serveur
 """
 from django.core.management.base import BaseCommand, CommandError
 from api.core.base_utils import Configuration
-from api.core.crawler import Crawler
+# from api.core.crawler import Crawler
+from api.core.processor import Processor
 import os.path
 import json
 import sys
@@ -28,57 +29,20 @@ class Command(BaseCommand):
         parser.add_argument('--sleep', nargs='?', type=int)
 
     def handle(self, *args, **options):
-        discord_token = Configuration.findenv('DISCORD_USER_TOKEN', 'NONE')
         guild_id = Configuration.findenv('GUILD_ID', 'NONE')
+        processor = Processor(guild_id)
 
         limit = options['limit'] or 100
         all_channels = options['all_channels']
-        channels = options['id_channels']
 
-        if all_channels:
-            self.get_channel_list(discord_token, limit, guild_id)
-            channels = self.fetch_channel_list(guild_id)
-
-        self.get_channels_msg(discord_token, limit, channels)
-
-    def fetch_channel_list(self, guild_id):
-        """ read channel list of current guild
-         from data repository """
-        local_path = Configuration.findenv('PATH_STORAGE', 'data')
-        local_name = "fetch_{}.json".format(guild_id)
-        full_path = os.path.join(local_path, local_name)
-        data = json.load(open(full_path, ))
-        return [chan["id"] for chan in data]
-
-    def get_channel_list(self, discord_token, limit, guild_id):
-        """ get all channel infos from current guild
-         and stores it on data repository """
-        channel_end_point = Configuration.findenv('CHANNELS_GUILD_END_POINT', 'NONE')
-
-        crawler = Crawler(discord_token)
-        crawler.set_end_point(channel_end_point)
-
+        # si all_channels is True => on récupère la liste des channels du serveur
         try:
-            crawler.get_channels(guild_id)
-            crawler.store_channels()
+            channels = processor.get_channel_list(limit) if all_channels else options['id_channels']
+            processor.get_messages_from_channels(limit, channels)
+            processor.create_server()
+
         except Exception:
-            raise CommandError("Guild id '{}' does not exist [{}]".format(guild_id, sys.exc_info()[0]))
+            raise CommandError("Cannot get server msg [{}]".format(sys.exc_info()[0]))
 
-        self.stdout.write(self.style.SUCCESS('Successfully fetch channel list of guild : "%s"' % guild_id))
+        self.stdout.write(self.style.SUCCESS('Successfully fetch msg of channel'))
 
-    def get_channels_msg(self, discord_token, limit, channels):
-        """ get all messages from listed channels
-        and stores it on data repository """
-        channel_end_point = Configuration.findenv('MESSAGES_CHANNEL_END_POINT', 'NONE')
-
-        crawler = Crawler(discord_token)
-        crawler.set_end_point(channel_end_point)
-
-        for channel_id in channels:
-            try:
-                crawler.fetch_messages(channel_id, limit)
-                crawler.store_messages()
-            except Exception:
-                raise CommandError("Channel id '{}' does not exist [{}]".format(channel_id, sys.exc_info()[0]))
-
-            self.stdout.write(self.style.SUCCESS('Successfully fetch msg of channel: "%s"' % channel_id))
