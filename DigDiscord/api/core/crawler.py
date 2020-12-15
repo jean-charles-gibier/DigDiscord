@@ -4,28 +4,37 @@ Le crawler récupere l'info brute
 consistance en parsant le resulat du crawler)
 """
 
-from time import sleep
-import requests
-import sys
 import json
 import os.path
-from .scrapper import Scrapper
+import sys
+from time import sleep
+
+import requests
+
 from .base_utils import Configuration
-import pprint
+from .scrapper import Scrapper
 
 
 class Crawler:
     STATUS_HTTP_DOWN = 500
     MS_LATENCY = 300
 
-    def __init__(self, guild_id: str = None, token: str = None, end_point: str = None):
+    def __init__(
+        self, guild_id: str = None, token: str = None, end_point: str = None
+    ):
         """ defines crawler properties"""
-        self._guild_id = Configuration.findenv('GUILD_ID', guild_id)
-        self.server_end_point = Configuration.findenv('GUILD_END_POINT', 'NONE')
-        self.channel_end_point = Configuration.findenv('CHANNELS_GUILD_END_POINT', 'NONE')
-        self.message_end_point = Configuration.findenv('MESSAGES_CHANNEL_END_POINT', 'NONE')
-        self._token = Configuration.findenv('DISCORD_USER_TOKEN', token)
-        self._path = Configuration.findenv('PATH_STORAGE', 'data')
+        self._guild_id = Configuration.findenv("GUILD_ID", guild_id)
+        self.server_end_point = Configuration.findenv(
+            "GUILD_END_POINT", "NONE"
+        )
+        self.channel_end_point = Configuration.findenv(
+            "CHANNELS_GUILD_END_POINT", "NONE"
+        )
+        self.message_end_point = Configuration.findenv(
+            "MESSAGES_CHANNEL_END_POINT", "NONE"
+        )
+        self._token = Configuration.findenv("DISCORD_USER_TOKEN", token)
+        self._path = Configuration.findenv("PATH_STORAGE", "data")
         self._msg_list = []
         self._link_list = []
         self._channel_list = []
@@ -40,7 +49,9 @@ class Crawler:
         """
         self.message_end_point = end_point
 
-    def _special_get(self, url: str, payload: str, headers: dict, tries: int = 3):
+    def _special_get(
+        self, url: str, payload: str, headers: dict, tries: int = 3
+    ):
         """
         special_get fetch with special strategy
         to handle http responses & possible errors
@@ -76,14 +87,16 @@ class Crawler:
         """
         msg_counter = 0
         payload = {}
-        headers = {'Authorization': self._token}
+        headers = {"Authorization": self._token}
         self._channel_id = channel_id
         self._msg_list = []
 
         while True:
             try:
                 url_end_point = self.message_end_point.format(channel_id)
-                response = self._special_get(url_end_point, str(payload), headers)
+                response = self._special_get(
+                    url_end_point, str(payload), headers
+                )
                 data = response.json()
                 nb_read = len(data)
 
@@ -93,7 +106,7 @@ class Crawler:
 
                 data.reverse()
                 self._msg_list = Scrapper.message_filter(data) + self._msg_list
-                payload['before'] = data[0]['id']
+                payload["before"] = data[0]["id"]
                 msg_counter = msg_counter + nb_read
 
                 if nb_messages < msg_counter:
@@ -110,7 +123,6 @@ class Crawler:
                 print("Unexpected error:", sys.exc_info()[0])
                 break
 
-
     def get_server(self):
         """
         (public version)
@@ -125,7 +137,7 @@ class Crawler:
         :param guild_id: id server
         :return: guild json properties
         """
-        headers = {'Authorization': self._token}
+        headers = {"Authorization": self._token}
         payload = {}
         try:
             url_end_point = self.server_end_point.format(self._guild_id)
@@ -153,7 +165,7 @@ class Crawler:
 
         try:
             payload = {}
-            headers = {'Authorization': self._token}
+            headers = {"Authorization": self._token}
             url_end_point = self.channel_end_point.format(guild_id)
             response = self._special_get(url_end_point, str(payload), headers)
             self._channel_list = response.json()
@@ -161,7 +173,7 @@ class Crawler:
 
             # if empty or if we get an error
             if channels_counter == 0 or type(self._channel_list) is not list:
-                raise Exception('No channel found')
+                raise Exception("No channel found")
 
             if store_it is True:
                 self._store_channels()
@@ -182,8 +194,12 @@ class Crawler:
         """
         local_name = "fetch_{}.json".format(self._channel_id)
         full_path = os.path.join(self._path, local_name)
-        with open(full_path, 'w') as myfile:
-            myfile.write(json.dumps(self._msg_list, ensure_ascii=False).encode('utf8').decode())
+        with open(full_path, "w") as myfile:
+            myfile.write(
+                json.dumps(self._msg_list, ensure_ascii=False)
+                .encode("utf8")
+                .decode()
+            )
 
     def store_server(self):
         """
@@ -201,8 +217,12 @@ class Crawler:
         """
         local_name = "fetch_{}.json".format(self._guild_id)
         full_path = os.path.join(self._path, local_name)
-        with open(full_path, 'w') as myfile:
-            myfile.write(json.dumps(self._channel_list, ensure_ascii=False).encode('utf8').decode())
+        with open(full_path, "w") as myfile:
+            myfile.write(
+                json.dumps(self._channel_list, ensure_ascii=False)
+                .encode("utf8")
+                .decode()
+            )
 
     def _store_server(self):
         """
@@ -211,6 +231,9 @@ class Crawler:
         """
         local_name = "server_{}.json".format(self._guild_id)
         full_path = os.path.join(self._path, local_name)
-        with open(full_path, 'w') as myfile:
-            myfile.write(json.dumps(self._guild, ensure_ascii=False).encode('utf8').decode())
-
+        with open(full_path, "w") as myfile:
+            myfile.write(
+                json.dumps(self._guild, ensure_ascii=False)
+                .encode("utf8")
+                .decode()
+            )
