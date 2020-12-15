@@ -1,4 +1,6 @@
 from django.db import models
+
+
 # from django.db.models.signals import pre_init, post_init, class_prepared
 # from django.dispatch import receiver
 # import pprint
@@ -18,12 +20,26 @@ class Link(models.Model):
     link_content = models.URLField(max_length=300, blank=True, null=True)
     links = models.ManyToManyField('Message', related_name='messages')
 
+    def __init__(self, *args, **kwargs):
+        """
+        IMPORTANT : This hook is a scrappy workaround
+        for keeping original id author/user among attributes
+        despite it will not persisted in Model instance
+        :param args:
+        :param kwargs: contains embeded parameters
+        """
+        if 'message_id' in kwargs:
+            self.message_id = kwargs['message_id']
+            del kwargs['message_id']
+        super().__init__(*args, **kwargs)
+
     class Meta:
         verbose_name = "Link"
         ordering = ['link_content']
 
 
 class Message(models.Model):
+    identifiant = models.CharField(max_length=45, unique=True, blank=True, null=True)
     mentions = models.ManyToManyField('self', related_name='mentions')
     content = models.TextField(blank=True, null=True)
     date = models.DateField(blank=False, null=False)
@@ -39,8 +55,8 @@ class Message(models.Model):
         :param kwargs: contains embeded parameters
         """
         if 'author_id' in kwargs:
-             self.author_id = kwargs['author_id']
-             del kwargs['author_id']
+            self.author_id = kwargs['author_id']
+            del kwargs['author_id']
         super().__init__(*args, **kwargs)
 
     class Meta:
@@ -60,7 +76,6 @@ class ModelReference(models.Model):
 class Server(models.Model):
     name = models.CharField(max_length=200, blank=True, null=True)
     identifiant = models.CharField(max_length=45, blank=True, null=True)
-
 
     class Meta:
         verbose_name = "Server"

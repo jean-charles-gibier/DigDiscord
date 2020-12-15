@@ -36,6 +36,7 @@ class ChannelBuilder(Factory):
         translation = {
             'id': 'identifier',
             'name': 'name',
+            'topic': 'topic',
             'object_server': 'server'
             }
         translated_args = cls.translate_kwargs(cls, translation=translation, args=kwargs)
@@ -48,7 +49,14 @@ class LinkBuilder(Factory):
 
     @classmethod
     def factory_method(cls, **kwargs) -> Link:
-        return Link()
+
+        translation = {
+            'url': 'link_content',
+            'identifiant': 'message_id',
+            }
+        translated_args = cls.translate_kwargs(cls, translation=translation, args=kwargs)
+        return Link(**translated_args)
+
 
 class MessageBuilder(Factory):
     """
@@ -60,6 +68,7 @@ class MessageBuilder(Factory):
     def factory_method(cls, **kwargs) -> Message:
 
         translation = {
+            'identifiant': 'identifiant',
             'object_user': 'user',
             'object_channel': 'channel',
             'date': 'date',

@@ -35,12 +35,15 @@ class Command(BaseCommand):
         limit = options['limit'] or 100
         all_channels = options['all_channels']
 
+        # all_channels = true si liste de channels vide
+        if options['id_channels'] is None:
+            all_channels = True
+
         # si all_channels is True => on récupère la liste des channels du serveur
         try:
             channels = processor.get_channel_list(limit) if all_channels else options['id_channels']
             processor.get_messages_from_channels(limit, channels)
             processor.create_server()
-
         except Exception:
             raise CommandError("Cannot get server msg [{}]".format(sys.exc_info()[0]))
 

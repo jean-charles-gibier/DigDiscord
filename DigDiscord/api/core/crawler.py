@@ -27,6 +27,7 @@ class Crawler:
         self._token = Configuration.findenv('DISCORD_USER_TOKEN', token)
         self._path = Configuration.findenv('PATH_STORAGE', 'data')
         self._msg_list = []
+        self._link_list = []
         self._channel_list = []
         self._channel_id = ""
         self._guild = ""
@@ -109,24 +110,6 @@ class Crawler:
                 print("Unexpected error:", sys.exc_info()[0])
                 break
 
-    def store_messages(self):
-        """
-        Write crawled content on local file
-        name is suffixed by the channed id
-        :return: nothing
-        """
-        local_name = "fetch_{}.json".format(self._channel_id)
-        full_path = os.path.join(self._path, local_name)
-        with open(full_path, 'w') as myfile:
-            myfile.write(json.dumps(self._msg_list, ensure_ascii=False).encode('utf8').decode())
-
-    def store_server(self):
-        """
-        (public version)
-        Write server content on local file
-        :return: nothing
-        """
-        self._store_server()
 
     def get_server(self):
         """
@@ -191,6 +174,25 @@ class Crawler:
 
         return self._channel_list
 
+    def store_messages(self):
+        """
+        Write crawled content on local file
+        name is suffixed by the channed id
+        :return: nothing
+        """
+        local_name = "fetch_{}.json".format(self._channel_id)
+        full_path = os.path.join(self._path, local_name)
+        with open(full_path, 'w') as myfile:
+            myfile.write(json.dumps(self._msg_list, ensure_ascii=False).encode('utf8').decode())
+
+    def store_server(self):
+        """
+        (public version)
+        Write server content on local file
+        :return: nothing
+        """
+        self._store_server()
+
     def _store_channels(self):
         """
         Write crawled content on local file
@@ -211,3 +213,4 @@ class Crawler:
         full_path = os.path.join(self._path, local_name)
         with open(full_path, 'w') as myfile:
             myfile.write(json.dumps(self._guild, ensure_ascii=False).encode('utf8').decode())
+
