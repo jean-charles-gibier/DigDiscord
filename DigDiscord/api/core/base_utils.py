@@ -7,6 +7,7 @@ import os
 from sys import stdout
 
 import api.constants
+import api.core.factory  # as acf
 
 logger = lg.getLogger(__name__)
 
@@ -62,7 +63,7 @@ class Builder:
         :param json_content:
         :return: list of objects (even if there is only one)
         """
-        class_name = f"acf.{class_type.__name__}Builder"
+        class_name = f"api.core.factory.{class_type.__name__}Builder"
         func = getattr(eval(class_name), "factory_method")
         raw_objects = json.loads(json_content)
         if type(raw_objects) is list:

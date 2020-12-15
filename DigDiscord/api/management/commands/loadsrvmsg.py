@@ -3,11 +3,10 @@ loadsrvmsg
 Commande de chargement des messages récupérés par getsrvmsg
 server / channel / user and messages
 """
-import sys
 
 from api.core.base_utils import Configuration
 from api.core.processor import Processor
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
@@ -31,16 +30,17 @@ class Command(BaseCommand):
         if trunc_all:
             processor.trunc_all()
 
-        try:
+        #        try:
+        if True:
             processor.load_server()
             processor.load_channels()
             processor.load_users()
             processor.load_messages()
             processor.load_links()
-        except Exception:
-            raise CommandError(
-                "Cannot get server msg [{}]".format(sys.exc_info()[0])
-            )
+        #        except Exception:
+        #            raise CommandError(
+        #                "Cannot get server msg [{}]".format(sys.exc_info()[0])
+        #            )
 
         self.stdout.write(
             self.style.SUCCESS("Successfully load msg of channels")

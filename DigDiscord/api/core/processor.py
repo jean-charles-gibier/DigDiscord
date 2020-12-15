@@ -6,8 +6,6 @@ import sys
 from api.core.base_utils import Builder, Configuration
 from api.core.crawler import Crawler
 from api.models import Channel, Link, Message, ModelReference, Server, User
-
-# from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 
 logger = lg.getLogger(__name__)
@@ -147,6 +145,7 @@ class Processor:
             user_list = Builder.get_from_json(User, data)
             for user in user_list:
                 try:
+                    channel.save()
                     user.save()
                     user.channels.add(channel)
                     user.save()
@@ -173,6 +172,7 @@ class Processor:
             for message in message_list:
                 try:
                     message.save()
+                    channel.save()
                     message.channel = channel
                     message.user = User.objects.get(
                         identifiant=message.author_id
