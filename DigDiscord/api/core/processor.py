@@ -34,7 +34,7 @@ class Processor:
         self.guild_path = os.path.join(self.local_path, self.guild_name)
 
         self.object_server = None
-        self.object_channels = []
+        self.object_messages = []
 
     def get_channel_list(self, limit):
         """read channel list of current guild
@@ -72,13 +72,14 @@ class Processor:
         crawler = Crawler(self.guild_id)
 
         for channel_id in channels:
-            try:
+            if True:
+                #            try:
                 crawler.fetch_messages(channel_id, limit)
                 crawler.store_messages()
-            except Exception:
-                raise "Channel id '{}' does not exist [{}]".format(
-                    channel_id, sys.exc_info()[0]
-                )
+            # except Exception:
+            #     raise "Channel id '{}' does not exist [{}]".format(
+            #         channel_id, sys.exc_info()[0]
+            #     )
 
             # lg.info\
             print('Successfully fetch msg of channel: "%s"' % channel_id)
@@ -145,13 +146,18 @@ class Processor:
             user_list = Builder.get_from_json(User, data)
             for user in user_list:
                 try:
-                    channel.save()
-                    user.save()
-                    user.channels.add(channel)
                     user.save()
                 except IntegrityError:
                     # bypass duplicate key
+                    print("User skipped : {}".format(user.identifiant))
                     pass
+                except Exception as e:
+                    #  (api.models.DoesNotExist, ValueError):
+                    print(
+                        "Ne peut enregistrer user {} pour le channel {} raison :[{}] ".format(
+                            user.identifiant, channel.identifier, str(e)
+                        )
+                    )
 
     def load_messages(self):
         """
@@ -169,22 +175,28 @@ class Processor:
                 )
             ).read()
             message_list = Builder.get_from_json(Message, data)
+            print(
+                "Decompte du nb de msg pour le channel '{}' : {} ".format(
+                    channel.identifier, len(message_list)
+                )
+            )
             for message in message_list:
                 try:
                     message.save()
-                    channel.save()
+                    #                    channel.save()
                     message.channel = channel
                     message.user = User.objects.get(
                         identifiant=message.author_id
                     )
                     message.save()
-                except IntegrityError:
-                    # bypass duplicate key
-                    pass
-                except ValueError:
+                except Exception as e:
+                    #  (api.models.DoesNotExist, ValueError):
                     print(
-                        "Ne peut enregistrer message pour le channel {}".format(
-                            channel.identifier
+                        "Ne peut enregistrer message {} pour le channel {} auteur : {} raison :[{}] ".format(
+                            message.identifiant,
+                            channel.identifier,
+                            message.author_id,
+                            str(e),
                         )
                     )
 
@@ -203,9 +215,11 @@ class Processor:
                 )
             ).read()
             link_list = Builder.get_from_json(Link, data)
-            for link in [
-                nn for nn in link_list if nn.link_content is not None
-            ]:
+            link_uniq = list(
+                set([nn for nn in link_list if nn.link_content is not None])
+            )
+            for link in link_uniq:
+
                 try:
                     link.save()
                     link.links.add(

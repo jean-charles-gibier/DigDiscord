@@ -5,14 +5,8 @@ from django.db import models
 # import pprint
 
 
-class NomTresLongExpresJustPourVoirChannel(models.Model):
-    name = models.CharField(max_length=200, blank=True, null=True)
-
-
 class Channel(models.Model):
-    identifier = models.CharField(
-        max_length=45, blank=True, unique=True, null=True
-    )
+    identifier = models.CharField(max_length=45, primary_key=True)
     name = models.CharField(max_length=200, blank=True, null=True)
     topic = models.CharField(max_length=300, blank=True, null=True)
     server = models.ForeignKey(
@@ -25,7 +19,10 @@ class Channel(models.Model):
 
 
 class Link(models.Model):
-    link_content = models.URLField(max_length=300, blank=True, null=True)
+    link_md5 = models.CharField(
+        max_length=32, editable=False, primary_key=True
+    )
+    link_content = models.URLField(max_length=400, blank=True, null=True)
     links = models.ManyToManyField("Message", related_name="messages")
 
     def __init__(self, *args, **kwargs):
@@ -47,9 +44,7 @@ class Link(models.Model):
 
 
 class Message(models.Model):
-    identifiant = models.CharField(
-        max_length=45, unique=True, blank=True, null=True
-    )
+    identifiant = models.CharField(max_length=45, primary_key=True)
     mentions = models.ManyToManyField("self", related_name="mentions")
     content = models.TextField(blank=True, null=True)
     date = models.DateField(blank=False, null=False)
@@ -89,7 +84,7 @@ class ModelReference(models.Model):
 
 class Server(models.Model):
     name = models.CharField(max_length=200, blank=True, null=True)
-    identifiant = models.CharField(max_length=45, blank=True, null=True)
+    identifiant = models.CharField(max_length=45, primary_key=True)
 
     class Meta:
         verbose_name = "Server"
@@ -98,10 +93,8 @@ class Server(models.Model):
 
 class User(models.Model):
     name = models.CharField(max_length=200, blank=True, null=True)
-    identifiant = models.CharField(
-        max_length=45, unique=True, blank=True, null=True
-    )
-    channels = models.ManyToManyField(Channel, related_name="channels")
+    identifiant = models.CharField(max_length=45, primary_key=True)
+    #    messages = models.ManyToManyField(Message, related_name="messages")
 
     class Meta:
         verbose_name = "User"

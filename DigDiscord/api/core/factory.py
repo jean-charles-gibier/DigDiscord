@@ -64,6 +64,7 @@ class LinkBuilder(Factory):
 
         translation = {
             "url": "link_content",
+            "url_md5": "link_md5",
             "identifiant": "message_id",
         }
         translated_args = cls.translate_kwargs(
@@ -134,7 +135,7 @@ class UserBuilder(Factory):
         translation = {
             "author_id": "identifiant",
             "author": "name",
-            "object_channels": "channels",
+            "object_messages": "messages",
         }
         translated_args = cls.translate_kwargs(
             cls, translation=translation, args=kwargs

@@ -92,11 +92,10 @@ class Crawler:
         self._msg_list = []
 
         while True:
-            try:
+            #            try:
+            if True:
                 url_end_point = self.message_end_point.format(channel_id)
-                response = self._special_get(
-                    url_end_point, str(payload), headers
-                )
+                response = self._special_get(url_end_point, payload, headers)
                 data = response.json()
                 nb_read = len(data)
 
@@ -115,13 +114,13 @@ class Crawler:
                 elif 0 < nb_messages <= msg_counter:
                     break
 
-            except AttributeError as err:
-                print("Error: {0}".format(err))
-                break
-
-            except Exception:
-                print("Unexpected error:", sys.exc_info()[0])
-                break
+            # except AttributeError as err:
+            #     print("Error: {0}".format(err))
+            #     break
+            #
+            # except Exception:
+            #     print("Unexpected error:", sys.exc_info()[0])
+            #     break
 
     def get_server(self):
         """

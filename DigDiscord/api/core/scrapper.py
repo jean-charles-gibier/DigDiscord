@@ -1,6 +1,7 @@
 """
 le scrapper extrait les données du crawler
 """
+import hashlib
 
 
 class Scrapper:
@@ -21,7 +22,12 @@ class Scrapper:
                 "author_id": msg["author"]["id"],
                 "content": msg["content"],
                 "mentions": msg["mentions"],
-                "url": msg["embeds"][0]["url"][0:300]
+                "url": msg["embeds"][0]["url"][0:400]
+                if len(msg["embeds"]) > 0
+                else None,
+                "url_md5": hashlib.md5(
+                    (msg["embeds"][0]["url"][0:400]).encode("utf-8")
+                ).hexdigest()
                 if len(msg["embeds"]) > 0
                 else None,
             }

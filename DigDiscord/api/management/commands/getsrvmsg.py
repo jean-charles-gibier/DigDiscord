@@ -5,13 +5,15 @@ identifié(s) par son/ses id(s).
 ou  du server
 ou channels d'un serveur
 """
-import sys
+# import sys
 
 from api.core.base_utils import Configuration
 
 # from api.core.crawler import Crawler
 from api.core.processor import Processor
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
+
+# , CommandError
 
 
 class Command(BaseCommand):
@@ -40,7 +42,8 @@ class Command(BaseCommand):
             all_channels = True
 
         # si all_channels is True => on récupère la liste des channels du serveur
-        try:
+        #        try:
+        if True:
             channels = (
                 processor.get_channel_list(limit)
                 if all_channels
@@ -48,10 +51,10 @@ class Command(BaseCommand):
             )
             processor.get_messages_from_channels(limit, channels)
             processor.create_server()
-        except Exception:
-            raise CommandError(
-                "Cannot get server msg [{}]".format(sys.exc_info()[0])
-            )
+        # except Exception:
+        #     raise CommandError(
+        #         "Cannot get server msg [{}]".format(sys.exc_info()[0])
+        #     )
 
         self.stdout.write(
             self.style.SUCCESS("Successfully fetch msg of channel")
