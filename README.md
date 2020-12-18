@@ -1,5 +1,7 @@
 # DigDiscord
 
+[![Django CI](https://github.com/jean-charles-gibier/DigDiscord/workflows/Django%20CI/badge.svg)](https://github.com/jean-charles-gibier/DigDiscord/actions)
+
 Discord Forum Analysis Project X
 
 Purpose: "To crawl" and analyze the content of forums channels (and  all textual resources) from a discord server
