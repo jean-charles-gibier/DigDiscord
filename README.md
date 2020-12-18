@@ -1,6 +1,6 @@
 # DigDiscord
 
-![Django CI](https://github.com/jean-charles-gibier/DigDiscord/workflows/Django%20CI/badge.svg)
+![Django CI(https://github.com/jean-charles-gibier/DigDiscord/actions)](https://github.com/jean-charles-gibier/DigDiscord/workflows/Django%20CI/badge.svg)
 
 Discord Forum Analysis Project X
 
