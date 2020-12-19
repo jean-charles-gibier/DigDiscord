@@ -14,11 +14,14 @@ jobs:
       max-parallel: 4
       matrix:
         python-version: [3.6, 3.7, 3.8]
+        include:
+          - db: mysql
+            db_port: 3306
     services:
         mysql:
             image: mysql:5.7
             env:
-                MYSQL_ALLOW_EMPTY_PASSWORD: yes
+                MYSQL_ROOT_PASSWORD: dummypwd
                 MYSQL_DATABASE: digdiscord
             ports:
                 - 3306
@@ -35,6 +38,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Run Tests
+      env:
+        DB: ${{ matrix.db }}
+        DB_HOST: 127.0.0.1
+        DB_PORT: ${{ matrix.db_port }}
+        DB_PASSWORD: dummypwd
       run: |
          cd DigDiscord &&
          python ./manage.py migrate --fake &&
