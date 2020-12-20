@@ -21,7 +21,7 @@ jobs:
         mysql:
             image: mysql:5.7
             env:
-                MYSQL_ALLOW_EMPTY_PASSWORD: yes
+                MYSQL_PASSWORD: MOTDEPASSE1234  
                 MYSQL_DATABASE: digdiscord
             ports:
                 - 3306:3306
@@ -42,6 +42,7 @@ jobs:
         DB: digdiscord
         DB_HOST: 172.18.0.1
         DB_PORT: 3306
+        DB_PASSWORD: MOTDEPASSE1234 
         DB_USER: user
         DJANGO_SETTINGS_MODULE: DigDiscord.settings.deploy_ci
       run: |
