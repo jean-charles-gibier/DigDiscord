@@ -99,6 +99,9 @@ DATABASES = {
         "TEST": {
             "CHARSET": "utf8mb4",
             "COLLATION": "utf8mb4_unicode_ci",
+             "USER": "root",
+            "NAME": "digdiscord_test",
+#           "PASSWORD": "MOTDEPASSE1234",
         },
     }
 }
