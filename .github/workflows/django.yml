@@ -21,7 +21,7 @@ jobs:
         mysql:
             image: mysql:5.7
             env:
-                MYSQL_ROOT_PASSWORD: dummypwd
+                MYSQL_ALLOW_EMPTY_PASSWORD: yes
                 MYSQL_DATABASE: digdiscord
             ports:
                 - 3306:3306
@@ -43,7 +43,6 @@ jobs:
         DB_HOST: 127.0.0.1
         DB_PORT: ${{ matrix.db_port }}
         DB_USER: user
-        DB_PASSWORD: dummypwd
       run: |
          cd DigDiscord &&
          python ./manage.py migrate --fake &&
