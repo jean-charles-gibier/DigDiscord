@@ -4,7 +4,7 @@ Test des commandes d'administration custom
 import json
 import sys
 import os
-from unittest import skip
+from unittest import skipIf
 
 # , Configuration
 from api.core.scrapper import Scrapper
