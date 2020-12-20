@@ -21,13 +21,19 @@ jobs:
         mysql:
             image: mysql:5.7
             env:
+                MYSQL_ROOT_PASSWORD: password
                 MYSQL_PASSWORD: MOTDEPASSE1234  
                 MYSQL_DATABASE: digdiscord
             ports:
                 - 3306:3306
-            options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+            options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=
 
     steps:
+    - name: Verify MySQL connection from host
+      run: |
+        sudo apt-get install -y mysql-client
+        mysql --host 172.18.0.1 --port 32574 -uroot -ppassword -e "SHOW DATABASES"
+ 
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
