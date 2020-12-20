@@ -13,7 +13,7 @@ class CommandsTestCase(TestCase):
         pass
 
     @skipIf(
-        os.getenv(name,'DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci')
+        os.getenv('DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci')
     def test_getsrvmsg_start(self):
         """ test if manage command getsrvmsg is responding """
         kwargs = {
@@ -27,7 +27,7 @@ class CommandsTestCase(TestCase):
         self.assertGreaterEqual(10, 10)
 
     @skipIf(
-        os.getenv(name,'DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci')
+        os.getenv('DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci')
     def test_getsrvmsg_all_channels(self):
         """ test all channels option """
         kwargs = {
