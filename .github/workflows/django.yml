@@ -42,6 +42,7 @@ jobs:
         DB: ${{ matrix.db }}
         DB_HOST: 127.0.0.1
         DB_PORT: ${{ matrix.db_port }}
+        DB_USER: user
         DB_PASSWORD: dummypwd
       run: |
          cd DigDiscord &&
