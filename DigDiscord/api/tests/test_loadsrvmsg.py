@@ -3,7 +3,7 @@ Test des commandes d'administration custom
 """
 from django.core.management import call_command
 from django.test import TransactionTestCase
-from unittest import skip
+from unittest import skipIf
 import os
 
 
