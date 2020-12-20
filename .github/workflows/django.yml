@@ -22,7 +22,8 @@ jobs:
             image: mysql:5.7
             env:
                 MYSQL_ROOT_PASSWORD: password
-                MYSQL_PASSWORD: MOTDEPASSE1234  
+                MYSQL_PASSWORD: MOTDEPASSE1234
+                MYSQL_USER: user  
                 MYSQL_DATABASE: digdiscord
             ports:
                 - 3306:3306
