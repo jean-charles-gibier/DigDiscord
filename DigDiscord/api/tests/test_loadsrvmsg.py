@@ -10,7 +10,7 @@ class LoadSrvMsg(TransactionTestCase):
     def setUp(self):
         """ fixtures """
         
-    @unittest.skipIf(
+    @skipIf(
             os.getenv(name,'DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci')
     def test_loadsrvmsg_stores_in_db(self):
         """test if managed cmd loadsrvmsg is responding
@@ -21,7 +21,7 @@ class LoadSrvMsg(TransactionTestCase):
         call_command("loadsrvmsg", **kwargs)
         # TODO verify that we get a channel object with the associated msg
         
-    @unittest.skipIf(
+    @skipIf(
             os.getenv(name,'DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci')
     def test_loadsrvmsg_all_channels(self):
         """ same test for all channels """
