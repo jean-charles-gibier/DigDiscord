@@ -19,11 +19,11 @@ jobs:
             db_port: 3306
     services:
         mysql:
-            image: mysql:5.7
+            image: mysql:8.0
             env:
                 MYSQL_ROOT_PASSWORD: password
-                MYSQL_PASSWORD: MOTDEPASSE1234
-                MYSQL_USER: user  
+                MYSQL_USER: user
+                MYSQL_ALLOW_EMPTY_PASSWORD: yes
                 MYSQL_DATABASE: digdiscord
             ports:
                 - 3306:3306
