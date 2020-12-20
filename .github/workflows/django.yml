@@ -40,7 +40,7 @@ jobs:
     - name: Run Tests
       env:
         DB: ${{ matrix.db }}
-        DB_HOST: 127.0.0.1
+        DB_HOST: 172.18.0.1
         DB_PORT: ${{ matrix.db_port }}
         DB_USER: user
         DJANGO_SETTINGS_MODULE: DigDiscord.settings.deploy_ci
