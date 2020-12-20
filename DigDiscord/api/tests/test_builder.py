@@ -3,8 +3,8 @@ Test des commandes d'administration custom
 """
 import json
 import sys
+import os
 from unittest import skip
-from api.core.base_utils import Builder
 
 # , Configuration
 from api.core.scrapper import Scrapper
