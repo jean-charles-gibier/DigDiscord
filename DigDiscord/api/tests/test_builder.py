@@ -3,7 +3,7 @@ Test des commandes d'administration custom
 """
 import json
 import sys
-
+from unittest import skip
 from api.core.base_utils import Builder
 
 # , Configuration
