@@ -3,6 +3,7 @@ Test des commandes d'administration custom
 """
 from django.core.management import call_command
 from django.test import TestCase
+from unittest import skip
 import os
 
 
