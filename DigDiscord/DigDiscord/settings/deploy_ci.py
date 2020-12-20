@@ -16,7 +16,6 @@ DATABASES = {
         "TEST": {
             "USER": "root",
             "NAME": "digdiscord_test",
-#           "PASSWORD": "MOTDEPASSE1234",
             "CHARSET": "utf8mb4",
             "COLLATION": "utf8mb4_unicode_ci",
         },
