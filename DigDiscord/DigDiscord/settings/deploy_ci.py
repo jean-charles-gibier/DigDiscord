@@ -14,7 +14,7 @@ DATABASES = {
         },
         # Tell Django to build the test database with the 'utf8mb4' character set
         "TEST": {
-#            "USER": "root",
+            "USER": "root",
             "NAME": "digdiscord_test",
             "CHARSET": "utf8mb4",
             "COLLATION": "utf8mb4_unicode_ci",
