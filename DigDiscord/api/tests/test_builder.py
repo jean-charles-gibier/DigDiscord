@@ -561,7 +561,8 @@ class BuilderGenerate(TransactionTestCase):
    """
  
     @skipIf(
-            os.getenv('DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci')
+            os.getenv('DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci',
+    reason="requires secret token")
     def test_create_server_and_hierarchy(self):
         self._create_server()
         self._create_channel()
