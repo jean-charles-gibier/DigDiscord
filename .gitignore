@@ -8,3 +8,4 @@ DigDiscord/*.json
 DigDiscord/data/*.json
 .pre-commit-config.yaml
 chk.sh
+.flake8

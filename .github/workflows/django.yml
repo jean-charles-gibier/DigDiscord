@@ -43,6 +43,7 @@ jobs:
         DB_HOST: 127.0.0.1
         DB_PORT: ${{ matrix.db_port }}
         DB_USER: user
+        DJANGO_SETTINGS_MODULE: DigDiscord.settings.deploy_ci
       run: |
          cd DigDiscord &&
          python ./manage.py migrate --fake &&
