@@ -39,9 +39,9 @@ jobs:
         pip install -r requirements.txt
     - name: Run Tests
       env:
-        DB: ${{ matrix.db }}
+        DB: digdiscord
         DB_HOST: 172.18.0.1
-        DB_PORT: ${{ matrix.db_port }}
+        DB_PORT: 3306
         DB_USER: user
         DJANGO_SETTINGS_MODULE: DigDiscord.settings.deploy_ci
       run: |
