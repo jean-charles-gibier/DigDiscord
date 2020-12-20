@@ -3,6 +3,7 @@ Test des commandes d'administration custom
 """
 from django.core.management import call_command
 from django.test import TestCase
+import os
 
 
 class CommandsTestCase(TestCase):
@@ -10,6 +11,8 @@ class CommandsTestCase(TestCase):
         """ nothing at the moment """
         pass
 
+    @unittest.skipIf(
+        os.getenv(name,'DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci')
     def test_getsrvmsg_start(self):
         """ test if manage command getsrvmsg is responding """
         kwargs = {
@@ -22,6 +25,8 @@ class CommandsTestCase(TestCase):
 
         self.assertGreaterEqual(10, 10)
 
+    @unittest.skipIf(
+        os.getenv(name,'DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci')
     def test_getsrvmsg_all_channels(self):
         """ test all channels option """
         kwargs = {
