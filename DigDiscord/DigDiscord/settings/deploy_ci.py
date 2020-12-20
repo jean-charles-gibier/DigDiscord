@@ -4,7 +4,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "digdiscord",
-        "USER": "user",
+        "USER": "root",
         "PASSWORD": "MOTDEPASSE1234",
         "HOST": "172.18.0.1",
         "PORT": "3306",
