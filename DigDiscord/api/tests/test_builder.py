@@ -658,6 +658,7 @@ class BuilderGenerate(TransactionTestCase):
         for user in users:
             try:
                 user.save()
+                print("Register User : {}".format(user.identifiant))
                 user.channels.add(current_channel)
                 user.save()
             except IntegrityError:
