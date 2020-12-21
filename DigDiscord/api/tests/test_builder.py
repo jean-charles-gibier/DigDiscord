@@ -634,8 +634,10 @@ class BuilderGenerate(TransactionTestCase):
                 message.save()
             except Exception:
                 raise (
-                    "error test msg [{}] with author_id : {}".format(
-                        sys.exc_info()[0], message.author_id
+                    ValueError(
+                        "error test msg [{}] with author_id : {}".format(
+                            sys.exc_info()[0], message.author_id
+                        )
                     )
                 )
 
@@ -673,7 +675,9 @@ class BuilderGenerate(TransactionTestCase):
                 message.save()
             except Exception:
                 raise (
-                    "error test msg [{}] with author_id : {}".format(
-                        sys.exc_info()[0], message.author_id
+                    ValueError(
+                        "error test msg [{}] with author_id : {}".format(
+                            sys.exc_info()[0], message.author_id
+                        )
                     )
                 )
