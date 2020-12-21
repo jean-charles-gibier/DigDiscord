@@ -2,9 +2,11 @@
 Test des commandes d'administration custom
 """
 import json
-import sys
 import os
+import sys
 from unittest import skipIf
+
+from api.core.base_utils import Builder
 
 # , Configuration
 from api.core.scrapper import Scrapper
@@ -16,6 +18,10 @@ from django.test import TransactionTestCase
 
 
 class BuilderGenerate(TransactionTestCase):
+    """
+    TODO mettre les fausses valeurs dans des fichiers ressources
+    """
+
     def setUp(self):
         self.default_server = None
 
@@ -559,10 +565,16 @@ class BuilderGenerate(TransactionTestCase):
      }
    ]
    """
- 
+
+    def test_create_server_and_mock_hierarchy(self):
+        self._create_server()
+        self._create_channel()
+        self._mock_user_and_message()
+
     @skipIf(
-        os.getenv('DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci',
-        reason="requires secret token")
+        os.getenv("DJANGO_SETTINGS_MODULE") == "DigDiscord.settings.deploy_ci",
+        reason="requires secret token",
+    )
     def test_create_server_and_hierarchy(self):
         self._create_server()
         self._create_channel()
@@ -594,8 +606,40 @@ class BuilderGenerate(TransactionTestCase):
         current_channel = Channel.objects.all()[0]
 
         # préfiltrage de données normalement opéré par le crawler
-        # dans ce test les data / fixtures doivent etre filtrées séparément
-        # A revoir avec un mock opérationel (ça dénote sans doute un pb de conception)
+        # dans ce test les "vrais" datas / fixtures ne sont pas filtrées séparément
+        # Cf le mock opérationel ci-dessous pour tests hors-ligne
+        self.dummy_messages = json.dumps(
+            Scrapper.message_filter(json.loads(self.dummy_messages))
+        )
+        users = Builder.get_from_json(User, self.dummy_messages)
+        for user in users:
+            try:
+                user.save()
+                user.channels.add(current_channel)
+                user.save()
+            except IntegrityError:
+                # bypass duplicate key
+                pass
+            except Exception:
+                print("Unexpected error:", sys.exc_info()[0])
+                break
+
+        messages = Builder.get_from_json(
+            Message, self.dummy_messages, object_channel=current_channel
+        )
+        for message in messages:
+            message.save()
+            message.user = User.objects.get(identifiant=message.author_id)
+            message.save()
+
+    def _mock_user_and_message(self):
+        """ce test est la version 'mock' du test précedent :
+        on ne va pas checher les infos sur le server discord
+        mais on simule une réponse de l'API de celui ci
+        """
+        # on prend le 1er channel (au hasard)
+        current_channel = Channel.objects.all()[0]
+
         self.dummy_messages = json.dumps(
             Scrapper.message_filter(json.loads(self.dummy_messages))
         )
