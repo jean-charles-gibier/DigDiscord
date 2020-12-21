@@ -628,9 +628,16 @@ class BuilderGenerate(TransactionTestCase):
             Message, self.dummy_messages, object_channel=current_channel
         )
         for message in messages:
-            message.save()
-            message.user = User.objects.get(identifiant=message.author_id)
-            message.save()
+            try:
+                message.save()
+                message.user = User.objects.get(identifiant=message.author_id)
+                message.save()
+            except Exception:
+                raise (
+                    "error test msg [{}] with author_id : {}".format(
+                        sys.exc_info()[0], message.author_id
+                    )
+                )
 
     def _mock_user_and_message(self):
         """ce test est la version 'mock' du test précedent :
@@ -660,6 +667,13 @@ class BuilderGenerate(TransactionTestCase):
             Message, self.dummy_messages, object_channel=current_channel
         )
         for message in messages:
-            message.save()
-            message.user = User.objects.get(identifiant=message.author_id)
-            message.save()
+            try:
+                message.save()
+                message.user = User.objects.get(identifiant=message.author_id)
+                message.save()
+            except Exception:
+                raise (
+                    "error test msg [{}] with author_id : {}".format(
+                        sys.exc_info()[0], message.author_id
+                    )
+                )
