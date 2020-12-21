@@ -5,8 +5,10 @@ DATABASES = {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "digdiscord",
         "USER": "root",
+        # user
         "PASSWORD": "MOTDEPASSE1234",
         "HOST": "172.18.0.1",
+        # 127.0.0.1
         "PORT": "3306",
         "OPTIONS": {
             # Tell MySQLdb to connect with 'utf8mb4' character set

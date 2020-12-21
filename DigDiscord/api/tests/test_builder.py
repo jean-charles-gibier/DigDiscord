@@ -615,8 +615,6 @@ class BuilderGenerate(TransactionTestCase):
         for user in users:
             try:
                 user.save()
-                user.channels.add(current_channel)
-                user.save()
             except IntegrityError:
                 # bypass duplicate key
                 pass
@@ -659,8 +657,6 @@ class BuilderGenerate(TransactionTestCase):
             try:
                 user.save()
                 print("Register User : {}".format(user.identifiant))
-                user.channels.add(current_channel)
-                user.save()
             except IntegrityError:
                 # bypass duplicate key
                 pass
@@ -671,6 +667,7 @@ class BuilderGenerate(TransactionTestCase):
         messages = Builder.get_from_json(
             Message, self.dummy_messages, object_channel=current_channel
         )
+
         for message in messages:
             try:
                 message.save()
