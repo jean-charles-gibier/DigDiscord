@@ -28,4 +28,3 @@ DATABASES = {
 
 
 ALLOWED_HOSTS.append("tgpa8220.odns.fr")
-STATIC_ROOT = os.path.join(BASE_DIR, 'dumps')
