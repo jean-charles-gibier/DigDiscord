@@ -5,7 +5,7 @@ identifié(s) par son/ses id(s).
 ou  du server
 ou channels d'un serveur
 """
-# import sys
+import sys
 
 from api.core.base_utils import Configuration
 
@@ -22,11 +22,13 @@ class Command(BaseCommand):
     ' "--id_channels" specify from which id channel messages are fetched'
     ' "--all_channels" [flag] get all channels messages (nb limited by --limit option)'
     ' "--limit" limit nb of messages (default 100)'
-    ' "--sleep" time to wait in ms between api calls'
+    ' "--limit" limit nb of messages (default 100)'
+    ' "--complete" specify which part of the table messages will be completed (with the "newer" or the "older" messages)'
 
     def add_arguments(self, parser):
         parser.add_argument("--id_channels", nargs="*", type=int)
         parser.add_argument("--all_channels", action="store_true")
+        parser.add_argument("--complete", choices=["newer", "older"])
         parser.add_argument("--limit", nargs="?", type=int)
         parser.add_argument("--sleep", nargs="?", type=int)
 
@@ -35,26 +37,26 @@ class Command(BaseCommand):
         processor = Processor(guild_id)
 
         limit = options["limit"] or 100
+        complete_style = options["complete"]
         all_channels = options["all_channels"]
 
         # all_channels = true si liste de channels vide
         if options["id_channels"] is None:
             all_channels = True
 
+        # complete_newer = true => on complete le référentiel
+        # avec les message + récents que le dernier message enregistré
+        # complete = older  on complete le référentiel
+        # a avec les message + anciens que le premier message enregistré
+
         # si all_channels is True => on récupère la liste des channels du serveur
-        #        try:
-        if True:
-            channels = (
-                processor.get_channel_list(limit)
-                if all_channels
-                else options["id_channels"]
-            )
-            processor.get_messages_from_channels(limit, channels)
-            processor.create_server()
-        # except Exception:
-        #     raise CommandError(
-        #         "Cannot get server msg [{}]".format(sys.exc_info()[0])
-        #     )
+        channels = (
+            processor.get_channel_list(limit)
+            if all_channels
+            else options["id_channels"]
+        )
+        processor.get_messages_from_channels(limit, channels, complete_style)
+        processor.create_server()
 
         self.stdout.write(
             self.style.SUCCESS("Successfully fetch msg of channel")

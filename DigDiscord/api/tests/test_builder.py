@@ -585,7 +585,7 @@ class BuilderGenerate(TransactionTestCase):
         test_id = "347061157351260161"
         server1 = Builder.get_from_json(Server, self.dummy_server)[0]
         server1.save()
-        server2 = Server.objects.get(identifiant=test_id)
+        server2 = Server.objects.get(identifier=test_id)
         server2.save()
         self.default_server = server1
         self.assertEqual(server1, server2)
@@ -628,14 +628,14 @@ class BuilderGenerate(TransactionTestCase):
         for message in messages:
             try:
                 message.save()
-                message.user = User.objects.get(identifiant=message.author_id)
+                message.user = User.objects.get(identifier=message.author_id)
                 message.save()
             except Exception:
                 raise (
                     ValueError(
                         "error test msg [{}] with msg_id : {} author_id : {}".format(
                             sys.exc_info()[0],
-                            message.identifiant,
+                            message.identifier,
                             message.author_id,
                         )
                     )
@@ -656,7 +656,7 @@ class BuilderGenerate(TransactionTestCase):
         for user in users:
             try:
                 user.save()
-                print("Register User : {}".format(user.identifiant))
+                print("Register User : {}".format(user.identifier))
             except IntegrityError:
                 # bypass duplicate key
                 pass
@@ -671,14 +671,14 @@ class BuilderGenerate(TransactionTestCase):
         for message in messages:
             try:
                 message.save()
-                message.user = User.objects.get(identifiant=message.author_id)
+                message.user = User.objects.get(identifier=message.author_id)
                 message.save()
             except Exception:
                 raise (
                     ValueError(
                         "error test msg [{}] with msg_id : {} author_id : {}".format(
                             sys.exc_info()[0],
-                            message.identifiant,
+                            message.identifier,
                             message.author_id,
                         )
                     )

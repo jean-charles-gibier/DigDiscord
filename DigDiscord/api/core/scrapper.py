@@ -12,16 +12,18 @@ class Scrapper:
     @classmethod
     def message_filter(cls, data):
         """
-        filtre pour l'aobjet Message
+        filtre pour l'abjet Message
         """
         return [
             {
-                "identifiant": msg["id"],
+                "identifier": msg["id"],
                 "date": msg["timestamp"][0:10],
                 "author": msg["author"]["username"],
                 "author_id": msg["author"]["id"],
                 "content": msg["content"],
-                "mentions": msg["mentions"],
+                "references_id": [msg["message_reference"]["message_id"]]
+                if "message_reference" in msg
+                else [],
                 "url": msg["embeds"][0]["url"][0:400]
                 if len(msg["embeds"]) > 0
                 else None,
@@ -40,7 +42,7 @@ class Scrapper:
         filtre pour l'objet Link
         """
         return [
-            {"content": msg["embeds"][0]["url"], "id": msg["id"]}
+            {"content": msg["embeds"][0]["url"], "message_id": msg["id"]}
             for msg in data
-            if len(msg["embeds"]) > 0
+            if len(msg["embeds"]) > 0 and "id" in msg
         ]

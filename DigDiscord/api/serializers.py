@@ -20,8 +20,8 @@ class MessageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Message
         fields = (
-            "identifiant",
-            "mentions",
+            "identifier",
+            "references",
             "content",
             "date",
             "user",
@@ -38,10 +38,10 @@ class ModelReferenceSerializer(serializers.HyperlinkedModelSerializer):
 class ServerSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Server
-        fields = ("name", "identifiant")
+        fields = ("name", "identifier")
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ("name", "identifiant")
+        fields = ("name", "identifier")

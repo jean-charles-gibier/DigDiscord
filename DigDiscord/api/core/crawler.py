@@ -10,6 +10,7 @@ import sys
 from time import sleep
 
 import requests
+from api.core.content_accessor import ContentAcessor
 
 from .base_utils import Configuration
 from .scrapper import Scrapper
@@ -78,7 +79,9 @@ class Crawler:
 
         return response
 
-    def fetch_messages(self, channel_id: str, nb_messages: int = 0):
+    def fetch_messages(
+        self, channel_id: str, nb_messages: int = 0, complete_type=None
+    ):
         """
         get specific nb msg from channel
         :param channel_id: id channel
@@ -91,36 +94,42 @@ class Crawler:
         self._channel_id = channel_id
         self._msg_list = []
 
+        # complete_type = None
+        # payload_way = "before"
+        # payload_value = non indiqué
+
+        # complete_type = newer => payload after = last message_id
+        # payload_way = "after"
+        # payload_value = last_msg
+
+        # complete_type = older => payload before = first message_id
+        # payload_way = "before"
+        # payload_value = first_msg
+
+        # first_msg = ContentAcessor.get_first_message_id()
+        # last_msg = ContentAcessor.get_last_message_id()
+
         while True:
-            #            try:
-            if True:
-                url_end_point = self.message_end_point.format(channel_id)
-                response = self._special_get(url_end_point, payload, headers)
-                data = response.json()
-                nb_read = len(data)
+            url_end_point = self.message_end_point.format(channel_id)
+            response = self._special_get(url_end_point, payload, headers)
+            data = response.json()
+            nb_read = len(data)
 
-                # if empty or if we get an error
-                if nb_read == 0 or type(data) is not list:
-                    break
+            # if empty or if we get an error
+            if nb_read == 0 or type(data) is not list:
+                break
 
-                data.reverse()
-                self._msg_list = Scrapper.message_filter(data) + self._msg_list
-                payload["before"] = data[0]["id"]
-                msg_counter = msg_counter + nb_read
+            data.reverse()
+            self._msg_list = Scrapper.message_filter(data) + self._msg_list
+            payload["before"] = data[0]["id"]
 
-                if nb_messages < msg_counter:
-                    self._msg_list = self._msg_list[:nb_messages]
-                    break
-                elif 0 < nb_messages <= msg_counter:
-                    break
+            msg_counter = msg_counter + nb_read
 
-            # except AttributeError as err:
-            #     print("Error: {0}".format(err))
-            #     break
-            #
-            # except Exception:
-            #     print("Unexpected error:", sys.exc_info()[0])
-            #     break
+            if nb_messages < msg_counter:
+                self._msg_list = self._msg_list[:nb_messages]
+                break
+            elif 0 < nb_messages <= msg_counter:
+                break
 
     def get_server(self):
         """

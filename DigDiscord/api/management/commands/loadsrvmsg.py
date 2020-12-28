@@ -25,25 +25,17 @@ class Command(BaseCommand):
         processor = Processor(guild_id)
 
         trunc_all = options["trunc_all"]
-        # all_channels = options["all_channels"]
-
-        #        if all_channels:
-        #            channels = []
 
         if trunc_all:
             processor.trunc_all()
 
-        #        try:
-        if True:
-            processor.load_server()
-            processor.load_channels()
-            processor.load_users()
-            processor.load_messages()
-            processor.load_links()
-        #        except Exception:
-        #            raise CommandError(
-        #                "Cannot get server msg [{}]".format(sys.exc_info()[0])
-        #            )
+        processor.load_server()
+        processor.load_channels()
+        processor.load_users()
+        processor.load_messages()
+        processor.load_links()
+        processor.load_references()
+        processor.set_channel_id_messages()
 
         self.stdout.write(
             self.style.SUCCESS("Successfully load msg of channels")
