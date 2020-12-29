@@ -13,7 +13,7 @@ jobs:
     strategy:
       max-parallel: 6
       matrix:
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.6]
         include:
           - db: mysql
             db_port: 3306
@@ -54,5 +54,5 @@ jobs:
         DJANGO_SETTINGS_MODULE: DigDiscord.settings.deploy_ci
       run: |
          cd DigDiscord &&
-         python ./manage.py migrate --fake &&
+         python ./manage.py makemigrations && python ./manage.py migrate --fake &&
          python manage.py test
