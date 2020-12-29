@@ -10,3 +10,6 @@ DigDiscord/data/*.json
 chk.sh
 .flake8
 DigDiscord/dumps/*
+DigDiscord/DigDiscord/__pycache__/*
+DigDiscord/out.txt
+DigDiscord/__pycache__/*

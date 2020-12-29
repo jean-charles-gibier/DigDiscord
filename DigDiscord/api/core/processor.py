@@ -7,6 +7,7 @@ from api.core.base_utils import Builder, Configuration
 from api.core.crawler import Crawler
 from api.models import Channel, Link, Message, ModelReference, Server, User
 from django.db import IntegrityError
+from django.db.models import Max, Min
 
 logger = lg.getLogger(__name__)
 
@@ -34,7 +35,6 @@ class Processor:
         self.guild_path = os.path.join(self.local_path, self.guild_name)
 
         self.object_server = None
-        self.object_messages = []
 
     def get_channel_list(self, limit):
         """read channel list of current guild
@@ -62,27 +62,18 @@ class Processor:
                 self.guild_id, sys.exc_info()[0]
             )
 
-        # lg.info\
         print(
             'Successfully fetch channel list of guild : "%s"' % self.guild_id
         )
 
-    def get_messages_from_channels(self, limit, channels):
+    def get_messages_from_channels(self, limit, channels, complete_type):
         """get all messages and links from listed channels
         and stores it on data repository"""
         crawler = Crawler(self.guild_id)
 
         for channel_id in channels:
-            if True:
-                #            try:
-                crawler.fetch_messages(channel_id, limit)
-                crawler.store_messages()
-            # except Exception:
-            #     raise "Channel id '{}' does not exist [{}]".format(
-            #         channel_id, sys.exc_info()[0]
-            #     )
-
-            # lg.info\
+            crawler.fetch_messages(channel_id, limit, complete_type)
+            crawler.store_messages()
             print('Successfully fetch msg of channel: "%s"' % channel_id)
 
     def create_server(self):
@@ -151,7 +142,7 @@ class Processor:
                     user.save()
                 except IntegrityError:
                     # bypass duplicate key
-                    print("User skipped : {}".format(user.identifiant))
+                    print("User skipped : {}".format(user.identifier))
                     pass
                 except Exception as e:
                     #  (api.models.DoesNotExist, ValueError):
@@ -182,25 +173,60 @@ class Processor:
                     channel.identifier, len(message_list)
                 )
             )
+            # bulkeriser
             for message in message_list:
                 try:
                     message.save()
-                    #                    channel.save()
                     message.channel = channel
                     message.user = User.objects.get(
-                        identifiant=message.author_id
+                        identifier=message.author_id
                     )
                     message.save()
                 except Exception as e:
                     #  (api.models.DoesNotExist, ValueError):
                     print(
                         "Ne peut enregistrer message {} pour le channel {} auteur : {} raison :[{}] ".format(
-                            message.identifiant,
+                            message.identifier,
                             channel.identifier,
                             message.author_id,
                             str(e),
                         )
                     )
+
+    def load_references(self):
+        """
+        par chargement des messages référencés
+        :return:
+        """
+        for channel in self.object_channels:
+            messages_name = "fetch_{}.json".format(channel.identifier)
+            messages_path = os.path.join(self.local_path, messages_name)
+            # fetch our results on local db
+            data = (
+                open(
+                    messages_path,
+                )
+            ).read()
+            message_list = Builder.get_from_json(Message, data)
+
+            for message in message_list:
+                try:
+                    message.save()
+                    for m in message.references_id:
+                        message.references.add(
+                            Message.objects.get(identifier=m)
+                        )
+                    message.save()
+
+                except Exception as e:
+                    if hasattr("message", "references_id"):
+                        print(
+                            "Ne peut enregistrer la reference: message {} lien(s) {} raison [{}] ".format(
+                                message.identifiant,
+                                ",".join(message.references_id),
+                                str(e),
+                            )
+                        )
 
     def load_links(self):
         """
@@ -225,14 +251,33 @@ class Processor:
                 try:
                     link.save()
                     link.links.add(
-                        Message.objects.get(identifiant=link.message_id)
+                        Message.objects.get(identifier=link.message_id)
                     )
                     link.save()
                 except IntegrityError:
                     link.links.add(
-                        Message.objects.get(identifiant=link.message_id)
+                        Message.objects.get(identifier=link.message_id)
                     )
                     link.save()
+
+    def set_channel_id_messages(self):
+        """
+        set all max/min id msg value for all channels
+        :return: no
+        """
+        if len(self.object_channels) == 0:
+            raise Exception("Channels are not loaded !")
+
+        for channel in self.object_channels:
+            max_id = Message.objects.filter(channel=channel).aggregate(
+                Max("identifier")
+            )["identifier__max"]
+            min_id = Message.objects.filter(channel=channel).aggregate(
+                Min("identifier")
+            )["identifier__min"]
+            channel.last_id_message = max_id
+            channel.first_id_message = min_id
+            channel.save()
 
     def trunc_all(self):
         """ trunc all model tables in current api """

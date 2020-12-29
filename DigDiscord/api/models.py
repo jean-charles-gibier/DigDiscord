@@ -1,14 +1,22 @@
 from django.db import models
 
+# import pprint
+
+
 # from django.db.models.signals import pre_init, post_init, class_prepared
 # from django.dispatch import receiver
-# import pprint
 
 
 class Channel(models.Model):
     identifier = models.CharField(max_length=45, primary_key=True)
     name = models.CharField(max_length=200, blank=True, null=True)
     topic = models.CharField(max_length=300, blank=True, null=True)
+    first_id_message = models.CharField(
+        max_length=45, blank=True, null=True, default="0"
+    )
+    last_id_message = models.CharField(
+        max_length=45, blank=True, null=True, default="0"
+    )
     server = models.ForeignKey(
         "Server", on_delete=models.CASCADE, null=True, blank=True
     )
@@ -44,8 +52,8 @@ class Link(models.Model):
 
 
 class Message(models.Model):
-    identifiant = models.CharField(max_length=45, primary_key=True)
-    mentions = models.ManyToManyField("self", related_name="mentions")
+    identifier = models.CharField(max_length=45, primary_key=True)
+    references = models.ManyToManyField("self", related_name="references")
     content = models.TextField(blank=True, null=True)
     date = models.DateField(blank=False, null=False)
     user = models.ForeignKey(
@@ -63,6 +71,9 @@ class Message(models.Model):
         :param args:
         :param kwargs: contains embeded parameters
         """
+        if "references_id" in kwargs:
+            self.references_id = kwargs["references_id"]
+            del kwargs["references_id"]
         if "author_id" in kwargs:
             self.author_id = kwargs["author_id"]
             del kwargs["author_id"]
@@ -84,7 +95,7 @@ class ModelReference(models.Model):
 
 class Server(models.Model):
     name = models.CharField(max_length=200, blank=True, null=True)
-    identifiant = models.CharField(max_length=45, primary_key=True)
+    identifier = models.CharField(max_length=45, primary_key=True)
 
     class Meta:
         verbose_name = "Server"
@@ -93,8 +104,7 @@ class Server(models.Model):
 
 class User(models.Model):
     name = models.CharField(max_length=200, blank=True, null=True)
-    identifiant = models.CharField(max_length=45, primary_key=True)
-    #    messages = models.ManyToManyField(Message, related_name="messages")
+    identifier = models.CharField(max_length=45, primary_key=True)
 
     class Meta:
         verbose_name = "User"

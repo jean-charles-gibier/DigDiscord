@@ -66,8 +66,10 @@ class Builder:
         class_name = f"api.core.factory.{class_type.__name__}Builder"
         func = getattr(eval(class_name), "factory_method")
         raw_objects = json.loads(json_content)
+
         if type(raw_objects) is list:
             list_objects = [func(**o, **kwargs) for o in raw_objects]
         else:
             list_objects = [func(**raw_objects, **kwargs)]
+
         return list_objects

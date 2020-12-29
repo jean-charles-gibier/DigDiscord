@@ -65,7 +65,7 @@ class LinkBuilder(Factory):
         translation = {
             "url": "link_content",
             "url_md5": "link_md5",
-            "identifiant": "message_id",
+            "identifier": "message_id",
         }
         translated_args = cls.translate_kwargs(
             cls, translation=translation, args=kwargs
@@ -83,12 +83,13 @@ class MessageBuilder(Factory):
     def factory_method(cls, **kwargs) -> Message:
 
         translation = {
-            "identifiant": "identifiant",
+            "identifier": "identifier",
             "object_user": "user",
             "object_channel": "channel",
             "date": "date",
             "content": "content",
             "author_id": "author_id",
+            "references_id": "references_id",
         }
         translated_args = cls.translate_kwargs(
             cls, translation=translation, args=kwargs
@@ -118,7 +119,7 @@ class ServerBuilder(Factory):
         id json / id models
         """
 
-        translation = {"id": "identifiant", "name": "name"}
+        translation = {"id": "identifier", "name": "name"}
         translated_args = cls.translate_kwargs(
             cls, translation=translation, args=kwargs
         )
@@ -133,7 +134,7 @@ class UserBuilder(Factory):
     @classmethod
     def factory_method(cls, **kwargs) -> User:
         translation = {
-            "author_id": "identifiant",
+            "author_id": "identifier",
             "author": "name",
             "object_messages": "messages",
         }
