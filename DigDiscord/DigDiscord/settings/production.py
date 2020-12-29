@@ -12,7 +12,7 @@ DATABASES = {
         "HOST": os.environ.get('PRODUCTION_BD_HOST'),
         "PORT": os.environ.get('PRODUCTION_BD_PORT'),
         "OPTIONS": {
-            # Tell MySQLdb to connect with 'utf8mb4' character set
+	    "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
             "charset": "utf8mb4",
         },
         # Tell Django to build the test database with the 'utf8mb4' character set

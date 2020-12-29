@@ -45,6 +45,7 @@ class Processor:
         data = json.load(
             open(
                 self.channels_path,
+#                'r', encoding='utf-8'
             )
         )
         return [chan["id"] for chan in data]
@@ -111,6 +112,7 @@ class Processor:
         :return:
         """
         # fetch our results on local db
+        print(self.channels_path)
         data = (
             open(
                 self.channels_path,

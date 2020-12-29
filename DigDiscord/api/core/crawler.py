@@ -178,10 +178,10 @@ class Crawler:
                 self._store_channels()
 
         except AttributeError as err:
-            print("Error: {0}".format(err))
+            print("Error channel attribute : {0}".format(err))
 
         except Exception:
-            print("Unexpected error:", sys.exc_info()[0])
+            print("Unexpected error channel :", sys.exc_info()[0])
 
         return self._channel_list
 
