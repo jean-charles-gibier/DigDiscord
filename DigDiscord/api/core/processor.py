@@ -34,6 +34,7 @@ class Processor:
         self.guild_name = "server_{}.json".format(self.guild_id)
         self.guild_path = os.path.join(self.local_path, self.guild_name)
 
+        self.object_channels = []
         self.object_server = None
 
     def get_channel_list(self, limit):
@@ -266,7 +267,7 @@ class Processor:
         :return: no
         """
         if len(self.object_channels) == 0:
-            raise Exception("Channels are not loaded !")
+            self.load_channels()
 
         for channel in self.object_channels:
             max_id = Message.objects.filter(channel=channel).aggregate(
@@ -275,8 +276,8 @@ class Processor:
             min_id = Message.objects.filter(channel=channel).aggregate(
                 Min("identifier")
             )["identifier__min"]
-            channel.last_id_message = max_id
-            channel.first_id_message = min_id
+            channel.last_id_message = max_id or 0
+            channel.first_id_message = min_id or 0
             channel.save()
 
     def trunc_all(self):

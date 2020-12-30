@@ -163,9 +163,9 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-)
+#STATICFILES_DIRS = (
+#    os.path.join(BASE_DIR, "dumps"),
+#)
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'dumps')
 print("STATIC_ROOT =====> {}".format(STATIC_ROOT))

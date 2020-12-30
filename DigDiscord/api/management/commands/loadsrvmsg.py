@@ -19,22 +19,26 @@ class Command(BaseCommand):
         parser.add_argument("--id_channels", nargs="*", type=int)
         parser.add_argument("--trunc_all", action="store_true")
         parser.add_argument("--all_channels", action="store_true")
+        parser.add_argument("--set_last_first_id", action="store_true")
 
     def handle(self, *args, **options):
         guild_id = Configuration.findenv("GUILD_ID", "NONE")
         processor = Processor(guild_id)
 
         trunc_all = options["trunc_all"]
+        set_last_first = options["set_last_first_id"]
 
         if trunc_all:
             processor.trunc_all()
 
-        processor.load_server()
-        processor.load_channels()
-        processor.load_users()
-        processor.load_messages()
-        processor.load_links()
-        processor.load_references()
+        if not set_last_first:
+            processor.load_server()
+            processor.load_channels()
+            processor.load_users()
+            processor.load_messages()
+            processor.load_links()
+            processor.load_references()
+
         processor.set_channel_id_messages()
 
         self.stdout.write(
