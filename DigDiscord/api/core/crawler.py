@@ -94,20 +94,16 @@ class Crawler:
         self._channel_id = channel_id
         self._msg_list = []
 
-        # complete_type = None
-        # payload_way = "before"
-        # payload_value = non indiqué
-
-        # complete_type = newer => payload after = last message_id
-        # payload_way = "after"
-        # payload_value = last_msg
-
-        # complete_type = older => payload before = first message_id
-        # payload_way = "before"
-        # payload_value = first_msg
-
-        # first_msg = ContentAcessor.get_first_message_id()
-        # last_msg = ContentAcessor.get_last_message_id()
+        if complete_type == "older":
+            payload["before"] = (
+                ContentAcessor.get_first_message_id(channel_id) or 0
+            )
+            print("Complete older => payload '{}'".format(payload["before"]))
+        if complete_type == "newer":
+            payload["after"] = (
+                ContentAcessor.get_last_message_id(channel_id) or 0
+            )
+            print("Complete newer => payload '{}'".format(payload["after"]))
 
         while True:
             url_end_point = self.message_end_point.format(channel_id)
@@ -121,7 +117,10 @@ class Crawler:
 
             data.reverse()
             self._msg_list = Scrapper.message_filter(data) + self._msg_list
-            payload["before"] = data[0]["id"]
+            if complete_type == "newer":
+                payload["after"] = data[-1]["id"]
+            else:
+                payload["before"] = data[0]["id"]
 
             msg_counter = msg_counter + nb_read
 

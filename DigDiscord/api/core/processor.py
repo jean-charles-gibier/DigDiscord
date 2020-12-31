@@ -1,6 +1,7 @@
 import json
 import logging as lg
 import os.path
+import pprint
 import sys
 
 from api.core.base_utils import Builder, Configuration
@@ -46,7 +47,6 @@ class Processor:
         data = json.load(
             open(
                 self.channels_path,
-#                'r', encoding='utf-8'
             )
         )
         return [chan["id"] for chan in data]
@@ -174,7 +174,7 @@ class Processor:
                     channel.identifier, len(message_list)
                 )
             )
-            # bulkeriser
+            # A bulkeriser
             for message in message_list:
                 try:
                     message.save()
@@ -183,6 +183,7 @@ class Processor:
                         identifier=message.author_id
                     )
                     message.save()
+
                 except Exception as e:
                     #  (api.models.DoesNotExist, ValueError):
                     print(
@@ -212,12 +213,14 @@ class Processor:
 
             for message in message_list:
                 try:
-                    message.save()
+                    to_modify = Message.objects.get(
+                        identifier=message.identifier
+                    )
                     for m in message.references_id:
-                        message.references.add(
+                        to_modify.references.add(
                             Message.objects.get(identifier=m)
                         )
-                    message.save()
+                    to_modify.save()
 
                 except Exception as e:
                     if hasattr("message", "references_id"):
@@ -266,10 +269,13 @@ class Processor:
         set all max/min id msg value for all channels
         :return: no
         """
-        if len(self.object_channels) == 0:
-            self.load_channels()
+        list_channels = Channel.objects.all()
+        if len(list_channels) == 0:
+            print("Warn : Pas de channel à mettre à jour !")
+            return
 
-        for channel in self.object_channels:
+        for channel in list_channels:
+
             max_id = Message.objects.filter(channel=channel).aggregate(
                 Max("identifier")
             )["identifier__max"]
