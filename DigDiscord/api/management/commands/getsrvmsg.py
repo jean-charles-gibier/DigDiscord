@@ -5,8 +5,6 @@ identifié(s) par son/ses id(s).
 ou  du server
 ou channels d'un serveur
 """
-import sys
-
 from api.core.base_utils import Configuration
 
 # from api.core.crawler import Crawler
@@ -43,11 +41,6 @@ class Command(BaseCommand):
         # all_channels = true si liste de channels vide
         if options["id_channels"] is None:
             all_channels = True
-
-        # complete_newer = true => on complete le référentiel
-        # avec les message + récents que le dernier message enregistré
-        # complete = older  on complete le référentiel
-        # a avec les message + anciens que le premier message enregistré
 
         # si all_channels is True => on récupère la liste des channels du serveur
         channels = (
