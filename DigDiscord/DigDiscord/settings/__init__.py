@@ -26,7 +26,6 @@ SECRET_KEY = "9!m-#xwngw0!_-3m#^mlx$$n$xyje643pz@%2&($9+jv%))2+i"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-
 ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 # Application definition
@@ -100,9 +99,9 @@ DATABASES = {
         "TEST": {
             "CHARSET": "utf8mb4",
             "COLLATION": "utf8mb4_unicode_ci",
-             "USER": "rout",
+            "USER": "rout",
             "NAME": "digdiscord_test",
-#           "PASSWORD": "MOTDEPASSE1234",
+            #           "PASSWORD": "MOTDEPASSE1234",
         },
     }
 }
@@ -130,6 +129,7 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     "DEFAULT_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
     ],
     "DEFAULT_PARSER_CLASSES": [
         "rest_framework.parsers.JSONParser",
@@ -163,10 +163,9 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-#STATICFILES_DIRS = (
+# STATICFILES_DIRS = (
 #    os.path.join(BASE_DIR, "dumps"),
-#)
+# )
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'dumps')
-print("STATIC_ROOT =====> {}".format(STATIC_ROOT))
-
+STATIC_ROOT = os.path.join(BASE_DIR, "dumps")
+# print("STATIC_ROOT =====> {}".format(STATIC_ROOT))

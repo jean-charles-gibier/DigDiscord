@@ -7,7 +7,10 @@ from api.serializers import (
     ServerSerializer,
     UserSerializer,
 )
+from django.db.models import Count
 from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 
 class ChannelViewSet(viewsets.ModelViewSet):
@@ -38,3 +41,9 @@ class ServerViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class UserCounter(APIView):
+    def get(self, request, format=None):
+        content = {"UserCount": User.objects.aggregate(count=Count("pk"))}
+        return Response(content)
