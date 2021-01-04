@@ -57,7 +57,11 @@ class Message(models.Model):
     content = models.TextField(blank=True, null=True)
     date = models.DateField(blank=False, null=False)
     user = models.ForeignKey(
-        "User", on_delete=models.SET_NULL, null=True, blank=True
+        "User",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="messages",
     )
     channel = models.ForeignKey(
         "Channel", on_delete=models.SET_NULL, null=True, blank=True

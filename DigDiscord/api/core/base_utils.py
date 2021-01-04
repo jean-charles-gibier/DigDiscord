@@ -49,7 +49,6 @@ class Builder:
     def __init__(self):
         self.server = None
         self.channels = None
-        pass
 
     @classmethod
     def get_from_json(

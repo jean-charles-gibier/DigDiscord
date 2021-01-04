@@ -1,9 +1,12 @@
+import pprint
+
 from api.models import Channel, Link, Message, ModelReference, Server, User
 from api.serializers import (
     ChannelSerializer,
     LinkSerializer,
     MessageSerializer,
     ModelReferenceSerializer,
+    ScoreUserGeneralMessageSerializer,
     ServerSerializer,
     UserSerializer,
 )
@@ -43,7 +46,41 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 
-class UserCounter(APIView):
-    def get(self, request, format=None):
-        content = {"UserCount": User.objects.aggregate(count=Count("pk"))}
-        return Response(content)
+class GenericCounter(APIView):
+    """perform an object count on DB
+    (over an eval if the type-name passed by url is allowed)"""
+
+    def get(self, request, objectname=None, format=None):
+        allowed_objects = [
+            *set(
+                [
+                    "Channel",
+                    "Link",
+                    "Message",
+                    "ModelReference",
+                    "Server",
+                    "User",
+                ]
+            )
+        ]
+        if objectname is not None:
+            uc_object = objectname[0].upper() + objectname[1:]
+        if uc_object in allowed_objects:
+            key_object = uc_object + "Count"
+            content = {
+                key_object: eval(uc_object).objects.aggregate(
+                    count=Count("pk")
+                )
+            }
+            return Response(content)
+
+
+class ScoreUserGeneralMessage(viewsets.ModelViewSet):
+    """ User list by nb of contribution on all forums """
+
+    queryset = (
+        Message.objects.values("user_id", "user__name")
+        .annotate(count_messages=Count("user_id"))
+        .order_by("-count_messages")
+    )
+    serializer_class = ScoreUserGeneralMessageSerializer

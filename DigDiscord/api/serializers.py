@@ -1,5 +1,7 @@
 # api/serializers.py
 
+import pprint
+
 from api.models import Channel, Link, Message, ModelReference, Server, User
 from rest_framework import serializers
 
@@ -45,3 +47,26 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ("name", "identifier")
+
+
+class ScoreUserGeneralMessageSerializer(
+    serializers.HyperlinkedModelSerializer
+):
+    """ serializer for user/message jointure """
+
+    count_messages = serializers.SerializerMethodField()
+    identifier = serializers.SerializerMethodField()
+    user_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ["user_name", "identifier", "count_messages"]
+
+    def get_count_messages(self, obj):
+        return obj["count_messages"]
+
+    def get_identifier(self, obj):
+        return obj["user_id"]
+
+    def get_user_name(self, obj):
+        return obj["user__name"]
