@@ -175,10 +175,15 @@ class ScoreUserGeneralMessage(viewsets.ReadOnlyModelViewSet):
 class LinksFrequency(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = (
-        Link.objects.values("link_content")
-        .annotate(count_links=Count("link_md5"), link_md5=Max("link_md5"))
+        Link.objects.values("link_md5")
+        .annotate(
+            count_links=Count("link_md5"),
+            link_content=Max("link_content"),
+            links=Max("links"),
+        )
         .order_by("-count_links")
     )
+    print("=> {}".format(queryset.query))
     serializer_class = LinksFrequencySerializer
 
 
