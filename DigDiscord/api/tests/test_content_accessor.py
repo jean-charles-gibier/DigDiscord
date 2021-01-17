@@ -11,12 +11,12 @@ class LoadSrvMsg(TransactionTestCase):
         """ fixtures """
         self.msg01 = Message.objects.create(
             identifier="1000000000001",
-            date="2017-08-19",
+            date="2017-08-19T08:48:09.118000+00:00",
             content="bla bla bla 01",
         )
         self.msg02 = Message.objects.create(
             identifier="1000000000002",
-            date="2017-08-19",
+            date="2017-08-19T08:48:09.118000+00:00",
             content="bla bla bla 02",
         )
 

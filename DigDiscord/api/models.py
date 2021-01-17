@@ -2,7 +2,6 @@ from django.db import models
 
 # import pprint
 
-
 # from django.db.models.signals import pre_init, post_init, class_prepared
 # from django.dispatch import receiver
 
@@ -55,7 +54,7 @@ class Message(models.Model):
     identifier = models.CharField(max_length=45, primary_key=True)
     references = models.ManyToManyField("self", related_name="references")
     content = models.TextField(blank=True, null=True)
-    date = models.DateField(blank=False, null=False)
+    date = models.DateTimeField(blank=False, null=False)
     user = models.ForeignKey(
         "User",
         on_delete=models.SET_NULL,
