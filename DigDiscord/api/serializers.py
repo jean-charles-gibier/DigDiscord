@@ -71,6 +71,7 @@ class ScoreUserGeneralMessageSerializer(
         ]
 
     def get_channel_id(self, obj):
+        #        pprint.pprint(obj)
         return obj["channel_id"]
 
     def get_count_messages(self, obj):

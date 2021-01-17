@@ -1,6 +1,9 @@
+import datetime
 from abc import ABC, abstractmethod
 
+import pytz
 from api.models import Channel, Link, Message, ModelReference, Server, User
+from django.forms.fields import DateTimeField
 
 # import pprint
 
@@ -77,6 +80,7 @@ class MessageBuilder(Factory):
     """
     transform API response (get messages) to object Message  list
     id json / id models
+    work around date must be 'timezoned'
     """
 
     @classmethod
@@ -94,6 +98,10 @@ class MessageBuilder(Factory):
         translated_args = cls.translate_kwargs(
             cls, translation=translation, args=kwargs
         )
+        date = DateTimeField().clean(translated_args["date"])
+        tz = pytz.timezone("Europe/Paris")
+        date.replace(tzinfo=tz)
+        translated_args["date"] = date
         return Message(**translated_args)
 
 

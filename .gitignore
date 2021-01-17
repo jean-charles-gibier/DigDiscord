@@ -13,3 +13,6 @@ DigDiscord/dumps/*
 DigDiscord/DigDiscord/__pycache__/*
 DigDiscord/out.txt
 DigDiscord/__pycache__/*
+DigDiscord/.coverage
+DigDiscord/htmlcov/
+set_env.sh
