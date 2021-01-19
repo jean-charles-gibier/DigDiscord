@@ -1,6 +1,7 @@
 from api.views import (
     ChannelsFrequency,
     ChannelViewSet,
+    DistributionUserMessage,
     GenericCounter,
     LinksFrequency,
     LinkViewSet,
@@ -25,8 +26,13 @@ router.register(r"user", UserViewSet)
 router.register(
     r"score", ScoreUserGeneralMessage, basename="scoreusergeneralmessage"
 )
-router.register(r"links", LinksFrequency, basename="linksfrequency")
+router.register(
+    r"distribution",
+    DistributionUserMessage,
+    basename="distributionusermessage",
+)
 
+router.register(r"links", LinksFrequency, basename="linksfrequency")
 router.register(r"channels", ChannelsFrequency, basename="channelsfrequency")
 
 urlpatterns = [

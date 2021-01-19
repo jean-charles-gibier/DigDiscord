@@ -4,6 +4,7 @@ from api.models import Channel, Link, Message, ModelReference, Server, User
 from api.serializers import (
     ChannelSerializer,
     ChannelsFrequencySerializer,
+    DistributionUserMessageSerializer,
     LinkSerializer,
     LinksFrequencySerializer,
     MessageSerializer,
@@ -84,7 +85,16 @@ class GenericCounter(APIView):
 
 
 class ScoreUserGeneralMessage(viewsets.ReadOnlyModelViewSet):
-    """ User list by nb of contribution of all users on all forums """
+    """
+    User list by nb of contributions of all users on all forums
+    ex :
+    scores for all user on all channels:
+    GET /api/score/
+    all channels scores for one given user:
+    GET /api/score/334428165546049536/by_user/
+    all users scores for one given channel:
+    GET /api/score/347061157351260162/by_channel/
+    """
 
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = (
@@ -127,7 +137,6 @@ class ScoreUserGeneralMessage(viewsets.ReadOnlyModelViewSet):
                 .order_by("-count_messages")
             )
             obj = get_list_or_404(queryset)
-
             # May raise a permission denied
             self.check_object_permissions(self.request, obj)
 
@@ -183,7 +192,6 @@ class LinksFrequency(viewsets.ReadOnlyModelViewSet):
         )
         .order_by("-count_links")
     )
-    print("=> {}".format(queryset.query))
     serializer_class = LinksFrequencySerializer
 
 
@@ -195,3 +203,60 @@ class ChannelsFrequency(viewsets.ReadOnlyModelViewSet):
         .order_by("-count_messages")
     )
     serializer_class = ChannelsFrequencySerializer
+
+
+class DistributionUserMessage(viewsets.ReadOnlyModelViewSet):
+    """id de base : id_user
+    declinaisons :
+    - by_hour
+    - by_weekday
+    - by_month
+    examples :
+    """
+
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    queryset = Message.objects.raw(
+        "SELECT identifier, HOUR(date) as aggregate_name, count(identifier) "
+        "as count FROM `api_message`  group by HOUR(date) order by 2"
+    )
+    print("all => {}".format(queryset.query))
+    serializer_class = DistributionUserMessageSerializer
+
+    def get_object(self):
+        pass
+
+    @action(
+        detail=True,
+        methods=["GET"],
+        url_path="by_user(?:/(?P<time_slice>[a-z_]*))?",
+    )
+    def by_user(self, request, time_slice=None, pk=None):
+        # Perform the lookup filtering. all message by_hour
+        # time_slice can be 'by_hour' 'by_weekday' 'by_month'
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+
+        assert lookup_url_kwarg in self.kwargs, (
+            "Expected view %s to be called with a URL keyword argument "
+            'named "%s". Fix your URL conf, or set the `.lookup_field` '
+            "attribute on the view correctly."
+            % (self.__class__.__name__, lookup_url_kwarg)
+        )
+
+        try:
+            user_id = self.kwargs[lookup_url_kwarg]
+            queryset = Message.objects.raw(
+                "SELECT identifier, HOUR(date) as aggregate_name, count(identifier) as count "
+                "FROM `api_message` "
+                "where user_id = {} group by HOUR(date) order by 2".format(
+                    user_id
+                )
+            )
+
+            # May raise a permission denied
+            self.check_object_permissions(self.request, queryset)
+
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
+
+        except Channel.DoesNotExist:
+            raise Http404

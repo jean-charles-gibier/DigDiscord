@@ -127,3 +127,27 @@ class ChannelsFrequencySerializer(serializers.HyperlinkedModelSerializer):
 
     def get_channel_name(self, obj):
         return obj["name"]
+
+
+class DistributionUserMessageSerializer(
+    serializers.HyperlinkedModelSerializer
+):
+    """ serializer for message aggregate distributions """
+
+    identifier = serializers.SerializerMethodField()
+    # hour day month etc.
+    aggregate_name = serializers.SerializerMethodField()
+    count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Message
+        fields = ["identifier", "aggregate_name", "count"]
+
+    def get_identifier(self, obj):
+        return obj.identifier
+
+    def get_count(self, obj):
+        return obj.count
+
+    def get_aggregate_name(self, obj):
+        return obj.aggregate_name
