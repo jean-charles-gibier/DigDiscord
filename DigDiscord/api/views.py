@@ -1,3 +1,8 @@
+"""
+digdiscord views stats and so on
+take care that there is a notable adherence to mysql grammar
+caused by some raw sql commands
+"""
 import pprint
 
 from api.models import Channel, Link, Message, ModelReference, Server, User
@@ -231,8 +236,12 @@ class DistributionUserMessage(viewsets.ReadOnlyModelViewSet):
         url_path="by_user(?:/(?P<time_slice>[a-z_]*))?",
     )
     def by_user(self, request, time_slice=None, pk=None):
-        # Perform the lookup filtering. all message by_hour
-        # time_slice can be 'by_hour' 'by_weekday' 'by_month'
+        """
+        Perform the lookup filtering. all message by_hour
+        time_slice can be 'by_hour' 'by_weekday' 'by_month'
+        ex :
+        GET /api/distribution/371581173916499969/by_user/by_weekday/
+        """
         lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
 
         assert lookup_url_kwarg in self.kwargs, (
@@ -242,15 +251,29 @@ class DistributionUserMessage(viewsets.ReadOnlyModelViewSet):
             % (self.__class__.__name__, lookup_url_kwarg)
         )
 
+        if time_slice is None or time_slice not in [
+            "by_hour",
+            "by_weekday",
+            "by_month",
+        ]:
+            time_slice = "by_hour"
+
+        sql_group = {
+            "by_hour": "HOUR",
+            "by_weekday": "DAYOFWEEK",
+            "by_month": "MONTH",
+        }[time_slice]
+
         try:
             user_id = self.kwargs[lookup_url_kwarg]
             queryset = Message.objects.raw(
-                "SELECT identifier, HOUR(date) as aggregate_name, count(identifier) as count "
+                "SELECT identifier, {}(date) as aggregate_name, count(identifier) as count "
                 "FROM `api_message` "
-                "where user_id = {} group by HOUR(date) order by 2".format(
-                    user_id
+                "where user_id = {} group by {}(date) order by 2".format(
+                    sql_group, user_id, sql_group
                 )
             )
+            print(" query :[{}]".format(queryset.query))
 
             # May raise a permission denied
             self.check_object_permissions(self.request, queryset)
