@@ -127,3 +127,57 @@ class ChannelsFrequencySerializer(serializers.HyperlinkedModelSerializer):
 
     def get_channel_name(self, obj):
         return obj["name"]
+
+
+class DistributionUserMessageSerializer(
+    serializers.HyperlinkedModelSerializer
+):
+    """ serializer for message aggregate distributions """
+
+    identifier = serializers.SerializerMethodField()
+    # hour day month etc.
+    aggregate_name = serializers.SerializerMethodField()
+    count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Message
+        fields = ["identifier", "aggregate_name", "count"]
+
+    def get_identifier(self, obj):
+        return obj.identifier
+
+    def get_count(self, obj):
+        return obj.count
+
+    def get_aggregate_name(self, obj):
+        return obj.aggregate_name
+
+
+class WordBattleSerializer(serializers.HyperlinkedModelSerializer):
+
+    """serializer for word battle
+    TODO : use
+    from django.template.defaultfilters import slugify
+     slugify(u"test")
+    """
+
+    word_1 = serializers.SerializerMethodField()
+    result_1 = serializers.SerializerMethodField()
+    word_2 = serializers.SerializerMethodField()
+    result_2 = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Message
+        fields = ["word_1", "result_1", "word_2", "result_2"]
+
+    def get_word_1(self, obj):
+        return obj.word_1
+
+    def get_result_1(self, obj):
+        return obj.result_1
+
+    def get_word_2(self, obj):
+        return obj.word_2
+
+    def get_result_2(self, obj):
+        return obj.result_2

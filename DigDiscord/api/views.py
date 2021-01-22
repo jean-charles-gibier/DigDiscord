@@ -1,9 +1,15 @@
+"""
+digdiscord views stats and so on
+take care that there is a notable adherence to mysql grammar
+caused by some raw sql commands
+"""
 import pprint
 
 from api.models import Channel, Link, Message, ModelReference, Server, User
 from api.serializers import (
     ChannelSerializer,
     ChannelsFrequencySerializer,
+    DistributionUserMessageSerializer,
     LinkSerializer,
     LinksFrequencySerializer,
     MessageSerializer,
@@ -11,6 +17,7 @@ from api.serializers import (
     ScoreUserGeneralMessageSerializer,
     ServerSerializer,
     UserSerializer,
+    WordBattleSerializer,
 )
 from django.db.models import Count, Max
 from django.http import Http404
@@ -71,8 +78,12 @@ class GenericCounter(APIView):
         allowed_objects = [
             *{"Channel", "Link", "Message", "ModelReference", "Server", "User"}
         ]
-        if objectname is not None:
+
+        if objectname is None:
+            uc_object = allowed_objects[0]
+        else:
             uc_object = objectname[0].upper() + objectname[1:]
+
         if uc_object in allowed_objects:
             key_object = uc_object + "Count"
             content = {
@@ -84,7 +95,16 @@ class GenericCounter(APIView):
 
 
 class ScoreUserGeneralMessage(viewsets.ReadOnlyModelViewSet):
-    """ User list by nb of contribution of all users on all forums """
+    """
+    User list by nb of contributions of all users on all forums
+    ex :
+    scores for all user on all channels:
+    GET /api/score/
+    all channels scores for one given user:
+    GET /api/score/334428165546049536/by_user/
+    all users scores for one given channel:
+    GET /api/score/347061157351260162/by_channel/
+    """
 
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = (
@@ -127,7 +147,6 @@ class ScoreUserGeneralMessage(viewsets.ReadOnlyModelViewSet):
                 .order_by("-count_messages")
             )
             obj = get_list_or_404(queryset)
-
             # May raise a permission denied
             self.check_object_permissions(self.request, obj)
 
@@ -183,7 +202,6 @@ class LinksFrequency(viewsets.ReadOnlyModelViewSet):
         )
         .order_by("-count_links")
     )
-    print("=> {}".format(queryset.query))
     serializer_class = LinksFrequencySerializer
 
 
@@ -195,3 +213,176 @@ class ChannelsFrequency(viewsets.ReadOnlyModelViewSet):
         .order_by("-count_messages")
     )
     serializer_class = ChannelsFrequencySerializer
+
+
+class DistributionUserMessage(viewsets.ReadOnlyModelViewSet):
+    """id de base : id_user
+    declinaisons :
+    - by_hour
+    - by_weekday
+    - by_month
+    examples :
+    """
+
+    slice_translations = {
+        "by_hour": "HOUR",
+        "by_weekday": "DAYOFWEEK",
+        "by_month": "MONTH",
+    }
+
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    queryset = Message.objects.raw(
+        "SELECT identifier, HOUR(date) as aggregate_name, count(identifier) "
+        "as count FROM `api_message`  group by HOUR(date) order by 2"
+    )
+    # print("all => {}".format(queryset.query))
+    serializer_class = DistributionUserMessageSerializer
+
+    @action(
+        detail=True,
+        methods=["GET"],
+        url_path="by_user(?:/(?P<time_slice>[a-z_]*))?",
+    )
+    def by_user(self, request, time_slice=None, pk=None):
+        """
+        Perform the lookup filtering. all message by_hour
+        time_slice can be 'by_hour' 'by_weekday' 'by_month'
+        ex :
+        GET /api/distribution/371581173916499969/by_user/by_weekday/
+        """
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+
+        assert lookup_url_kwarg in self.kwargs, (
+            "Expected view %s to be called with a URL keyword argument "
+            'named "%s". Fix your URL conf, or set the `.lookup_field` '
+            "attribute on the view correctly."
+            % (self.__class__.__name__, lookup_url_kwarg)
+        )
+
+        if time_slice is None or time_slice not in [
+            "by_hour",
+            "by_weekday",
+            "by_month",
+        ]:
+            time_slice = "by_hour"
+
+        sql_group = self.slice_translations[time_slice]
+
+        try:
+            user_id = self.kwargs[lookup_url_kwarg]
+            queryset = Message.objects.raw(
+                "SELECT identifier, {}(date) as aggregate_name, count(identifier) as count "
+                "FROM `api_message` "
+                "where user_id = {} group by {}(date) order by 2".format(
+                    sql_group, user_id, sql_group
+                )
+            )
+            print(" query :[{}]".format(queryset.query))
+
+            # May raise a permission denied
+            self.check_object_permissions(self.request, queryset)
+
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
+
+        except Channel.DoesNotExist:
+            raise Http404
+
+    # TODO : unifiy by_user and by_channel actions
+    @action(
+        detail=True,
+        methods=["GET"],
+        url_path="by_channel(?:/(?P<time_slice>[a-z_]*))?",
+    )
+    def by_channel(self, request, time_slice=None, pk=None):
+        """
+        Perform the lookup filtering. all message by_hour
+        time_slice can be 'by_hour' 'by_weekday' 'by_month'
+        ex :
+        GET /api/distribution/758607543412457472/by_channel/by_weekday/
+        """
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+
+        assert lookup_url_kwarg in self.kwargs, (
+            "Expected view %s to be called with a URL keyword argument "
+            'named "%s". Fix your URL conf, or set the `.lookup_field` '
+            "attribute on the view correctly."
+            % (self.__class__.__name__, lookup_url_kwarg)
+        )
+
+        if time_slice is None or time_slice not in [
+            "by_hour",
+            "by_weekday",
+            "by_month",
+        ]:
+            time_slice = "by_hour"
+
+        sql_group = self.slice_translations[time_slice]
+
+        try:
+            user_id = self.kwargs[lookup_url_kwarg]
+            queryset = Message.objects.raw(
+                "SELECT identifier, {}(date) as aggregate_name, count(identifier) as count "
+                "FROM `api_message` "
+                "where channel_id = {} group by {}(date) order by 2".format(
+                    sql_group, user_id, sql_group
+                )
+            )
+
+            # May raise a permission denied
+            self.check_object_permissions(self.request, queryset)
+
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
+
+        except Channel.DoesNotExist:
+            raise Http404
+
+
+class WordBattle(viewsets.ReadOnlyModelViewSet):
+    """perform an accurence comparizon between 2 words
+    (or 2 series of words).
+    /api/wordbattle/?word1=react&word2=vue%20JS
+    """
+
+    serializer_class = WordBattleSerializer
+    queryset = Message.objects.raw(
+        "select 'none' AS word_1, 0 AS result_1, 'none' AS word_2, 0 AS result_2"
+    )
+
+    @action(
+        detail=False,
+        methods=["GET"],
+        url_path="(?P<word_1>[ A-Za-z_-]*)/(?P<word_2>[ A-Za-z_-]*)",
+    )
+    def get(self, request, word_1="react", word_2="Vue JS"):
+        """
+        Perform battle of words
+        ex :
+        GET /api/wordbattle/reatc/vueJS/
+        """
+        # TODO de-slugtffy
+        # and protect url entries
+
+        try:
+            queryset = Message.objects.raw(
+                """
+                SELECT
+                0 as identifier,
+                '{}' AS word_1,
+                (SELECT count(*) FROM api_message WHERE MATCH(content) AGAINST ('{}' IN NATURAL LANGUAGE MODE)) AS result_1,
+                '{}' AS word_2,
+                (SELECT count(*) FROM api_message WHERE MATCH(content) AGAINST ('{}' IN NATURAL LANGUAGE MODE)) AS result_2
+                """.format(
+                    word_1, word_1, word_2, word_2
+                )
+            )
+
+            # May raise a permission denied
+            self.check_object_permissions(self.request, queryset)
+
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
+
+        except Message.DoesNotExist:
+            raise Http404
