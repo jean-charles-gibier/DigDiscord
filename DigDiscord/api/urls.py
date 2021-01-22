@@ -10,6 +10,7 @@ from api.views import (
     ScoreUserGeneralMessage,
     ServerViewSet,
     UserViewSet,
+    WordBattle,
 )
 from django.urls import include, path
 from rest_framework import routers
@@ -31,6 +32,8 @@ router.register(
     DistributionUserMessage,
     basename="distributionusermessage",
 )
+
+router.register(r"wordbattle", WordBattle, basename="wordbattle"),
 
 router.register(r"links", LinksFrequency, basename="linksfrequency")
 router.register(r"channels", ChannelsFrequency, basename="channelsfrequency")

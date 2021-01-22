@@ -16,7 +16,7 @@ Provide a model => what are the entities?
 
 Test the nosql technique ? make a poc ?
 technical basis : Api / Django / DRF
-
+z
 Suggested name: DigDiscord
 
 Inspiration project
@@ -35,8 +35,13 @@ python -m pip install mysqlclient
 
 modify settings
 modify charset
+Our DB Model must be updated in this way
+(since Django ORM dos not seem to handle this features) :
 ````
 ALTER TABLE `digdiscord`.`api_channel`
 CHARACTER SET = utf8mb4 ;
 ````
-test
+modify messages index search
+```
+ALTER TABLE api_message ADD FULLTEXT (content);
+```

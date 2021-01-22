@@ -151,3 +151,33 @@ class DistributionUserMessageSerializer(
 
     def get_aggregate_name(self, obj):
         return obj.aggregate_name
+
+
+class WordBattleSerializer(serializers.HyperlinkedModelSerializer):
+
+    """serializer for word battle
+    TODO : use
+    from django.template.defaultfilters import slugify
+     slugify(u"test")
+    """
+
+    word_1 = serializers.SerializerMethodField()
+    result_1 = serializers.SerializerMethodField()
+    word_2 = serializers.SerializerMethodField()
+    result_2 = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Message
+        fields = ["word_1", "result_1", "word_2", "result_2"]
+
+    def get_word_1(self, obj):
+        return obj.word_1
+
+    def get_result_1(self, obj):
+        return obj.result_1
+
+    def get_word_2(self, obj):
+        return obj.word_2
+
+    def get_result_2(self, obj):
+        return obj.result_2

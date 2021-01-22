@@ -16,3 +16,4 @@ DigDiscord/__pycache__/*
 DigDiscord/.coverage
 DigDiscord/htmlcov/
 set_env.sh
+api/core/factory.pysvg
