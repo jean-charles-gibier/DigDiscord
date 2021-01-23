@@ -339,7 +339,7 @@ class DistributionUserMessage(viewsets.ReadOnlyModelViewSet):
 
 
 class WordBattle(viewsets.ReadOnlyModelViewSet):
-    """perform an accurence comparizon between 2 words
+    """perform a score comparizon between 2 words
     or 2 series of words separed by underscores.
      (Underscores will be interpreted as blank space).
     you must pass this two arguments for instance :
@@ -360,10 +360,14 @@ class WordBattle(viewsets.ReadOnlyModelViewSet):
         """
         Perform battle of words
         ex :
-        GET /api/wordbattle/react/vueJS/
+        GET /api/wordbattle/react/vue_JS/
+        (Underscores will be interpreted as blank spaces).
         """
-        # TODO de-slugtffy
-        # and protect url entries
+
+        #  de-slugtffy de-underscores and protect url entries
+        word_1 = word_1.replace("_", " ")
+        word_2 = word_2.replace("_", " ")
+
         try:
             queryset = Message.objects.raw(
                 """
