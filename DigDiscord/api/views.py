@@ -339,7 +339,7 @@ class DistributionUserMessage(viewsets.ReadOnlyModelViewSet):
 
 
 class WordBattle(viewsets.ReadOnlyModelViewSet):
-    """perform an accurence comparizon between 2 words
+    """perform a score comparizon between 2 words
     or 2 series of words separed by underscores.
      (Underscores will be interpreted as blank space).
     you must pass this two arguments for instance :
