@@ -161,6 +161,7 @@ class WordBattleSerializer(serializers.HyperlinkedModelSerializer):
      slugify(u"test")
     """
 
+    identifier = serializers.SerializerMethodField()
     word_1 = serializers.SerializerMethodField()
     result_1 = serializers.SerializerMethodField()
     word_2 = serializers.SerializerMethodField()
@@ -168,7 +169,10 @@ class WordBattleSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Message
-        fields = ["word_1", "result_1", "word_2", "result_2"]
+        fields = ["identifier", "word_1", "result_1", "word_2", "result_2"]
+
+    def get_identifier(self, obj):
+        return obj.identifier
 
     def get_word_1(self, obj):
         return obj.word_1
