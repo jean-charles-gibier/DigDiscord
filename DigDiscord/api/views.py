@@ -3,7 +3,6 @@ digdiscord views stats and so on
 take care that there is a notable adherence to mysql grammar
 caused by some raw sql commands
 """
-import pprint
 
 from api.models import Channel, Link, Message, ModelReference, Server, User
 from api.serializers import (
@@ -340,14 +339,16 @@ class DistributionUserMessage(viewsets.ReadOnlyModelViewSet):
 
 
 class WordBattle(viewsets.ReadOnlyModelViewSet):
-    """perform an accurence comparizon between 2 words
-    (or 2 series of words).
-    /api/wordbattle/?word1=react&word2=vue%20JS
+    """perform a score comparizon between 2 words
+    or 2 series of words separed by underscores.
+     (Underscores will be interpreted as blank space).
+    you must pass this two arguments for instance :
+      GET /api/wordbattle/react/vueJS/
     """
 
     serializer_class = WordBattleSerializer
     queryset = Message.objects.raw(
-        "select 'none' AS word_1, 0 AS result_1, 'none' AS word_2, 0 AS result_2"
+        "select 0 as identifier, 'none' AS word_1, 0 AS result_1, 'none' AS word_2, 0 AS result_2"
     )
 
     @action(
@@ -359,11 +360,10 @@ class WordBattle(viewsets.ReadOnlyModelViewSet):
         """
         Perform battle of words
         ex :
-        GET /api/wordbattle/reatc/vueJS/
+        GET /api/wordbattle/react/vueJS/
         """
         # TODO de-slugtffy
         # and protect url entries
-
         try:
             queryset = Message.objects.raw(
                 """
