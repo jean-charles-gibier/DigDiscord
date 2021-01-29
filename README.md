@@ -2,21 +2,21 @@
 
 [![Django CI](https://github.com/jean-charles-gibier/DigDiscord/workflows/Django%20CI/badge.svg)](https://github.com/jean-charles-gibier/DigDiscord/actions)
 
-Discord Forum Analysis Project X
+Discord Forum Analysis (Final Project of DA Python V1)
 
-Purpose: "To crawl" and analyze the content of forums channels (and  all textual resources) from a discord server
+Purpose: Kind of a P.O.C. : "To crawl" and analyze the content of forums channels (and  all textual resources) from a discord server
 
 Collect: Comments / Keywords / Urls / Code / Snippets / users / dates / images
 
-Making it a "data cube" and present the results through an API that can be used on a web front => DRF
+Making it a "data cube" and present the results through an API DRF that can be used on a frontend based on Vue JS.
+Frontend will consume our data and presents it thru axios and some Vue charts component.
 
-TO DO
+keys concept :
 
-Provide a model => what are the entities?
+Simple model entities
 
-Test the nosql technique ? make a poc ?
-technical basis : Api / Django / DRF
-z
+technical basis : Api / Django / DRF + Vue JS / Bootstrap
+
 Suggested name: DigDiscord
 
 Inspiration project
