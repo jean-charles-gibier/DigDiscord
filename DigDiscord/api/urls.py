@@ -3,6 +3,7 @@ from api.views import (
     ChannelViewSet,
     DistributionUserMessage,
     GenericCounter,
+    IsAuthentView,
     LinksFrequency,
     LinkViewSet,
     MessageViewSet,
@@ -14,6 +15,7 @@ from api.views import (
 )
 from django.urls import include, path
 from rest_framework import routers
+from rest_framework.authtoken.views import obtain_auth_token
 
 # from django.urls import path
 
@@ -41,4 +43,6 @@ router.register(r"channels", ChannelsFrequency, basename="channelsfrequency")
 urlpatterns = [
     path(r"", include(router.urls)),
     path(r"<str:objectname>/counter", GenericCounter.as_view()),
+    path("api-token-auth/", obtain_auth_token, name="api_token_auth"),
+    path("hello/", IsAuthentView.as_view(), name="hello"),
 ]

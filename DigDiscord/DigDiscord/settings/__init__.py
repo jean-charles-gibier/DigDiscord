@@ -27,6 +27,9 @@ SECRET_KEY = "9!m-#xwngw0!_-3m#^mlx$$n$xyje643pz@%2&($9+jv%))2+i"
 DEBUG = True
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+# local only
+#
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
 
@@ -39,11 +42,16 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "rest_framework.authtoken",
+    #
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    #
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -71,16 +79,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "DigDiscord.wsgi.application"
-
-# Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': BASE_DIR / 'db.sqlite3',
-#    }
-# }
 
 # Local
 DATABASES = {
@@ -135,7 +133,9 @@ REST_FRAMEWORK = {
         "rest_framework.parsers.JSONParser",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.SessionAuthentication",
+        #        "rest_framework.authentication.BasicAuthentication",
+        #        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",

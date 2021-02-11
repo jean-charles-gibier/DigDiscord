@@ -4,6 +4,8 @@ env
 venv/*
 venv
 *.pyc
+*.svg
+*.txt
 DigDiscord/*.json
 DigDiscord/data/*.json
 .pre-commit-config.yaml
