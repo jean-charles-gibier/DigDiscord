@@ -4,6 +4,8 @@ env
 venv/*
 venv
 *.pyc
+*.svg
+*.txt
 DigDiscord/*.json
 DigDiscord/data/*.json
 .pre-commit-config.yaml
@@ -17,3 +19,4 @@ DigDiscord/.coverage
 DigDiscord/htmlcov/
 set_env.sh
 api/core/factory.pysvg
+DigDiscord/frontend/node_modules/

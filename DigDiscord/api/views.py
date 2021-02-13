@@ -23,6 +23,7 @@ from django.http import Http404
 from django.shortcuts import get_list_or_404, get_object_or_404
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -390,3 +391,11 @@ class WordBattle(viewsets.ReadOnlyModelViewSet):
 
         except Message.DoesNotExist:
             raise Http404
+
+
+class IsAuthentView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        content = {"message": "Hello, You are authenticated !"}
+        return Response(content)
