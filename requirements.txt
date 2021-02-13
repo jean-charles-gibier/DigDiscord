@@ -33,7 +33,7 @@ mysqlclient==2.0.1
 nodeenv==1.5.0
 packaging==20.4
 Pillow==8.0.1
-pkg-resources==0.0.0
+# pkg-resources==0.0.0
 pluggy==0.13.1
 pre-commit==2.9.3
 psycopg2==2.8.5
