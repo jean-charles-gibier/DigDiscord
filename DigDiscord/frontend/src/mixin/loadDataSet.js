@@ -17,6 +17,31 @@ export default {
         return ['No values', [], []]
       }
 
+      const monthLabels = {
+        '1': 'Janvier',
+        '2': 'Février',
+        '3': 'Mars',
+        '4': 'Avril',
+        '5': 'Mai',
+        '6': 'Juin',
+        '7': 'Juillet',
+        '8': 'Août',
+        '9': 'Septembre',
+        '10': 'Octobre',
+        '11': 'Novembre',
+        '12': 'Décembre'
+      }
+
+      const weekDayLabels = {
+        '1': 'Lundi',
+        '2': 'Mardi',
+        '3': 'Mercredi',
+        '4': 'Jeudi',
+        '5': 'Vendredi',
+        '6': 'Samedi',
+        '7': 'Dimanche'
+      }
+
       // options settings
       // var chartType = options['chartType']
       var dataType = options['dataType']
@@ -83,7 +108,7 @@ export default {
 
       // console.log('==>', values)
       values.forEach(element => {
-        this.labels.push(element[labelsLabel])
+        this.labels.push((request.endsWith('by_hour/') || request.endsWith('distribution/')) ? element[labelsLabel] + ' h' : request.endsWith('by_weekday/') ? weekDayLabels[element[labelsLabel]] : request.endsWith('by_month/') ? monthLabels[element[labelsLabel]] : element[labelsLabel])
         // console.log('word label', element[labelsLabel])
         this.dataSet.push(element[dataSetLabel])
         // console.log('word data', element[dataSetLabel])
