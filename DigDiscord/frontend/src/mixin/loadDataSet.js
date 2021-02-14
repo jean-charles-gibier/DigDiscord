@@ -22,11 +22,12 @@ export default {
       var dataType = options['dataType']
       var numMessage = options['numMessage']
       var title = options['title']
+      var explain = options['explain']
       var request = messages[numMessage]['request']
       var labelsLabel = 'aggregate_name'
       var dataSetLabel = 'count'
 
-      // first: validate content
+      // first: validate api json content
       var values = [
         'denombrements',
         'scores_c',
@@ -34,13 +35,14 @@ export default {
         'distributions',
         'battle'].includes(dataType) && !request.endsWith('api/distribution/') ? messages[numMessage].data : messages[numMessage].data.results
 
+      // then validate the kind of content
       console.log('values', values)
       if (values === undefined) {
         console.log('result undefined => autre traitement à prévoir')
         return ['No values', [], []]
       }
 
-      // C'est ci qu'on traite chaque cas spécial de chaque stats
+      // on traite chaque cas spécial de chaque stats
       if (dataType === 'frequences_l' || dataType === 'frequences_f') {
         // for the moment we take only 30 firsts values
         values = values.slice(0, 20)
@@ -75,16 +77,19 @@ export default {
       }
 
       // console.log('==>', values)
-
       values.forEach(element => {
         this.labels.push(element[labelsLabel])
-        console.log('word label', element[labelsLabel])
+        // console.log('word label', element[labelsLabel])
         this.dataSet.push(element[dataSetLabel])
-        console.log('word data', element[dataSetLabel])
+        // console.log('word data', element[dataSetLabel])
       })
 
+      // console.log('===>', messages[numMessage]['exp'])
+      title = messages[numMessage]['title']
+      explain = messages[numMessage]['explain']
       return [
         title,
+        explain,
         this.labels,
         this.dataSet
       ]

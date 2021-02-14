@@ -20,9 +20,10 @@ export default {
     }
   },
   mounted () {
-    const [title, labels, values] = this.load_dataset(this.messages,
+    const [title, explain, labels, values] = this.load_dataset(this.messages,
       {
         'title': 'Titre Pie',
+        // add explain
         'chartType': 'pie',
         'dataType': this.dataType,
         'numMessage': this.numMessage
@@ -49,7 +50,7 @@ export default {
     }
     this.renderChart(
       {
-        labels,
+        labels: labels,
         datasets: [
           {
             label: title,
@@ -58,8 +59,16 @@ export default {
           }
         ]
       },
-      { responsive: true, maintainAspectRatio: false }
+      {
+        title: {
+          display: true,
+          text: explain
+        },
+        responsive: true,
+        maintainAspectRatio: false
+      }
     )
+    this.htmlLegend = this.generateLegend()
   }
 }
 </script>

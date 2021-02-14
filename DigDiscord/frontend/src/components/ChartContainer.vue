@@ -340,6 +340,43 @@ export default {
         'frequences_f': 'channels/',
         'battle': 'wordbattle/<WORD_1>/<WORD_2>/'
       }
+      const titles = {
+        'denombrements': ['Nombre de forums',
+          'Nombre de liens', 'Nombre de messages',
+          'Nombre d\'utilsateurs', 'Nombre de seveurs',
+          'Nom du serveur'],
+        'scores_u': 'Classement des forums pour l\'utilisateur',
+        'scores_c': 'Classement des contributeurs les + actifs pour le forum',
+        'distributions': ['Distribution horaire (tous messages et forums confondus)',
+          'Distribution horaire des messages pour le forum',
+          'Distribution hebdomadaire des messages pour le forum',
+          'Distribution des messages par mois pour le forum',
+          'Distribution horaire des messages pour l\'utilisateur',
+          'Distribution hebdomadaire des messages pour l\'utilisateur',
+          'Distribution des messages par mois pour l\'utilisateur'
+        ],
+        'frequences_l': 'Fréquences par liens',
+        'frequences_f': 'Fréquences par forums',
+        'battle': 'Fréquence comparée de 2 mots sur le serveur'
+      }
+
+      const explainAxes = {
+        'denombrements': ['', '', '', '', '', ''],
+        'scores_u': 'Nombre de messages / noms des forums',
+        'scores_c': 'Nombre de messages / noms des utilisateurs',
+        'distributions': ['Nombre de messages / heure du jour',
+          'Nombre de messages / heure du jour',
+          'Nombre de messages / Jour de la semaine',
+          'Nombre de messages / # du mois',
+          'Nombre de messages / heure du jour',
+          'Nombre de messages / Jour de la semaine',
+          'Nombre de messages / # du mois'
+        ],
+        'frequences_l': 'Nombre de messages / Url',
+        'frequences_f': 'Nombre de messages / forums',
+        'battle': '(Exemple :\'Vue_JS\' VS \'React\' 😃)'
+      }
+
       var endPoint = 'http://127.0.0.1:8000/api/'
 
       if (this.dataType !== undefined) {
@@ -347,15 +384,23 @@ export default {
         var translation = this.dataType
         // subPaths store endPoint of each request
         var subPaths = []
+        var subTitles = []
+        var explains = []
         var effectiveRequests = translate[translation]
+        var effectiveTitles = titles[translation]
+        var effectiveExplains = explainAxes[translation]
 
         if (effectiveRequests !== undefined) {
           if (Object.prototype.toString.call(effectiveRequests) === '[object Array]') {
             for (var i = 0; i < effectiveRequests.length; i++) {
               subPaths[i] = effectiveRequests[i]
+              subTitles[i] = effectiveTitles[i]
+              explains[i] = effectiveExplains[i]
             }
           } else {
             subPaths[0] = effectiveRequests
+            subTitles[0] = effectiveTitles
+            explains[0] = effectiveExplains
           }
         }
 
@@ -424,9 +469,10 @@ export default {
           }
 
           var serviceUrl = endPoint + subPaths[o]
-          this.messages.push(await this.get_stat(serviceUrl))
+          console.log('explains =>' + explains[o])
+          this.messages.push(await this.get_stat(serviceUrl, subTitles[o], explains[o]))
         }
-        console.log('=>' + JSON.stringify(this.messages))
+        // console.log('=>' + JSON.stringify(this.messages))
       }
     }
     /*,

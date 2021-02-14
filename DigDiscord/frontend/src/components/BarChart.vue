@@ -12,7 +12,7 @@ export default {
   },
   mixins: [loadDataSet],
   mounted () {
-    const [title, labels, values] = this.load_dataset(this.messages,
+    const [title, explain, labels, values] = this.load_dataset(this.messages,
       {
         'title': 'Titre Bar',
         'chartType': 'bar',
@@ -31,7 +31,12 @@ export default {
           }
         ]
       },
-      { responsive: true,
+      {
+        title: {
+          display: true,
+          text: explain
+        },
+        responsive: true,
         maintainAspectRatio: false,
         scales: {
           yAxes: [{

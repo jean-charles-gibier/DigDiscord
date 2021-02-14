@@ -12,7 +12,7 @@ export default {
   },
   mixins: [loadDataSet],
   mounted () {
-    const [title, labels, values] = this.load_dataset(this.messages,
+    const [title, explain, labels, values] = this.load_dataset(this.messages,
       {
         'title': 'Titre Line',
         'chartType': 'line',
@@ -20,14 +20,12 @@ export default {
         'numMessage': this.numMessage
       })
 
-    console.log('====>' + JSON.stringify(values))
-
     this.renderChart(
       {
         labels,
         datasets: [
           {
-            label: title,
+            label: explain,
             backgroundColor: 'transparent',
             borderColor: 'rgba(1, 116, 188, 0.50)',
             pointBackgroundColor: 'rgba(171, 71, 188, 1)',
@@ -40,7 +38,7 @@ export default {
         maintainAspectRatio: false,
         title: {
           display: true,
-          text: 'My Data'
+          text: title
         },
         scales: {
           yAxes: [{
