@@ -11,6 +11,15 @@ export default {
     numMessage: { type: Number }
   },
   mixins: [loadDataSet],
+  methods: {
+    random_rgba () {
+      var o = Math.round
+      var r = Math.random
+      var q = Math.sqrt
+      var s = 192
+      return 'rgba(' + o(r() * s) + ', ' + o(r() * s) + ', ' + o(r() * s) + ', ' + q(r()).toFixed(1) + ')'
+    }
+  },
   mounted () {
     const [title, explain, labels, values] = this.load_dataset(this.messages,
       {
@@ -25,8 +34,8 @@ export default {
         labels,
         datasets: [
           {
-            label: title,
-            backgroundColor: '#f87979',
+            label: explain,
+            backgroundColor: this.random_rgba(),
             data: values
           }
         ]
@@ -34,7 +43,7 @@ export default {
       {
         title: {
           display: true,
-          text: explain
+          text: title
         },
         responsive: true,
         maintainAspectRatio: false,

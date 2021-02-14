@@ -42,15 +42,20 @@ export default {
         return ['No values', [], []]
       }
 
+      // On limite d'office les résulatats aux 25 meilleurs scores
+      values = values.slice(0, 25)
+
       // on traite chaque cas spécial de chaque stats
-      if (dataType === 'frequences_l' || dataType === 'frequences_f') {
+      if (dataType === 'frequences_l' || dataType === 'frequences_f' || dataType === 'frequences_u') {
         // for the moment we take only 30 firsts values
-        values = values.slice(0, 20)
         if (request.endsWith('api/links/')) {
           labelsLabel = 'link_content'
           dataSetLabel = 'count_links'
         } else if (request.endsWith('api/channels/')) {
           labelsLabel = 'channel_name'
+          dataSetLabel = 'count_messages'
+        } else if (request.endsWith('api/score/')) {
+          labelsLabel = 'user_name'
           dataSetLabel = 'count_messages'
         }
       }

@@ -72,9 +72,9 @@ export default {
     chartType: 0,
     dataType: 0,
     chartTypes: ['pie', 'curve', 'bar', 'line', 'json'],
-    dataTypes: ['denombrements', 'scores_u', 'scores_c', 'frequences_l', 'frequences_f', 'distributions', 'battle'],
+    dataTypes: ['denombrements', 'scores_u', 'scores_c', 'frequences_l', 'frequences_f', 'frequences_u', 'distributions', 'battle'],
     chartLabels: ['Secteurs', 'Courbes', 'Histogrammes', 'Lignes', 'Contenu json'],
-    dataLabels: ['Chiffres', 'Scores utilisateurs', 'Scores forums', 'Fréquences liens URL', 'Fréquences forums', 'Répartitions', 'Bataille de mots']
+    dataLabels: ['Chiffres', 'Scores utilisateurs', 'Scores forums', 'Fréquences liens URL', 'Fréquences forums', 'Fréquences utilisateurs', 'Répartitions', 'Bataille de mots']
   }),
   components: {
   },

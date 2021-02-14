@@ -338,6 +338,7 @@ export default {
         ],
         'frequences_l': 'links/',
         'frequences_f': 'channels/',
+        'frequences_u': 'score/',
         'battle': 'wordbattle/<WORD_1>/<WORD_2>/'
       }
       const titles = {
@@ -357,6 +358,7 @@ export default {
         ],
         'frequences_l': 'Fréquences par liens',
         'frequences_f': 'Fréquences par forums',
+        'frequences_u': 'Fréquences par utilisateurs',
         'battle': 'Fréquence comparée de 2 mots sur le serveur'
       }
 
@@ -374,6 +376,7 @@ export default {
         ],
         'frequences_l': 'Nombre de messages / Url',
         'frequences_f': 'Nombre de messages / forums',
+        'frequences_u': 'Nombre de messages / utilisateurs',
         'battle': '(Exemple :\'Vue_JS\' VS \'React\' 😃)'
       }
 

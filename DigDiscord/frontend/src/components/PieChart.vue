@@ -53,7 +53,7 @@ export default {
         labels: labels,
         datasets: [
           {
-            label: title,
+            label: explain,
             backgroundColor: allGradients,
             data: values
           }
@@ -62,7 +62,7 @@ export default {
       {
         title: {
           display: true,
-          text: explain
+          text: title
         },
         responsive: true,
         maintainAspectRatio: false

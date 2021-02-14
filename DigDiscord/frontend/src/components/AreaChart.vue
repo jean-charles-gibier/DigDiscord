@@ -55,7 +55,7 @@ export default {
             data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
           },
           {
-            label: title,
+            label: explain,
             borderColor: '#05CBE1',
             pointBackgroundColor: 'white',
             pointBorderColor: 'white',
@@ -68,7 +68,7 @@ export default {
       {
         title: {
           display: true,
-          text: explain
+          text: title
         },
         responsive: true,
         maintainAspectRatio: false,
