@@ -43,14 +43,13 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework.authtoken",
-    #
     "corsheaders",
+#    "uzerz",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    #
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -191,3 +190,5 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "frontend/dist/static")]
 STATIC_ROOT = os.path.join(BASE_DIR, "dumps")
 # STATIC_ROOT = os.path.join(BASE_DIR, "../frontend/dist")
 # print("STATIC_ROOT =====> {}".format(STATIC_ROOT))
+
+# AUTH_USER_MODEL = 'uzerz.CustomUser'

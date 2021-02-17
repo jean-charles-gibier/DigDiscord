@@ -11,6 +11,7 @@ from api.views import (
     ScoreUserGeneralMessage,
     ServerViewSet,
     UserViewSet,
+    Search,
     WordBattle,
 )
 from django.urls import include, path
@@ -36,6 +37,7 @@ router.register(
 )
 
 router.register(r"wordbattle", WordBattle, basename="wordbattle"),
+router.register(r"search", Search, basename="search"),
 
 router.register(r"links", LinksFrequency, basename="linksfrequency")
 router.register(r"channels", ChannelsFrequency, basename="channelsfrequency")

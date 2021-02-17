@@ -234,7 +234,14 @@
             </div>
         </div>
 
-        <div v-if="chartType === 'json'">
+        <div class="card" v-if="chartType === 'json'">
+          <div v-for="(message, idx) in messages" :key="idx">
+            <pre class="text-left pre-scrollable">
+              <code>
+{{JSON.stringify(message, undefined, 4)}}
+              </code>
+            </pre>
+          </div>
         </div>
       </div>
     </div>
@@ -477,25 +484,22 @@ export default {
         }
         // console.log('=>' + JSON.stringify(this.messages))
       }
-    }
-    /*,
+    },
     upload () {
-      const obj = {
-        hello: 'world'
-      }
-      const json = JSON.stringify(obj)
+      /*
+      const json = JSON.stringify(this.messages)
       const blob = new Blob([json], {
         type: 'application/json'
       })
       const data = new FormData()
-      data.append("document", blob);
+      data.append('document', blob)
       axios({
         method: 'post',
         url: '/sample',
-        data: data,
+        data: data
       })
+      */
     }
-    */
   },
   computed: {
     // dirty method caused by the following pb :

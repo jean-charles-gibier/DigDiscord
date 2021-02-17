@@ -185,3 +185,26 @@ class WordBattleSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_result_2(self, obj):
         return obj.result_2
+
+
+class SearchSerializer(serializers.HyperlinkedModelSerializer):
+
+    """serializer for serach
+    """
+
+    identifier = serializers.SerializerMethodField()
+    message = serializers.SerializerMethodField()
+    lien = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Message
+        fields = ["identifier", "message", "lien"]
+
+    def get_identifier(self, obj):
+        return obj.identifier
+
+    def get_message(self, obj):
+        return obj.message
+
+    def get_lien(self, obj):
+        return obj.lien

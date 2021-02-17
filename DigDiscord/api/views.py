@@ -17,6 +17,7 @@ from api.serializers import (
     ServerSerializer,
     UserSerializer,
     WordBattleSerializer,
+    SearchSerializer,
 )
 from django.db.models import Count, Max
 from django.http import Http404
@@ -365,7 +366,7 @@ class WordBattle(viewsets.ReadOnlyModelViewSet):
         (Underscores will be interpreted as blank spaces).
         """
 
-        #  de-slugtffy de-underscores and protect url entries
+        #  de-slugyffy de-underscores and protect url entries
         word_1 = word_1.replace("_", " ")
         word_2 = word_2.replace("_", " ")
 
@@ -380,6 +381,50 @@ class WordBattle(viewsets.ReadOnlyModelViewSet):
                 (SELECT count(*) FROM api_message WHERE MATCH(content) AGAINST ('{}' IN NATURAL LANGUAGE MODE)) AS result_2
                 """.format(
                     word_1, word_1, word_2, word_2
+                )
+            )
+
+            # May raise a permission denied
+            self.check_object_permissions(self.request, queryset)
+
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
+
+        except Message.DoesNotExist:
+            raise Http404
+
+
+class Search(viewsets.ReadOnlyModelViewSet):
+    """perform a simple full search text
+    """
+
+    serializer_class = SearchSerializer
+    queryset = Message.objects.raw(
+        "select 0 as identifier, 'none' AS word_1, 0 AS result_1, 'none' AS word_2, 0 AS result_2"
+    )
+
+    @action(
+        detail=False,
+        methods=["GET"],
+        url_path="(?P<word>[ A-Za-z_-]*)",
+    )
+    def get(self, request, word="Vue JS"):
+        """
+        Perform search of words
+        ex :
+        GET /api/search/vue_JS/
+        (Underscores will be interpreted as blank spaces).
+        """
+
+        #  de-slugyffy de-underscores and protect url entries
+        word = word.replace("_", " ")
+
+        try:
+            queryset = Message.objects.raw(
+                """
+                SELECT * FROM api_message WHERE MATCH(content) AGAINST ('{}' IN NATURAL LANGUAGE MODE)) AS result                
+                """.format(
+                    word
                 )
             )
 
