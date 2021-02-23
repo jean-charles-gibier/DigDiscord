@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
-#    "uzerz",
+    "profileapp",
 ]
 
 MIDDLEWARE = [
@@ -191,4 +191,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, "dumps")
 # STATIC_ROOT = os.path.join(BASE_DIR, "../frontend/dist")
 # print("STATIC_ROOT =====> {}".format(STATIC_ROOT))
 
-# AUTH_USER_MODEL = 'uzerz.CustomUser'
+AUTH_USER_MODEL = 'profileapp.CustomUser'
+USER_DETAILS_SERIALIZER = 'api.serializer.UserProfileSerializer'

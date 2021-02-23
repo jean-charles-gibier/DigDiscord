@@ -13,6 +13,7 @@ from api.views import (
     UserViewSet,
     Search,
     WordBattle,
+    ProfileManager,
 )
 from django.urls import include, path
 from rest_framework import routers
@@ -47,4 +48,5 @@ urlpatterns = [
     path(r"<str:objectname>/counter", GenericCounter.as_view()),
     path("api-token-auth/", obtain_auth_token, name="api_token_auth"),
     path("hello/", IsAuthentView.as_view(), name="hello"),
+    path("profile/", ProfileManager.as_view(), name="profile_manager"),
 ]

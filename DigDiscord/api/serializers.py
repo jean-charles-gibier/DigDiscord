@@ -1,7 +1,13 @@
 # api/serializers.py
 
 import pprint
-
+import json
+import pdb
+# User => Uz for api.models/auth.models distinction
+# from django.contrib.auth.models import User as Uz
+from profileapp.models import CustomUser as cu
+from django.contrib.auth.forms import UserCreationForm
+from profileapp.models import Profile
 from api.models import Channel, Link, Message, ModelReference, Server, User
 from rest_framework import serializers
 
@@ -154,7 +160,6 @@ class DistributionUserMessageSerializer(
 
 
 class WordBattleSerializer(serializers.HyperlinkedModelSerializer):
-
     """serializer for word battle
     TODO : use
     from django.template.defaultfilters import slugify
@@ -188,23 +193,80 @@ class WordBattleSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class SearchSerializer(serializers.HyperlinkedModelSerializer):
-
-    """serializer for serach
+    """serializer for search
     """
 
     identifier = serializers.SerializerMethodField()
     message = serializers.SerializerMethodField()
-    lien = serializers.SerializerMethodField()
+    date = serializers.SerializerMethodField()
+    channel_id = serializers.SerializerMethodField()
+    user_id = serializers.SerializerMethodField()
 
     class Meta:
         model = Message
-        fields = ["identifier", "message", "lien"]
+        fields = ["identifier", "message", "date", "channel_id", "user_id"]
 
     def get_identifier(self, obj):
         return obj.identifier
 
     def get_message(self, obj):
-        return obj.message
+        return obj.content
 
-    def get_lien(self, obj):
-        return obj.lien
+    def get_date(self, obj):
+        return obj.date
+
+    def get_channel_id(self, obj):
+        return obj.date
+
+    def get_user_id(self, obj):
+        return obj.date
+
+
+class CustomUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = cu
+        exclude = ('groups', 'user_permissions',)
+
+    def validate_username(self, data):
+        return data
+
+    def validate_email(self, data):
+        return data
+
+    def validate_password(self, data):
+        return data
+
+    def create(self, profile_data):
+        # create user
+        user = cu.objects.create(
+              username=profile_data['username'],
+              first_name=profile_data['first_name'],
+              last_name=profile_data['last_name'],
+              email=profile_data['email'],
+             )
+        return user
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    uzer = CustomUserSerializer(required=True)
+
+    class Meta:
+        model = Profile
+        fields = ['discord_nickname', 'location', 'record_date', 'uzer']
+
+    def create(self, validated_data):
+        # pdb.set_trace()
+        profile_data = validated_data.pop('uzer')
+
+        custuzer = CustomUserSerializer(required=True)
+        objuzer = custuzer.create(profile_data)
+
+        # create profile
+        profile = Profile.objects.create(
+              uzer=objuzer,
+              discord_nickname= validated_data['discord_nickname'],
+              location= validated_data['location'],
+              record_date= validated_data['record_date'],
+        )
+
+        return profile

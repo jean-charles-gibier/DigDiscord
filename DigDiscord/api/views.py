@@ -3,6 +3,8 @@ digdiscord views stats and so on
 take care that there is a notable adherence to mysql grammar
 caused by some raw sql commands
 """
+import pdb
+import pprint
 
 from api.models import Channel, Link, Message, ModelReference, Server, User
 from api.serializers import (
@@ -18,16 +20,17 @@ from api.serializers import (
     UserSerializer,
     WordBattleSerializer,
     SearchSerializer,
+    UserProfileSerializer
 )
 from django.db.models import Count, Max
 from django.http import Http404
 from django.shortcuts import get_list_or_404, get_object_or_404
-from rest_framework import permissions, viewsets
+from rest_framework import permissions, viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from django.core.exceptions import ValidationError
 
 class ChannelViewSet(viewsets.ModelViewSet):
     """ viewset for Channel object """
@@ -397,10 +400,11 @@ class WordBattle(viewsets.ReadOnlyModelViewSet):
 class Search(viewsets.ReadOnlyModelViewSet):
     """perform a simple full search text
     """
-
+    # from rest_framework import pagination
+    # pagination_class = pagination.PageNumberPagination
     serializer_class = SearchSerializer
     queryset = Message.objects.raw(
-        "select 0 as identifier, 'none' AS word_1, 0 AS result_1, 'none' AS word_2, 0 AS result_2"
+        "select 0 as identifier, 'none' AS word"
     )
 
     @action(
@@ -420,12 +424,15 @@ class Search(viewsets.ReadOnlyModelViewSet):
         word = word.replace("_", " ")
 
         try:
+
+            statement = """
+            SELECT * FROM api_message WHERE MATCH(content) AGAINST ('{}' IN NATURAL LANGUAGE MODE)                
+            """.format(
+                word
+            )
+
             queryset = Message.objects.raw(
-                """
-                SELECT * FROM api_message WHERE MATCH(content) AGAINST ('{}' IN NATURAL LANGUAGE MODE)) AS result                
-                """.format(
-                    word
-                )
+                statement
             )
 
             # May raise a permission denied
@@ -444,3 +451,32 @@ class IsAuthentView(APIView):
     def get(self, request):
         content = {"message": "Hello, You are authenticated !"}
         return Response(content)
+
+
+class ProfileManager(APIView):
+
+    def get(self, request):
+        content = {"message": "Not yet implemented !"}
+        return Response(content)
+
+    def put(self, request):
+        content = {"message": "Not yet implemented !"}
+        return Response(content)
+
+    def post(self, request):
+        import sys
+        # create client
+        serializer = UserProfileSerializer(data=request.data)
+        try:
+            if serializer.is_valid(raise_exception=True):
+                if serializer.create(serializer.data) is not None:
+                    print("Should be OK")
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                print('Validation error :' + serializer.errors)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception:
+             print ("Erreur post profile : {} {} ".format(sys.exc_info()[0], sys.exc_info()[1]))
+             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
