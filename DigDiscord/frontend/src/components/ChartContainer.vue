@@ -1,246 +1,285 @@
 <template>
   <div id='app'>
-<!--
-    <div>Item: {{ chartType }} / {{ dataType }}</div>
--->
-      <div v-if="dataType === 'denombrements'">
-        <div class="d-flex flex-row justify-content-around">
-          <div class="card bg-light h2">
-            <div class="card-body text-center">
-            <p class="card-text">Chiffres du serveur {{cServerName}} au {{new Date().toJSON().slice(0,10).split('-').reverse().join('/') }}</p>
-          </div>
-        </div>
+    <div v-if="searchLoaded && messages[0]">
+      <div class="font-italic" v-if="messages[0].data.length >= 50">
+        La recherche se limite aux 50 derniers messages.
       </div>
-        <div class="d-flex flex-row justify-content-around">
-          <div class="card bg-light mb-3" style="max-width: 18rem;">
-            <div class="card-header">
-              <h5 class="card-title">Nombre d'utilisateurs</h5>
-            </div>
-            <div class="card-body">
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col">
-                      <p class="card-text h1">
-                        {{cUserCount}}
-                      </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card bg-light mb-3" style="max-width: 18rem;">
-            <div class="card-header">
-              <h5 class="card-title">Nombre de forums</h5>
-            </div>
-            <div class="card-body">
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col">
-                      <p class="card-text h1">
-                        {{cChannelCount}}
-                      </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card bg-light mb-3" style="max-width: 18rem;">
-            <div class="card-header">
-              <h5 class="card-title">Nombre de messages</h5>
-            </div>
-            <div class="card-body">
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col">
-                      <p class="card-text h1">
-                        {{cMessageCount}}
-                      </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card bg-light mb-3" style="max-width: 18rem;">
-            <div class="card-header">
-              <h5 class="card-title">Nombre de liens</h5>
-            </div>
-            <div class="card-body">
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col">
-                      <p class="card-text h1">
-                        {{cLinkCount}}
-                      </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="font-italic" v-else-if="messages[0].data.length == 0">
+        Aucun résultat trouvé.
       </div>
+      <div class="font-italic" v-else-if="messages[0].data.length == 1">
+        1 message
+      </div>
+      <div class="font-italic" v-else>
+        {{ messages[0].data.length }} messages.
+      </div>
+
+      <b-container fluid>
+        <b-row>
+          <b-col cols="4">
+            <b-list-group v-b-scrollspy:listgroup-ex>
+
+              <div v-for="(message, idx) in messages[0].data" :key="idx">
+                <b-list-group-item v-bind:href="'#list-item-'+ idx" > {{ userMap[messages[0].data[idx]['user_id']] }}</b-list-group-item>
+                  {{ channelMap[messages[0].data[idx]['channel_id']] + ' - ' + messages[0].data[idx]['date'] }}
+              </div>
+
+            </b-list-group>
+          </b-col>
+
+          <b-col cols="8">
+            <div id="listgroup-ex" :style="'position:relative; overflow-y:auto; height:' + messages[0].data.length * 5 + 'em'">
+              <div v-for="(message, idx) in messages[0].data" :key="idx">
+                <h4 :id="'list-item-' + idx"> {{ userMap[messages[0].data[idx]['user_id']] }}</h4>
+                <p>{{ messages[0].data[idx]['message'] }}</p>
+              </div>
+            </div>
+          </b-col>
+
+        </b-row>
+      </b-container>
+    </div>
 
       <div v-else>
-        <div v-if="dataType === 'scores_u'" class="p-0">
-          <!-- Explanations here -->
-          <div class="card bg-light d-flex flex-row col-sm-12">
-            <div class="col-sm-6">
-              <div class="d-flex flex-row justify-content-center">
-                <div class="h5 pt-1 pl-2 pr-2">
-                  Utilisateur :
+        <div v-if="dataType === 'denombrements'">
+          <div class="d-flex flex-row justify-content-around">
+            <div class="card bg-light h2">
+              <div class="card-body text-center">
+              <p class="card-text">Chiffres du serveur {{cServerName}} au {{new Date().toJSON().slice(0,10).split('-').reverse().join('/') }}</p>
+            </div>
+          </div>
+        </div>
+          <div class="d-flex flex-row justify-content-around">
+            <div class="card bg-light mb-3" style="max-width: 18rem;">
+              <div class="card-header">
+                <h5 class="card-title">Nombre d'utilisateurs</h5>
+              </div>
+              <div class="card-body">
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col">
+                        <p class="card-text h1">
+                          {{cUserCount}}
+                        </p>
+                    </div>
+                  </div>
                 </div>
-                <div class="pt-1">
-                  <select v-model="userSelected">
-                    <option v-for="result in this.userList[0].data.results" v-bind:value="result.identifier" :key="result.identifier">
-                      {{  result.name }}
-                    </option>
-                  </select>
+              </div>
+            </div>
+
+            <div class="card bg-light mb-3" style="max-width: 18rem;">
+              <div class="card-header">
+                <h5 class="card-title">Nombre de forums</h5>
+              </div>
+              <div class="card-body">
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col">
+                        <p class="card-text h1">
+                          {{cChannelCount}}
+                        </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card bg-light mb-3" style="max-width: 18rem;">
+              <div class="card-header">
+                <h5 class="card-title">Nombre de messages</h5>
+              </div>
+              <div class="card-body">
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col">
+                        <p class="card-text h1">
+                          {{cMessageCount}}
+                        </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card bg-light mb-3" style="max-width: 18rem;">
+              <div class="card-header">
+                <h5 class="card-title">Nombre de liens</h5>
+              </div>
+              <div class="card-body">
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col">
+                        <p class="card-text h1">
+                          {{cLinkCount}}
+                        </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div v-if="dataType === 'scores_c'" class="p-0">
-          <!-- Explanations here -->
-          <div class="card bg-light d-flex flex-row col-sm-12">
-            <div class="col-sm-6">
-              <div class="d-flex flex-row justify-content-center col-sm-12">
-                <div class="h5 pt-1 pl-2 pr-2">
-                  Forum :
-                </div>
-                <div class="pt-1">
-                  <select v-model="channelSelected">
-                    <option v-for="result in this.channelList[0].data.results" v-bind:value="result.identifier" :key="result.identifier">
-                      {{  result.name }}
-                    </option>
-                  </select>
+        <div v-else>
+          <div v-if="dataType === 'scores_u'" class="p-0">
+            <!-- Explanations here -->
+            <div class="card bg-light d-flex flex-row col-sm-12">
+              <div class="col-sm-6">
+                <div class="d-flex flex-row justify-content-center">
+                  <div class="h5 pt-1 pl-2 pr-2">
+                    Utilisateur :
+                  </div>
+                  <div class="pt-1">
+                    <select v-model="userSelected">
+                      <option v-for="result in this.userList[0].data.results" v-bind:value="result.identifier" :key="result.identifier">
+                        {{  result.name }}
+                      </option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div v-if="dataType === 'battle'" class="p-0">
-          <div class="card bg-light">
-              <div class="row align-items-center flex-row">
+          <div v-if="dataType === 'scores_c'" class="p-0">
+            <!-- Explanations here -->
+            <div class="card bg-light d-flex flex-row col-sm-12">
+              <div class="col-sm-6">
+                <div class="d-flex flex-row justify-content-center col-sm-12">
+                  <div class="h5 pt-1 pl-2 pr-2">
+                    Forum :
+                  </div>
+                  <div class="pt-1">
+                    <select v-model="channelSelected">
+                      <option v-for="result in this.channelList[0].data.results" v-bind:value="result.identifier" :key="result.identifier">
+                        {{  result.name }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="dataType === 'battle'" class="p-0">
+            <div class="card bg-light">
+                <div class="row align-items-center flex-row">
+                  <div class="justify-content-center d-flex col-sm-5">
+                  <div class="h5 pt-1 pl-2 pr-2">
+                    Mot #1 :
+                  </div>
+                  <div class="pt-0">
+                    <b-form-input v-model="word1Selected" placeholder="Entrer mot #1"></b-form-input>
+                  </div>
+                </div>
+
+                <div class="justify-content-center d-flex col-sm-2">
+                  <div class="h5 pt-1 pl-2 pr-2">
+                    <b-button pill @click="refreshValues()">VS</b-button>
+                  </div>
+                </div>
+
                 <div class="justify-content-center d-flex col-sm-5">
-                <div class="h5 pt-1 pl-2 pr-2">
-                  Mot #1 :
-                </div>
-                <div class="pt-0">
-                  <b-form-input v-model="word1Selected" placeholder="Entrer mot #1"></b-form-input>
-                </div>
-              </div>
-
-              <div class="justify-content-center d-flex col-sm-2">
-                <div class="h5 pt-1 pl-2 pr-2">
-                  <b-button pill @click="refreshValues()">VS</b-button>
-                </div>
-              </div>
-
-              <div class="justify-content-center d-flex col-sm-5">
-                <div class="h5 pt-1 pl-2 pr-2">
-                  Mot #2 :
-                </div>
-                <div class="pt-0">
-                  <b-form-input v-model="word2Selected" placeholder="Entrer mot #2"></b-form-input>
+                  <div class="h5 pt-1 pl-2 pr-2">
+                    Mot #2 :
+                  </div>
+                  <div class="pt-0">
+                    <b-form-input v-model="word2Selected" placeholder="Entrer mot #2"></b-form-input>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-<!-- EN CHANTIER -->
-        <div v-if="dataType === 'distributions'" class="p-0">
-          <div class="card bg-light">
-              <div class="row align-items-center flex-row">
-                <div class="justify-content-center d-flex col-sm-6 h5  pt-1 pl-2 pr-2">
-                  <b-form-group label="Sélection" v-slot="{ ariaDescribedby }">
-                      <b-form-radio-group
-                        v-model="repartSelected"
-                        :options="options"
-                        :aria-describedby="ariaDescribedby"
-                        name="plain-inline"
-                        plain
-                      ></b-form-radio-group>
-                    </b-form-group>
-                  </div>
-                  <div class="justify-content-center d-flex col-sm-6" v-if="repartSelected !== 'generale'">
-
-                    <div class="h5 pt-1 pl-2 pr-2" >
-                      {{ repartSelected === 'generale' ? '' : repartSelected[0].toUpperCase() + repartSelected.substring(1) + ' :' }}
+  <!-- EN CHANTIER -->
+          <div v-if="dataType === 'distributions'" class="p-0">
+            <div class="card bg-light">
+                <div class="row align-items-center flex-row">
+                  <div class="justify-content-center d-flex col-sm-6 h5  pt-1 pl-2 pr-2">
+                    <b-form-group label="Sélection" v-slot="{ ariaDescribedby }">
+                        <b-form-radio-group
+                          v-model="repartSelected"
+                          :options="options"
+                          :aria-describedby="ariaDescribedby"
+                          name="plain-inline"
+                          plain
+                        ></b-form-radio-group>
+                      </b-form-group>
                     </div>
-                    <div class="pt-1">
-                      <div v-if="repartSelected === 'forum'">
-                        <select v-model="uofSelected">
-                          <option v-for="result in this.channelList[0].data.results" v-bind:value="result.identifier" :key="result.identifier">
-                            {{  result.name }}
-                          </option>
-                        </select>
+                    <div class="justify-content-center d-flex col-sm-6" v-if="repartSelected !== 'generale'">
+
+                      <div class="h5 pt-1 pl-2 pr-2" >
+                        {{ repartSelected === 'generale' ? '' : repartSelected[0].toUpperCase() + repartSelected.substring(1) + ' :' }}
                       </div>
-                      <div v-else>
-                        <select v-model="uofSelected">
-                          <option v-for="result in this.userList[0].data.results" v-bind:value="result.identifier" :key="result.identifier">
-                            {{  result.name }}
-                          </option>
-                        </select>
+                      <div class="pt-1">
+                        <div v-if="repartSelected === 'forum'">
+                          <select v-model="uofSelected">
+                            <option v-for="result in this.channelList[0].data.results" v-bind:value="result.identifier" :key="result.identifier">
+                              {{  result.name }}
+                            </option>
+                          </select>
+                        </div>
+                        <div v-else>
+                          <select v-model="uofSelected">
+                            <option v-for="result in this.userList[0].data.results" v-bind:value="result.identifier" :key="result.identifier">
+                              {{  result.name }}
+                            </option>
+                          </select>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+  <!-- FIN CHANTIER -->
+
+          <div v-if="chartType === 'bar'">
+            <div v-for="(message, idx) in messages" :key="idx">
+              <BarChart
+              :messages="messages"
+              :dataType="dataType"
+              :numMessage="idx"
+              :key="idx" />
             </div>
-<!-- FIN CHANTIER -->
-
-        <div v-if="chartType === 'bar'">
-          <div v-for="(message, idx) in messages" :key="idx">
-            <BarChart
-            :messages="messages"
-            :dataType="dataType"
-            :numMessage="idx"
-            :key="idx" />
           </div>
-        </div>
 
-        <div v-if="chartType === 'curve'">
-          <div v-for="(message, idx) in messages" :key="idx">
-            <AreaChart
-            :messages="messages"
-            :dataType="dataType"
-            :numMessage="idx"
-            :key="idx" />
-          </div>
-        </div>
-
-        <div v-if="chartType === 'pie'">
-          <div v-for="(message, idx) in messages" :key="idx">
-            <PieChart
-            :messages="messages"
-            :dataType="dataType"
-            :numMessage="idx"
-            :key="idx" />
-          </div>
-        </div>
-
-        <div v-if="chartType === 'line'">
-          <div v-for="(message, idx) in messages" :key="idx">
-            <LineChart
-            :messages="messages"
-            :dataType="dataType"
-            :numMessage="idx"
-            :key="idx" />
+          <div v-if="chartType === 'curve'">
+            <div v-for="(message, idx) in messages" :key="idx">
+              <AreaChart
+              :messages="messages"
+              :dataType="dataType"
+              :numMessage="idx"
+              :key="idx" />
             </div>
-        </div>
+          </div>
 
-        <div class="card" v-if="chartType === 'json'">
-          <div v-for="(message, idx) in messages" :key="idx">
-            <pre class="text-left pre-scrollable">
-              <code>
-{{JSON.stringify(message, undefined, 4)}}
-              </code>
-            </pre>
+          <div v-if="chartType === 'pie'">
+            <div v-for="(message, idx) in messages" :key="idx">
+              <PieChart
+              :messages="messages"
+              :dataType="dataType"
+              :numMessage="idx"
+              :key="idx" />
+            </div>
+          </div>
+
+          <div v-if="chartType === 'line'">
+            <div v-for="(message, idx) in messages" :key="idx">
+              <LineChart
+              :messages="messages"
+              :dataType="dataType"
+              :numMessage="idx"
+              :key="idx" />
+              </div>
+          </div>
+
+          <div class="card" v-if="chartType === 'json'">
+            <div v-for="(message, idx) in messages" :key="idx">
+              <pre class="text-left pre-scrollable">
+                <code>
+  {{JSON.stringify(message, undefined, 4)}}
+                </code>
+              </pre>
+            </div>
           </div>
         </div>
       </div>
@@ -259,7 +298,8 @@ export default {
   name: 'App',
   props: {
     dataType: { type: String },
-    chartType: { type: String }
+    chartType: { type: String },
+    searchSelected: { type: String }
   },
   watch: {
     dataType: function (newVal, oldVal) {
@@ -281,6 +321,12 @@ export default {
     uofSelected: function (newVal, oldVal) {
       console.log('Prop changed: ', newVal, ' | was: ', oldVal)
       this.refreshValues()
+    },
+    searchSelected: function (newVal, oldVal) {
+      console.log('Prop changed: ', newVal, ' | was: ', oldVal)
+      if (newVal !== '') {
+        this.search(newVal)
+      }
     }
   },
   mixins: [apiCaller],
@@ -294,13 +340,16 @@ export default {
     return {
       messages: [],
       channelList: [],
+      channelMap: {},
       userList: [],
+      userMap: {},
       userSelected: '0',
       channelSelected: '0',
       word1Selected: '',
       word2Selected: '',
       repartSelected: 'generale',
       uofSelected: '0',
+      searchLoaded: false,
       options: [
         { text: 'Générale', value: 'generale' },
         { text: 'Par utilisateur', value: 'utilisateur' },
@@ -320,11 +369,21 @@ export default {
         // add users to main list
         this.userList[0].data.results.push(...nextUsers.data.results)
       }
+      // make map form list
+      this.userList[0].data.results.forEach(element => (
+        this.userMap[element['identifier']] = element['name']
+      ))
       console.log('userList loaded')
     },
     async loadChannelList () {
+      // => suppose there is no pagination in this channel list
+      // => And no more than 50 channels
       var serviceUrl = 'http://127.0.0.1:8000/api/channel/'
       this.channelList.push(await this.get_stat(serviceUrl))
+      // make map form list
+      this.channelList[0].data.results.forEach(element => (
+        this.channelMap[element['identifier']] = element['name']
+      ))
       console.log('channelList loaded')
     },
     async refreshValues () {
@@ -386,6 +445,9 @@ export default {
         'frequences_u': 'Nombre de messages / utilisateurs',
         'battle': '(Exemple :\'Vue_JS\' VS \'React\' 😃)'
       }
+
+      // unset full text search
+      this.searchLoaded = false
 
       var endPoint = 'http://127.0.0.1:8000/api/'
 
@@ -479,26 +541,19 @@ export default {
           }
 
           var serviceUrl = endPoint + subPaths[o]
-          console.log('explains =>' + explains[o])
+          // console.log('explains =>' + explains[o])
           this.messages.push(await this.get_stat(serviceUrl, subTitles[o], explains[o]))
         }
         // console.log('=>' + JSON.stringify(this.messages))
       }
     },
-    upload () {
-      /*
-      const json = JSON.stringify(this.messages)
-      const blob = new Blob([json], {
-        type: 'application/json'
-      })
-      const data = new FormData()
-      data.append('document', blob)
-      axios({
-        method: 'post',
-        url: '/sample',
-        data: data
-      })
-      */
+    async search (word) {
+      var serviceUrl = 'http://127.0.0.1:8000/api/search/' + word + '/'
+      // clear messages contents
+      console.log('clear messages contents and scan for :' + word)
+      this.messages = []
+      this.messages.push(await this.get_stat(serviceUrl, 'Messages trouvés', 'Matching'))
+      this.searchLoaded = true
     }
   },
   computed: {

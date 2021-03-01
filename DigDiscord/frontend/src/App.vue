@@ -22,17 +22,17 @@
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
             <b-nav-form>
-              <b-form-input size="sm" class="mr-sm-2" placeholder="Full text search"></b-form-input>
-              <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
+              <b-form-input v-model="searchInput" size="sm" class="mr-sm-2" placeholder="recherche full text"></b-form-input>
+              <b-button size="sm" class="my-2 my-sm-0" type="submit" @click=" updateSearch() " v-bind:href="'#/chart/'">Rechercher</b-button>
             </b-nav-form>
 
             <b-nav-item-dropdown right>
               <!-- Using 'button-content' slot -->
               <template #button-content>
-                <em>User</em>
+                <em>Utilisateur</em>
               </template>
-              <b-dropdown-item href="#">Profile</b-dropdown-item>
-              <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+              <b-dropdown-item href="#/profile/">Profile</b-dropdown-item>
+              <b-dropdown-item href="#/profile/">Sign in / Sign out</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
         </b-collapse>
@@ -58,7 +58,7 @@
       </b-collapse> <!-- fin du retractable  -->
       <div class="row">
         <div class="col-sm-12"  id="app-2">
-          <router-view v-bind="{chartType: chartTypeName, dataType: dataTypeName}" />
+          <router-view v-bind="{chartType: chartTypeName, dataType: dataTypeName, searchSelected: searchSelected}" />
         </div>
       </div>
     </div>
@@ -71,14 +71,33 @@ export default {
     message: {},
     chartType: 0,
     dataType: 0,
+    searchInput: '',
+    searchSelected: '',
     chartTypes: ['pie', 'curve', 'bar', 'line', 'json'],
     dataTypes: ['denombrements', 'scores_u', 'scores_c', 'frequences_l', 'frequences_f', 'frequences_u', 'distributions', 'battle'],
     chartLabels: ['Secteurs', 'Courbes', 'Histogrammes', 'Lignes', 'Contenu json'],
     dataLabels: ['Chiffres', 'Scores utilisateurs', 'Scores forums', 'Fréquences liens URL', 'Fréquences forums', 'Fréquences utilisateurs', 'Répartitions', 'Bataille de mots']
   }),
+  watch: {
+    dataType: function (newVal, oldVal) {
+      this.searchSelected = ''
+    },
+    chartType: function (newVal, oldVal) {
+      this.searchSelected = ''
+    }
+  },
   components: {
   },
   methods: {
+    updateSearch () {
+      console.log('updateSearch for :' + this.searchInput)
+
+      if (this.searchInput !== '') {
+        console.log('updateSearch not empty for :' + this.searchInput)
+        this.searchSelected = this.searchInput
+        this.searchInput = ''
+      }
+    }
   },
   computed: {
     chartTypeName () {
@@ -93,6 +112,10 @@ export default {
     chartLabelName () {
       return this.chartLabels[this.chartType]
     }
+    // ,
+    // searched () {
+    //  return this.searched
+    // }
   },
   mounted () {
   },

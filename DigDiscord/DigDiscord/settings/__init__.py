@@ -35,6 +35,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 INSTALLED_APPS = [
     "api.apps.ApiConfig",
+    "profileapp.apps.ProfileappConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -44,7 +45,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
-    "profileapp",
 ]
 
 MIDDLEWARE = [
@@ -161,24 +161,24 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 # Place in your settings.py file, near the bottom
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "my_log_handler": {
-            "level": "DEBUG" if DEBUG else "INFO",
-            "class": "logging.FileHandler",
-            "filename": os.path.join(BASE_DIR, "django.log"),
-        },
-    },
-    "loggers": {
-        "django": {
-            "handlers": ["my_log_handler"],
-            "level": "DEBUG" if DEBUG else "INFO",
-            "propagate": True,
-        },
-    },
-}
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "handlers": {
+#         "my_log_handler": {
+#             "level": "DEBUG" if DEBUG else "INFO",
+#             "class": "logging.FileHandler",
+#             "filename": os.path.join(BASE_DIR, "django.log"),
+#         },
+#     },
+#     "loggers": {
+#         "django": {
+#             "handlers": ["my_log_handler"],
+#             "level": "DEBUG" if DEBUG else "INFO",
+#             "propagate": True,
+#         },
+#     },
+# }
 
 STATIC_URL = "static/"
 

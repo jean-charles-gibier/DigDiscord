@@ -3,8 +3,8 @@ digdiscord views stats and so on
 take care that there is a notable adherence to mysql grammar
 caused by some raw sql commands
 """
-import pdb
-import pprint
+# import pdb
+# import pprint
 
 from api.models import Channel, Link, Message, ModelReference, Server, User
 from api.serializers import (
@@ -413,20 +413,23 @@ class Search(viewsets.ReadOnlyModelViewSet):
         url_path="(?P<word>[ A-Za-z_-]*)",
     )
     def get(self, request, word="Vue JS"):
+
         """
         Perform search of words
         ex :
         GET /api/search/vue_JS/
         (Underscores will be interpreted as blank spaces).
+        At the moment limited to 50 rows
         """
-
         #  de-slugyffy de-underscores and protect url entries
         word = word.replace("_", " ")
 
         try:
 
             statement = """
-            SELECT * FROM api_message WHERE MATCH(content) AGAINST ('{}' IN NATURAL LANGUAGE MODE)                
+            SELECT identifier, content, date, channel_id, user_id
+            FROM api_message WHERE MATCH(content) AGAINST ('{}' IN NATURAL LANGUAGE MODE)
+            order by date desc limit 50
             """.format(
                 word
             )
@@ -435,6 +438,7 @@ class Search(viewsets.ReadOnlyModelViewSet):
                 statement
             )
 
+            # pprint.pprint(queryset)
             # May raise a permission denied
             self.check_object_permissions(self.request, queryset)
 
@@ -466,8 +470,10 @@ class ProfileManager(APIView):
     def post(self, request):
         import sys
         # create client
+        print("Receive post request")
         serializer = UserProfileSerializer(data=request.data)
         try:
+            print("Test if serializer.is_valid")
             if serializer.is_valid(raise_exception=True):
                 if serializer.create(serializer.data) is not None:
                     print("Should be OK")
@@ -476,7 +482,7 @@ class ProfileManager(APIView):
                 print('Validation error :' + serializer.errors)
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        except Exception:
-             print ("Erreur post profile : {} {} ".format(sys.exc_info()[0], sys.exc_info()[1]))
-             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as exc:
+            print("Erreur post profile : [{}] [{}]".format(sys.exc_info()[0], sys.exc_info()[1]))
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

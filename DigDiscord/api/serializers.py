@@ -216,10 +216,10 @@ class SearchSerializer(serializers.HyperlinkedModelSerializer):
         return obj.date
 
     def get_channel_id(self, obj):
-        return obj.date
+        return obj.channel_id
 
     def get_user_id(self, obj):
-        return obj.date
+        return obj.user_id
 
 
 class CustomUserSerializer(serializers.ModelSerializer):

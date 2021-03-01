@@ -17,6 +17,27 @@ export default {
         console.error(err)
       }
     },
+    async post_profile (request, data) {
+      let finalRet = ''
+      try {
+        axios.defaults.headers.common['Authorization'] =
+          'Token 82bc819879697f1ee2503d3384c56dfc862bae3a'
+        await axios.post(request, data, {
+          headers: {
+            'contentType': 'application/json'
+          }
+        }).then(response => {
+          return (response)
+        }).catch((err) => {
+          var errstr = JSON.stringify(err.response.data)
+          console.log(errstr)
+          finalRet = errstr
+        })
+      } catch (ex) {
+        console.log('==>', ex.message)
+      } finally { }
+      return finalRet
+    },
     get_promise (request) {
       // todo : concurrent XHR get
     }

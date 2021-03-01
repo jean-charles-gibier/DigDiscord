@@ -63,11 +63,11 @@ export default {
       // then validate the kind of content
       console.log('values', values)
       if (values === undefined) {
-        console.log('result undefined => autre traitement à prévoir')
+        console.log('result undefined !')
         return ['No values', [], []]
       }
 
-      // On limite d'office les résulatats aux 25 meilleurs scores
+      // On limite d'office les résultats aux 25 meilleurs scores
       values = values.slice(0, 25)
 
       // on traite chaque cas spécial de chaque stats
