@@ -6,7 +6,7 @@ import pdb
 # User => Uz for api.models/auth.models distinction
 # from django.contrib.auth.models import User as Uz
 from profileapp.models import CustomUser as cu
-from django.contrib.auth.forms import UserCreationForm
+# from django.contrib.auth.forms import UserCreationForm
 from profileapp.models import Profile
 from api.models import Channel, Link, Message, ModelReference, Server, User
 from rest_framework import serializers
@@ -244,6 +244,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
               last_name=profile_data['last_name'],
               email=profile_data['email'],
              )
+        user.set_password(profile_data['password'])
+        user.save()
         return user
 
 

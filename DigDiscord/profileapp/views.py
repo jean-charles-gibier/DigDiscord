@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.db import transaction
 from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth.decorators import login_required
@@ -8,7 +8,7 @@ from profileapp.models import Profile
 from django.contrib import messages
 from django.shortcuts import redirect
 # import pdb
-
+import pprint
 
 @login_required
 @transaction.atomic
@@ -48,6 +48,9 @@ def create_profile(request):
     if request.method == "GET":
         u_initial_values = {}
         p_initial_values = {}
+
+        pprint.pprint(request.user)
+
         if request.user is not None and not request.user.is_anonymous:
             u_initial_values['first_name'] = request.user.first_name
             u_initial_values['last_name'] = request.user.last_name
@@ -59,7 +62,7 @@ def create_profile(request):
         return render(
             request, "profileapp/test_profile.html",
             {'user_form': UserForm(initial=u_initial_values),
-             'profile_form': ProfileForm(initial=p_initial_values) }
+             'profile_form': ProfileForm(initial=p_initial_values)}
         )
 
     elif request.method == "POST":

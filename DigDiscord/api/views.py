@@ -4,7 +4,7 @@ take care that there is a notable adherence to mysql grammar
 caused by some raw sql commands
 """
 # import pdb
-# import pprint
+import pprint
 
 from api.models import Channel, Link, Message, ModelReference, Server, User
 from api.serializers import (
@@ -483,6 +483,7 @@ class ProfileManager(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as exc:
+            pprint.pprint(serializer.data)
             print("Erreur post profile : [{}] [{}]".format(sys.exc_info()[0], sys.exc_info()[1]))
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

@@ -38,6 +38,27 @@ export default {
       } finally { }
       return finalRet
     },
+    async post_get_token (request, data) {
+      let finalRet = ''
+      try {
+        await axios.post(request, data, {
+          headers: {
+            'contentType': 'application/json'
+          }
+        }).then(response => {
+          finalRet = response.data['token']
+          return (response.data['token'])
+        }).catch((err) => {
+          var errstr = JSON.stringify(err.response.data)
+          console.log(errstr)
+          finalRet = errstr
+        })
+      } catch (ex) {
+        console.log('==>', ex.message)
+      } finally { }
+      return finalRet
+    },
+
     get_promise (request) {
       // todo : concurrent XHR get
     }
