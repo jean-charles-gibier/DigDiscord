@@ -41,9 +41,9 @@ class UserRegister(APITestCase):
         )
         self.assertIsNotNone(profile)
 
-        self.token = Token.objects.create(user=user)
+        # self.token = Token.objects.create(user=user)
 
-        self.assertIsNotNone(self.token)
+        # self.assertIsNotNone(self.token)
 
     def new_register_user(self):
         """
@@ -56,7 +56,7 @@ class UserRegister(APITestCase):
         user = cu.objects.get(email=self.inputsnewadmin['uzer']['email'])
 
         # Make an authenticated request to the view...
-        self.inputsnewuser['uzer']['email'] =  str(randint(0, 100)) + self.inputsnewuser['uzer']['email']
+        self.inputsnewuser['uzer']['email'] = str(randint(0, 100)) + self.inputsnewuser['uzer']['email']
         request = factory.post(url, self.inputsnewuser, format='json')
         force_authenticate(request, user=user,  token=self.token)
         view = ProfileManager.as_view()
