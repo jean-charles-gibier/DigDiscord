@@ -23,6 +23,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         guild_id = Configuration.findenv("GUILD_ID", "NONE")
+
+        if guild_id == 'ID_FROM_CONSTANT':
+            print("Some variables are not set (ie :GUILD_ID) this test is avoided !")
+            return 0
         processor = Processor(guild_id)
 
         trunc_all = options["trunc_all"]

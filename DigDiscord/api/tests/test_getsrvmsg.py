@@ -4,6 +4,7 @@ Test des commandes d'administration custom
 from django.core.management import call_command
 from django.test import TestCase
 from unittest import skipIf
+from api.core.base_utils import Configuration
 import os
 
 
@@ -22,6 +23,10 @@ class CommandsTestCase(TestCase):
             "limit": 10,
         }
 
+        if Configuration.findenv("GUILD_ID", "") == 'ID_FROM_CONSTANT':
+            print("Some variables are not set (ie :GUILD_ID) this test is avoided !")
+            return 0
+
         call_command("getsrvmsg", **kwargs)
         # TODO verify that we get a json file with 10 elements
 
@@ -36,6 +41,10 @@ class CommandsTestCase(TestCase):
             "all_channels": True,
             "limit": 10,
         }
+
+        if Configuration.findenv("GUILD_ID", "") == 'ID_FROM_CONSTANT':
+            print("Some variables are not set (ie :GUILD_ID) this test is avoided !")
+            return 0
 
         call_command("getsrvmsg", **kwargs)
         # TODO verify that we get a json file with 10 elements

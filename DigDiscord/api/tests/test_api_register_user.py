@@ -58,7 +58,7 @@ class UserRegister(APITestCase):
         # Make an authenticated request to the view...
         self.inputsnewuser['uzer']['email'] = str(randint(0, 100)) + self.inputsnewuser['uzer']['email']
         request = factory.post(url, self.inputsnewuser, format='json')
-        force_authenticate(request, user=user,  token=self.token)
+        force_authenticate(request, user=user) #,  token=self.token)
         view = ProfileManager.as_view()
         response = view(request)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)

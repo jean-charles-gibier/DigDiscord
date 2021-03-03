@@ -189,7 +189,7 @@ class Crawler:
             print("Error channel attribute : {0}".format(err))
 
         except Exception:
-            print("Unexpected error channel :", sys.exc_info()[0])
+            print("Unexpected error channel :", sys.exc_info()[0], ' ', sys.exc_info()[1])
 
         return self._channel_list
 
