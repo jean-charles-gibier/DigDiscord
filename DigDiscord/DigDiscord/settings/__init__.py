@@ -26,7 +26,8 @@ SECRET_KEY = "9!m-#xwngw0!_-3m#^mlx$$n$xyje643pz@%2&($9+jv%))2+i"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "www.jean-charles-gibier.org",
+        "jean-charles-gibier.org"]
 # local only
 #
 CORS_ORIGIN_ALLOW_ALL = True
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+#    'drf_yasg',
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
