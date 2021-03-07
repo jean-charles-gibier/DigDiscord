@@ -45,13 +45,18 @@
             <div class="col-sm-2 bg-success">
               <img class="card-img-top" src="./assets/DD_Gold_digger.png">
             </div>
-            <div class="col-sm-10 bg-warning d-flex justify-content-md-center align-items-center" style ="font-family: 'Roboto', Ital">
-    Hello.<br>
-    Ce "projet d'adoption" envisage d'explorer et d'analyser le contenu des forums d'un serveur Discord (Ici DA Python)<br>
-    Il collecte les commentaires / mots clés / URL / "snipets" / extraits<br>
-    utilisateurs / dates / images de votre serveur pour alimenter une base de données "full text".<br>
-    Il présente les résultats via une API Django/DRF utilisable sur un front end basé sur Vue JS / axios / bootstrap.<br>
-    Les sources sont (bien sûr) disponible ici : DigDiscord.
+            <div class="col-sm-10 card-body bg-warning m-12" style="font-family: 'Roboto', Ital">
+<em>
+Hello.<br>
+DigDiscord est le projet qui termine mon parcours DA python sur OpenClassrooms.<br>
+Il explorer et analyse le contenu des forums d'un serveur Discord (<a href="https://discord.gg/JdjVJ2WV">Ici DA Python</a>)<br>
+Il présente les résultats via une API Django/DRF utilisable sur un front end basé sur Vue JS / axios / bootstrap.<br>
+Il collecte les commentaires / mots clés / URL / "snipets" / extraits / utilisateurs / dates / images de votre serveur discord pour les présenter sous forme d'agrégats analytiques ou ludiques.<br>
+Cela permet par exemple suivre l'activité des forums ou des utilisateurs d'un serveur en présentant des statistiques suscitant l'intérêt des contibuteurs.<br>
+Ce projet est un "POC", une démontration, une V.0 qui demande à être améliorée (et il le sera 🙂). Toute contribution est bienvenue.<br>
+Les sources sont (bien sûr) disponible ici : <a href="https://github.com/jean-charles-gibier/DigDiscord">DigDiscord</a>.<br>
+Credit illustration : <a href="https://twitter.com/Kazhig">Adèle</a><br>
+</em>
             </div>
           </div>
         </div>

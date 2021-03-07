@@ -1,91 +1,79 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-      With Bootstrap!
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <h2>Essential Links !!</h2>
-    <ul>
+    <h2>Brève note d'intention du projet 13</h2>
+    <em>
+    Avec Digdiscord, je teste la mise en place d’un service web selon un principe architectural très simple :<br>
+    le découplage entre le «front» et le «back».<br>
+    A l’instar du motif architectural MVC qui distingue les 3 responsabilités d’un logiciel (Modèle, Vue et Contrôleur), la conception de ce service web peut simplement se définir ainsi (*):<br><br>
+    <ul class="list-group list-group-flush">
       <li>
-        <a
-          href="https://vuejs.org"
-          target="_blank"
-        >
-          Core Docs
-        </a>
+        Récupérer de l’information.<br>
       </li>
       <li>
-        <a
-          href="https://forum.vuejs.org"
-          target="_blank"
-        >
-          Forum
-        </a>
+        Délivrer des services.<br>
       </li>
       <li>
-        <a
-          href="https://chat.vuejs.org"
-          target="_blank"
-        >
-          Community Chat
-        </a>
+        Avoir une interface accessible.<br>
+      </li>
+    </ul><br>
+Ces objectifs sont remplis par les actions respectives :<br><br>
+    <ul class="list-group list-group-flush">
+      <li>
+        Collecte des commentaires, URL, "snipets", utilisateurs, dates, etc. dans un forum Discord grâce à son <a href='https://discord.com/developers/docs/'>API ouverte</a>.<br>
       </li>
       <li>
-        <a
-          href="https://twitter.com/vuejs"
-          target="_blank"
-        >
-          Twitter
-        </a>
-      </li>
-      <br>
-      <li>
-        <a
-          href="http://vuejs-templates.github.io/webpack/"
-          target="_blank"
-        >
-          Docs for This Template
-        </a>
-      </li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li>
-        <a
-          href="http://router.vuejs.org/"
-          target="_blank"
-        >
-          vue-router
-        </a>
+        Génération des agrégats analytiques ou ludiques.<br>
       </li>
       <li>
-        <a
-          href="http://vuex.vuejs.org/"
-          target="_blank"
-        >
-          vuex
-        </a>
+        Présentation l’information sous forme dynamique de listes ou de graphiques.<br>
+      </li>
+    </ul><br>
+En outre, chacune de ces actions correspond à une solution technique bien déterminée :<br><br>
+    <ul class="list-group list-group-flush">
+      <li>
+La collecte est effectuée par une <a href='https://docs.djangoproject.com/fr/3.1/howto/custom-management-commands/'>«commande managée»</a> de Django<br>
+Cette commande peut être automatisée par un mécanisme tiers (ex : par cron)<br>
       </li>
       <li>
-        <a
-          href="http://vue-loader.vuejs.org/"
-          target="_blank"
-        >
-          vue-loader
-        </a>
+Les agrégats sont générés naturellement via l’ORM de Django (**) et sont transmis à la couche présentation par les sérialiseurs DRF<br>
       </li>
       <li>
-        <a
-          href="https://github.com/vuejs/awesome-vue"
-          target="_blank"
-        >
-          awesome-vue
-        </a>
+L’information est restituée sous forme de graphiques Vue-JS ou de «cards bootstrap»<br>
       </li>
-    </ul>
+    </ul><br>
+Le projet est donc basé sur ce triptyque : Django, DRF, Vue-JS<br>
+Plus précisément la pile technique de ce projet comprend :<br><br>
+    <ul class="list-group list-group-flush">
+      <li>
+Django / Django Rest Framework<br>
+      </li>
+      <li>
+Vue-JS<br>
+      </li>
+      <li>
+Bootstrap-vue<br>
+      </li>
+      <li>
+VueChart-Js<br>
+      </li>
+      <li>
+Axios<br>
+      </li>
+      <li>
+Swagger-ui<br>
+      </li>
+    </ul><br>
++ accessoirement pour l’aspect "bonnes pratiques" :<br><br>
+    <ul class="list-group list-group-flush">
+      <li>
+pre-commit<br>
+      </li>
+    </ul><br>
+    </em>
+  <small>
+    (*) Enfin moi je le définis ainsi, mais vous pouvez voir ça comme une reformulation du paradigme MVC.<br>
+    (**) Je n’ai pas su éviter quelques requêtes SQL brutes (on verra pourquoi)<br>
+  </small>
   </div>
 </template>
 
@@ -94,7 +82,7 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Bienvenue dans cabane du vieux developpeur'
     }
   }
 }
@@ -105,15 +93,13 @@ export default {
 h1, h2 {
   font-weight: normal;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
 a {
   color: #42b983;
+}
+li {
+    padding-left: 2rem;
+}
+ul {
+    padding-left: 2rem;
 }
 </style>
