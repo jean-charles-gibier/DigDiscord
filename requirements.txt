@@ -44,7 +44,7 @@ Pillow==8.0.1
 # pkg-resources==0.0.0
 pluggy==0.13.1
 pre-commit==2.9.3
-psycopg2==2.8.5
+# psycopg2==2.8.5
 py==1.9.0
 pyparsing==2.4.7
 pytest==6.0.1
@@ -65,5 +65,5 @@ toml==0.10.1
 uritemplate==3.0.1
 urllib3==1.26.3
 virtualenv==20.2.2
-whitenoise==5.2.0
+# whitenoise==5.2.0
 zipp==3.3.0
