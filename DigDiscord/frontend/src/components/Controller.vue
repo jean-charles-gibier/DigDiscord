@@ -38,8 +38,12 @@ Cette commande peut être automatisée par un mécanisme tiers (ex : par cron)<b
 Les agrégats sont générés naturellement via l’ORM de Django (**) et sont transmis à la couche présentation par les sérialiseurs DRF<br>
       </li>
       <li>
+Les données sont exposées via l'API DRF (<a href='https://jean-charles-gibier.org/api/swagger/'>exposée ici</a>)<br>
+      </li>
+      <li>
 L’information est restituée sous forme de graphiques Vue-JS ou de «cards bootstrap»<br>
       </li>
+
     </ul><br>
 Le projet est donc basé sur ce triptyque : Django, DRF, Vue-JS<br>
 Plus précisément la pile technique de ce projet comprend :<br><br>

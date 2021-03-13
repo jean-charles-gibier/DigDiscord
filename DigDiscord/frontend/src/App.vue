@@ -48,13 +48,17 @@
             <div class="col-sm-10 card-body bg-warning m-12" style="font-family: 'Roboto', Ital">
 <em>
 Hello.<br>
+Bienvenue sur DigDiscord.<br>
 DigDiscord est le projet qui termine mon parcours DA python sur OpenClassrooms.<br>
-Il explore et analyse le contenu des forums d'un serveur Discord (<a href="https://discord.gg/JdjVJ2WV">Ici DA Python</a>)<br>
+La page d'accueil servira de blog technique par la même occasion<br>
+DD explore et analyse le contenu des forums d'un serveur Discord (<a href="https://discord.gg/JdjVJ2WV">Ici DA Python</a>)<br>
 Il présente les résultats via une API Django/DRF utilisable sur un front end basé sur Vue JS / axios / bootstrap.<br>
 Il collecte les commentaires / mots clés / URL / "snipets" / extraits / utilisateurs / dates / images de votre serveur discord pour les présenter sous forme d'agrégats analytiques ou ludiques.<br>
 Cela permet par exemple de suivre l'activité des forums ou des utilisateurs d'un serveur en présentant des statistiques suscitant l'intérêt des contibuteurs.<br>
 Ce projet est un "POC", une démontration, une V.0 qui demande à être améliorée (et il le sera 🙂). Toute contribution est bienvenue.<br>
-Les sources sont (bien sûr) disponibles ici : <a href="https://github.com/jean-charles-gibier/DigDiscord">DigDiscord</a>.<br>
+L'API est (pour l'instant sommairement) exposée ici : <a href="https://jean-charles-gibier.org/api/swagger/">API</a>.<br>
+Les sources sont disponibles ici : <a href="https://github.com/jean-charles-gibier/DigDiscord">DigDiscord</a>.<br>
+<br>
 Credit illustration : <a href="https://twitter.com/Kazhig">Adèle</a><br>
 </em>
             </div>
