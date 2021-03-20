@@ -23,21 +23,6 @@ class Configuration:
         self.values = []
 
     @classmethod
-    def set_logger(cls):
-        """set log environement."""
-        # Set logging stuff
-        fh = lg.StreamHandler(stdout)
-        formatter = lg.Formatter(
-            "%(asctime)s - %(levelname)s -"
-            " %(filename)s - %(funcName)s - %(message)s"
-        )
-        fh.setFormatter(formatter)
-        logger = lg.getLogger()
-
-        logger.addHandler(fh)
-        logger.setLevel(lg.DEBUG)
-
-    @classmethod
     def findenv(cls, name: str, value: str = "") -> str:
         """Find the env value from the env,
         the api config or return the default."""

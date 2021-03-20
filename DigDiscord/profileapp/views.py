@@ -10,31 +10,31 @@ from django.shortcuts import redirect
 # import pdb
 import pprint
 
+import sys
+
 @login_required
 @transaction.atomic
 def update_profile(request):
-    profile_form = None
+    # profile_form = None
     if request.method == 'POST':
         user_form = UserForm(request.POST, instance=request.user)
-        if hasattr(request.user, 'profile'):
-            profile_form = ProfileForm(request.POST, instance=request.user.profile)
-        else:
-            profile_form = Profile.objects.create(user=request.user)
-#        pdb.set_trace()
+        profile_form = ProfileForm(request.POST, instance=request.user.profile)
+
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
             messages.success(request, 'Your profile was successfully updated!')
             return redirect('update_profile')
         else:
-            messages.error(request, 'Please correct the error below.')
+            # messages.error(request, 'Please correct the error below.')
+            print("Erreur update_profile : [{}] [{}]".format(sys.exc_info()[0], sys.exc_info()[1]))
     else:
         # pdb.set_trace()
         user_form = UserForm(instance=request.user)
         if hasattr(request.user, 'profile'):
             profile_form = ProfileForm(instance=request.user.profile)
         else:
-            profile_form = Profile.objects.create(user=request.user)
+            profile_form = Profile.objects.create(**request.user.profile)
     return render(request, 'profileapp/test_profile.html', {
         'user_form': user_form,
         'profile_form': profile_form
@@ -43,13 +43,10 @@ def update_profile(request):
 @login_required
 @transaction.atomic
 def create_profile(request):
-    print("Create profile")
     profile_form = None
     if request.method == "GET":
         u_initial_values = {}
         p_initial_values = {}
-
-        pprint.pprint(request.user)
 
         if request.user is not None and not request.user.is_anonymous:
             u_initial_values['first_name'] = request.user.first_name
@@ -67,10 +64,7 @@ def create_profile(request):
 
     elif request.method == "POST":
         user_form = UserForm(request.POST, instance=request.user)
-        if hasattr(request.user, 'profile'):
-            profile_form = ProfileForm(request.POST, instance=request.user.profile)
-        else:
-            profile_form = Profile.objects.create(user=request.user)
+        profile_form = ProfileForm(request.POST, instance=request.user.profile)
 
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
@@ -78,4 +72,6 @@ def create_profile(request):
             messages.success(request, 'Your profile was successfully updated!')
             auth_login(request, user_form)
             return redirect('update_profile')
-
+        else:
+            # messages.error(request, 'Please correct the error below.')
+            print("Erreur create_profile : [{}] [{}]".format(sys.exc_info()[0], sys.exc_info()[1]))

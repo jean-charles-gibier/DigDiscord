@@ -41,3 +41,6 @@ modify messages index search
 ```
 ALTER TABLE api_message ADD FULLTEXT (content);
 ```
+
+current code coverage :
+83%

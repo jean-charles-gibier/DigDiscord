@@ -13,7 +13,6 @@ from django.db.models import Max, Min
 
 logger = lg.getLogger(__name__)
 
-
 class Processor:
     def __init__(self, guild_id="NONE", discord_token="NONE"):
         self.server_end_point = Configuration.findenv(

@@ -7,7 +7,7 @@ import json
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIRequestFactory, force_authenticate
-from rest_framework.authtoken.models import Token
+# from rest_framework.authtoken.models import Token
 from profileapp.models import CustomUser as cu
 from profileapp.models import Profile
 from api.views import ProfileManager

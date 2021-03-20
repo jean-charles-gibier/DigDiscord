@@ -85,8 +85,10 @@ class GenericCounter(APIView):
 
         if objectname is None:
             uc_object = allowed_objects[0]
+            print("None")
         else:
             uc_object = objectname[0].upper() + objectname[1:]
+            print(">"+uc_object)
 
         if uc_object in allowed_objects:
             key_object = uc_object + "Count"
@@ -123,8 +125,8 @@ class ScoreUserGeneralMessage(viewsets.ReadOnlyModelViewSet):
     )
     serializer_class = ScoreUserGeneralMessageSerializer
 
-    def get_object(self):
-        pass
+    # def get_object(self):
+    #    pass
 
     @action(detail=True, methods=["GET"])
     def by_channel(self, request, pk=None):
@@ -425,7 +427,6 @@ class Search(viewsets.ReadOnlyModelViewSet):
         word = word.replace("_", " ")
 
         try:
-
             statement = """
             SELECT identifier, content, date, channel_id, user_id
             FROM api_message WHERE MATCH(content) AGAINST ('{}' IN NATURAL LANGUAGE MODE)
@@ -458,14 +459,6 @@ class IsAuthentView(APIView):
 
 
 class ProfileManager(APIView):
-
-    def get(self, request):
-        content = {"message": "Not yet implemented !"}
-        return Response(content)
-
-    def put(self, request):
-        content = {"message": "Not yet implemented !"}
-        return Response(content)
 
     def post(self, request):
         import sys

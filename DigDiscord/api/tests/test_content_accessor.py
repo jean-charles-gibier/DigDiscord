@@ -23,11 +23,13 @@ class LoadSrvMsg(TransactionTestCase):
     def test_first_message_in_db(self):
         """test if we con accessing at first message in db"""
         first_msg = ContentAcessor.get_first_message_id()
-        pprint.pprint(first_msg)
-        assert self.msg02 != self.msg01
+        assert self.msg01 != first_msg
+        first_msg = ContentAcessor.get_first_message_id(0)
+        assert self.msg01 != first_msg
 
     def test_last_message_in_db(self):
         """test if we con accessing at last message in db"""
         last_msg = ContentAcessor.get_last_message_id()
-        pprint.pprint(last_msg)
-        assert self.msg02 != self.msg01
+        assert self.msg02 != last_msg
+        last_msg = ContentAcessor.get_last_message_id(0)
+        assert self.msg02 != last_msg

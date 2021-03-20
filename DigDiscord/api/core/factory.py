@@ -5,6 +5,7 @@ import pytz
 from api.models import Channel, Link, Message, ModelReference, Server, User
 from django.forms.fields import DateTimeField
 
+
 # import pprint
 
 
@@ -64,7 +65,6 @@ class LinkBuilder(Factory):
 
     @classmethod
     def factory_method(cls, **kwargs) -> Link:
-
         translation = {
             "url": "link_content",
             "url_md5": "link_md5",
@@ -85,7 +85,6 @@ class MessageBuilder(Factory):
 
     @classmethod
     def factory_method(cls, **kwargs) -> Message:
-
         translation = {
             "identifier": "identifier",
             "object_user": "user",
