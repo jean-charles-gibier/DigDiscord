@@ -17,6 +17,9 @@ class ProcessorTest(TestCase):
         print("testing ProcessorTest")
 
         environ["GUILD_ID"] = "GUILD_ID_FOR_TEST"
+        if environ.get('PATH_STORAGE') is None:
+            environ["PATH_STORAGE"] = '/tmp'
+
         creationDate = timezone.now()
 
         self.channel = Channel.objects.create(
@@ -44,7 +47,7 @@ class ProcessorTest(TestCase):
             )
         self.message.references.set('references')
         # channels
-        text_file = open("data/fetch_GUILD_ID_FOR_TEST.json", "w")
+        text_file = open(environ["PATH_STORAGE"] + "/fetch_GUILD_ID_FOR_TEST.json", "w")
         text_file.write("""
         [
             {
@@ -86,7 +89,7 @@ class ProcessorTest(TestCase):
         """)
         text_file.close()
         # messages / users
-        text_file = open("data/fetch_99999999999999999.json", "w")
+        text_file = open(environ["PATH_STORAGE"] + "/fetch_99999999999999999.json", "w")
         text_file.write("""
         [
             {
@@ -113,7 +116,7 @@ class ProcessorTest(TestCase):
         """)
         text_file.close()
 
-        text_file = open("data/fetch_88888888888888888.json", "w")
+        text_file = open(environ["PATH_STORAGE"] + "/fetch_88888888888888888.json", "w")
         text_file.write("""
         []
         """)
