@@ -1,6 +1,6 @@
 from django.conf import settings
-import DigDiscord.settings.deploy_ci
-import DigDiscord.settings.production
+# import DigDiscord.settings.deploy_ci
+# import DigDiscord.settings.production
 from django.test import TestCase
 
 class TestSettings(TestCase):

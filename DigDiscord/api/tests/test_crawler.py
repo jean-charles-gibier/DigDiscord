@@ -20,6 +20,8 @@ class CrawlerCmd(TestCase):
             environ["GUILD_ID"] = "ID_FROM_CONSTANT"
         if environ.get('DISCORD_USER_TOKEN') is None:
             environ["DISCORD_USER_TOKEN"] = "DUMMY_TOKEN"
+        if environ.get('PATH_STORAGE') is None:
+            environ["PATH_STORAGE"] = '/tmp'
 
 
     """
@@ -45,6 +47,6 @@ class CrawlerCmd(TestCase):
             print("Channel not found")
         crawler.get_server()
         crawler.store_server()
-        crawler._store_server()
+        # crawler._store_server()
         crawler.store_messages()
         crawler._store_channels()
