@@ -2,7 +2,6 @@ import json
 import logging as lg
 import os.path
 import sys
-# import shutil
 
 from api.core.base_utils import Builder, Configuration
 from api.core.crawler import Crawler
@@ -41,7 +40,6 @@ class Processor:
         """read channel list of current guild
         from data repository"""
         # get from api discord
-
         self._refresh_channel_list(limit)
         # fetch results on local
         data = json.load(
@@ -49,7 +47,9 @@ class Processor:
                 self.channels_path,
             )
         )
-        return [chan["id"] for chan in data]
+        # if it's not a list it's an error
+        return [chan["id"] for chan in data] if type(data) is list else None
+
 
     def _refresh_channel_list(self, limit):
         """get all channel infos from current guild id
