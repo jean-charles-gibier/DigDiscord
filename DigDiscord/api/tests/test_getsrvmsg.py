@@ -5,7 +5,7 @@ from django.core.management import call_command
 from django.test import TestCase
 from unittest import skipIf
 from api.core.base_utils import Configuration
-import os
+from os import getenv
 
 
 class CommandsTestCase(TestCase):
@@ -15,7 +15,7 @@ class CommandsTestCase(TestCase):
         print("testing CommandsTestCase")
 
     @skipIf(
-        os.getenv('DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci',
+        getenv('DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci',
         reason="requires secret token")
     def test_getsrvmsg_start(self):
         """ test if manage command getsrvmsg is responding """
@@ -34,7 +34,7 @@ class CommandsTestCase(TestCase):
         self.assertGreaterEqual(10, 10)
 
     @skipIf(
-        os.getenv('DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci',
+        getenv('DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci',
         reason="requires secret token")
     def test_getsrvmsg_all_channels(self):
         """ test all channels option """

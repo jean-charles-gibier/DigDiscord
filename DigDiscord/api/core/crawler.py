@@ -176,10 +176,20 @@ class Crawler:
             url_end_point = self.channel_end_point.format(guild_id)
             response = self._special_get(url_end_point, str(payload), headers)
             self._channel_list = response.json()
+
+            # if cnx err return error
+            if type(self._channel_list) is not list:
+                raise Exception(
+                    'Erreur sur le "end point" {} : {}'.format(
+                                    url_end_point,
+                                    str(self._channel_list))
+                )
+
+            # count channels
             channels_counter = len(self._channel_list)
 
             # if empty or if we get an error
-            if channels_counter == 0 or type(self._channel_list) is not list:
+            if channels_counter == 0:
                 raise Exception("No channel found")
 
             if store_it is True:

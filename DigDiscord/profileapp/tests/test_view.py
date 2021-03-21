@@ -1,5 +1,5 @@
 from django.test import TestCase, RequestFactory
-from profileapp.managers import CustomUserManager as cum
+from profileapp.managers import CustomUserManager
 from profileapp.models import Profile as prof, CustomUser as cu
 from django.contrib.auth.models import AnonymousUser
 # from profileapp.models import Profile
@@ -16,20 +16,28 @@ class CustomUser(TestCase):
         print("testing CustomUser")
 
     def test_create_user_std(self):
-        cm = cum()
         try:
-            user = cm.create_user(email='email@email.com', password='fake_pw')
+            user = CustomUserManager().create_user(
+                email='email@email.com',
+                password='fake_pw',
+                first_name='first_name',
+                last_name='last_name'
+                )
             assert user is not None
         except:
-            print("Unexpected error:", sys.exc_info()[0])
+            print("Unexpected error (create_user):", sys.exc_info()[0], sys.exc_info()[1])
 
     def test_create_super_user_std(self):
-        cm = cum()
         try:
-            superuser = cm.create_superuser(email='email@email.com', password='fake_pw')
+            superuser = CustomUserManager().create_superuser(
+                email='email2@email.com',
+                password='fake_pw2',
+                first_name='first_name2',
+                last_name='last_name2'
+                )
             assert superuser is not None
         except:
-            print("Unexpected error:", sys.exc_info()[0])
+            print("Unexpected error (create_superuser):", sys.exc_info()[0], sys.exc_info()[1])
 
 
 class ProfileAppView(TestCase):

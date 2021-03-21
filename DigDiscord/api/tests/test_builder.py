@@ -2,7 +2,7 @@
 Test des commandes d'administration custom
 """
 import json
-import os
+from os import getenv
 import sys
 from unittest import skipIf
 
@@ -573,7 +573,7 @@ class BuilderGenerate(TransactionTestCase):
         self._mock_user_and_message()
 
     @skipIf(
-        os.getenv("DJANGO_SETTINGS_MODULE") == "DigDiscord.settings.deploy_ci",
+        getenv("DJANGO_SETTINGS_MODULE") == "DigDiscord.settings.deploy_ci",
         reason="requires secret token",
     )
     def test_create_server_and_hierarchy(self):

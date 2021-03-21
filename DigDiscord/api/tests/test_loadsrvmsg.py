@@ -4,7 +4,7 @@ Test des commandes d'administration custom
 from django.core.management import call_command
 from django.test import TransactionTestCase
 from unittest import skipIf
-import os
+from os import getenv
 
 class LoadSrvMsg(TransactionTestCase):
 
@@ -13,7 +13,7 @@ class LoadSrvMsg(TransactionTestCase):
         print("testing LoadSrvMsg")
 
     @skipIf(
-        os.getenv('DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci',
+        getenv('DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci',
         reason="requires secret token")
     def test_loadsrvmsg_stores_in_db(self):
         """
@@ -28,7 +28,7 @@ class LoadSrvMsg(TransactionTestCase):
         # TODO verify that we get a channel object with the associated msg
 
     @skipIf(
-        os.getenv('DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci',
+        getenv('DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci',
         reason="requires secret token")
     def test_loadsrvmsg_all_channels(self):
         """ same test for all channels """

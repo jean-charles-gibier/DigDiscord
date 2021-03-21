@@ -49,10 +49,10 @@ class ApiView(TestCase):
             name='name_u',
         )
         self.message = Message.objects.create(
-            identifier= 'Identifier',
-            date =creationDate,
-            user = self.u,
-            channel = self.channel
+            identifier='Identifier',
+            date=creationDate,
+            user=self.u,
+            channel=self.channel
             )
         self.message.references.set('references')
 

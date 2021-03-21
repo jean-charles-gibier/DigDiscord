@@ -3,7 +3,7 @@ miscellaneous tools and functionalities
 """
 import json
 import logging as lg
-import os
+from os import getenv
 from sys import stdout
 
 import api.constants
@@ -23,7 +23,7 @@ class Configuration:
         """Find the env value from the env,
         the api config or return the default."""
 
-        return os.getenv(name, getattr(api.constants, name, value))
+        return getenv(name, getattr(api.constants, name, value))
 
 
 class Builder:

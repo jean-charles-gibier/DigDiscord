@@ -1,4 +1,4 @@
-import os
+from os import environ
 from django.test import TestCase
 from api.core.processor import Processor
 from requests.exceptions import InvalidHeader
@@ -16,7 +16,7 @@ class ProcessorTest(TestCase):
         # set the GUILD env variable to a specific test value
         print("testing ProcessorTest")
 
-        os.environ["GUILD_ID"] = "GUILD_ID_FOR_TEST"
+        environ["GUILD_ID"] = "GUILD_ID_FOR_TEST"
         creationDate = timezone.now()
 
         self.channel = Channel.objects.create(
