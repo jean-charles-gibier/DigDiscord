@@ -9,9 +9,10 @@ import os
 
 
 class CommandsTestCase(TestCase):
+
     def setUp(self):
         """ nothing at the moment """
-        pass
+        print("testing CommandsTestCase")
 
     @skipIf(
         os.getenv('DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci',

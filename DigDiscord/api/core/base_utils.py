@@ -18,10 +18,6 @@ class Configuration:
     in completion of "constant" values
     """
 
-    def __init__(self):
-        """ defines config properties"""
-        self.values = []
-
     @classmethod
     def findenv(cls, name: str, value: str = "") -> str:
         """Find the env value from the env,

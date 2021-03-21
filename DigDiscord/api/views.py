@@ -85,10 +85,8 @@ class GenericCounter(APIView):
 
         if objectname is None:
             uc_object = allowed_objects[0]
-            print("None")
         else:
             uc_object = objectname[0].upper() + objectname[1:]
-            print(">"+uc_object)
 
         if uc_object in allowed_objects:
             key_object = uc_object + "Count"

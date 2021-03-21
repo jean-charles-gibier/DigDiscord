@@ -15,6 +15,8 @@ from random import randint
 
 class UserRegister(APITestCase):
     def setUp(self):
+        print("testing UserRegister")
+
         """ fixtures """
         self.inputsnewadmin = {"discord_nickname": "admin", "location": "Paris", "record_date": "2020-02-20",
                        "uzer": {"username": "Laurent", "email": "laurent@free.fr", "first_name": "Laurent",

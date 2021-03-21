@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.test import TestCase, RequestFactory
 from rest_framework.test import APIRequestFactory
 from profileapp.models import Profile as prof, CustomUser as cu
@@ -12,7 +13,9 @@ class ApiView(TestCase):
         init conditions of profile management
         :return:
         """
+        print("testing ApiView")
         # Every test needs access to the request factory.
+        creationDate = timezone.now()
         self.factory = RequestFactory()
         self.APIfactory = APIRequestFactory()
         self.user = cu.objects.create(
@@ -22,19 +25,20 @@ class ApiView(TestCase):
             email='email@biz.com',
             is_superuser=True,
         )
+
         self.prof = prof.objects.create(
             uzer=self.user,
             discord_nickname='discord_nickname',
             location='location',
-            record_date='2021-01-21'
+            record_date=creationDate
         )
         self.channel = Channel.objects.create(
-            identifier = 'identifier',
-            name = 'name',
-            topic =  'topic',
-            first_id_message = 0,
-            last_id_message =  0,
-            server = Server.objects.create(
+            identifier='identifier',
+            name='name',
+            topic='topic',
+            first_id_message=0,
+            last_id_message=0,
+            server=Server.objects.create(
                 identifier='identifier_s',
                 name='name_s',
                 )
@@ -46,7 +50,7 @@ class ApiView(TestCase):
         )
         self.message = Message.objects.create(
             identifier= 'Identifier',
-            date ='2020-01-01 12:00',
+            date =creationDate,
             user = self.u,
             channel = self.channel
             )
@@ -108,11 +112,24 @@ class ApiView(TestCase):
         response = fetcher(request, pk='347061157351260162')
         self.assertEqual(response.status_code, 404)
 
+        request = self.APIfactory.get('/api/score/identifier/by_channel/')
+        force_authenticate(request, user=self.user, token=self.user.auth_token)
+        fetcher = ScoreUserGeneralMessage.as_view({'get': 'by_channel'})
+        response = fetcher(request, pk='identifier')
+        self.assertEqual(response.status_code, 200)
+
         request = self.APIfactory.get('/api/score/334428165546049536/by_user/')
         force_authenticate(request, user=self.user, token=self.user.auth_token)
         fetcher = ScoreUserGeneralMessage.as_view({'get': 'by_user'})
         response = fetcher(request, pk='334428165546049536')
         self.assertEqual(response.status_code, 404)
+
+        request = self.APIfactory.get('/api/score/identifier_u/by_user/')
+        force_authenticate(request, user=self.user, token=self.user.auth_token)
+        fetcher = ScoreUserGeneralMessage.as_view({'get': 'by_user'})
+        response = fetcher(request, pk='identifier_u')
+        self.assertEqual(response.status_code, 200)
+
 
 
     def test_distribution_user_message(self):
@@ -130,10 +147,22 @@ class ApiView(TestCase):
         response = fetcher(request, pk='758607543412457472')
         self.assertEqual(response.status_code, 404)
 
+        request = self.APIfactory.get('/api/distribution/identifier/by_channel/by_hour/')
+        force_authenticate(request, user=self.user, token=self.user.auth_token)
+        fetcher = DistributionUserMessage.as_view({'get': 'retrieve'})
+        response = fetcher(request, pk='identifier')
+        self.assertEqual(response.status_code, 404)
+
         request = self.APIfactory.get('/api/distribution/371581173916499969/by_user/by_weekday/')
         force_authenticate(request, user=self.user, token=self.user.auth_token)
         fetcher = DistributionUserMessage.as_view({'get': 'retrieve'})
         response = fetcher(request, pk='371581173916499969')
+        self.assertEqual(response.status_code, 404)
+
+        request = self.APIfactory.get('/api/distribution/identifier_u/by_user/by_weekday/')
+        force_authenticate(request, user=self.user, token=self.user.auth_token)
+        fetcher = DistributionUserMessage.as_view({'get': 'retrieve'})
+        response = fetcher(request, pk='identifier_u')
         self.assertEqual(response.status_code, 404)
 
         request = self.APIfactory.get('/api/distribution/758607543412457472/by_channel/by_weekday/')

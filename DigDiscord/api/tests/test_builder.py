@@ -23,6 +23,7 @@ class BuilderGenerate(TransactionTestCase):
     """
 
     def setUp(self):
+        print("testing BuilderGenerate")
         self.default_server = None
 
         self.dummy_server = r"""
@@ -656,7 +657,7 @@ class BuilderGenerate(TransactionTestCase):
         for user in users:
             try:
                 user.save()
-                print("Register User : {}".format(user.identifier))
+                # print("Register User : {}".format(user.identifier))
             except IntegrityError:
                 # bypass duplicate key
                 pass

@@ -7,6 +7,8 @@ from django.test import TransactionTestCase
 
 class LoadSrvMsg(TransactionTestCase):
     def setUp(self):
+        """ nothing at the moment """
+        print("testing LoadSrvMsg")
 
         """ fixtures """
         self.msg01 = Message.objects.create(

@@ -6,23 +6,27 @@ from django.test import TransactionTestCase
 from unittest import skipIf
 import os
 
-
 class LoadSrvMsg(TransactionTestCase):
+
     def setUp(self):
         """ fixtures """
-        
+        print("testing LoadSrvMsg")
+
     @skipIf(
         os.getenv('DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci',
         reason="requires secret token")
     def test_loadsrvmsg_stores_in_db(self):
-        """test if managed cmd loadsrvmsg is responding
-        and loads data in db"""
+        """
+        test if managed cmd loadsrvmsg is responding
+        and loads data in db
+        Note : the channel id must match with one defined in test_processor
+        """
 
-        kwargs = {"id_channels": ["764519455984058398"]}
+        kwargs = {"id_channels": ["88888888888888888"]}
 
         call_command("loadsrvmsg", **kwargs)
         # TODO verify that we get a channel object with the associated msg
-        
+
     @skipIf(
         os.getenv('DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci',
         reason="requires secret token")

@@ -1,8 +1,6 @@
 import json
 import logging as lg
 import os.path
-
-# import pprint
 import sys
 
 from api.core.base_utils import Builder, Configuration
@@ -42,6 +40,7 @@ class Processor:
         """read channel list of current guild
         from data repository"""
         # get from api discord
+
         self._refresh_channel_list(limit)
         # fetch results on local
         data = json.load(

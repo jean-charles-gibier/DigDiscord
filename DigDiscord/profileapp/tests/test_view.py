@@ -5,24 +5,29 @@ from django.contrib.auth.models import AnonymousUser
 # from profileapp.models import Profile
 from profileapp.views import update_profile, create_profile
 import sys
+import pprint
+
 
 class CustomUser(TestCase):
     """
     To review
     """
+    def setUp(self):
+        print("testing CustomUser")
+
     def test_create_user_std(self):
         cm = cum()
         try:
-            user = cm.create_user('email@email.com', 'fake_pw')
-            assert user != None
+            user = cm.create_user(email='email@email.com', password='fake_pw')
+            assert user is not None
         except:
             print("Unexpected error:", sys.exc_info()[0])
 
     def test_create_super_user_std(self):
         cm = cum()
         try:
-            superuser = cm.create_superuser('email@email.com', 'fake_pw')
-            assert superuser != None
+            superuser = cm.create_superuser(email='email@email.com', password='fake_pw')
+            assert superuser is not None
         except:
             print("Unexpected error:", sys.exc_info()[0])
 
@@ -33,6 +38,7 @@ class ProfileAppView(TestCase):
         init conditions of profile management
         :return:
         """
+        print("testing ProfileAppView")
         # Every test needs access to the request factory.
         self.factory = RequestFactory()
         self.user = cu.objects.create(

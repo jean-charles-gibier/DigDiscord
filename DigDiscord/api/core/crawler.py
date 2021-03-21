@@ -15,6 +15,7 @@ from api.core.content_accessor import ContentAcessor
 from .base_utils import Configuration
 from .scrapper import Scrapper
 
+import pprint
 
 class Crawler:
     STATUS_HTTP_DOWN = 500
@@ -42,13 +43,13 @@ class Crawler:
         self._channel_id = ""
         self._guild = ""
 
-    def set_end_point(self, end_point: str):
-        """
-        set new root end point address
-        :param end_point: new end_point
-        :return: None
-        """
-        self.message_end_point = end_point
+    # def set_end_point(self, end_point: str):
+    #     """
+    #     set new root end point address
+    #     :param end_point: new end_point
+    #     :return: None
+    #     """
+    #     self.message_end_point = end_point
 
     def _special_get(
         self, url: str, payload: str, headers: dict, tries: int = 3
@@ -98,12 +99,10 @@ class Crawler:
             payload["before"] = (
                 ContentAcessor.get_first_message_id(channel_id) or 0
             )
-            print("Complete older => payload '{}'".format(payload["before"]))
         if complete_type == "newer":
             payload["after"] = (
                 ContentAcessor.get_last_message_id(channel_id) or 0
             )
-            print("Complete newer => payload '{}'".format(payload["after"]))
 
         while True:
             url_end_point = self.message_end_point.format(channel_id)
@@ -171,6 +170,7 @@ class Crawler:
         self._channel_list = []
 
         try:
+
             payload = {}
             headers = {"Authorization": self._token}
             url_end_point = self.channel_end_point.format(guild_id)
