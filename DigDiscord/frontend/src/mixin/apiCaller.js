@@ -41,6 +41,8 @@ export default {
     async post_get_token (request, data) {
       let finalRet = ''
       try {
+        axios.defaults.headers.common['Authorization'] =
+          'Token 82bc819879697f1ee2503d3384c56dfc862bae3a'
         await axios.post(request, data, {
           headers: {
             'contentType': 'application/json'

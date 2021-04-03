@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(
 )
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
+    # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "9!m-#xwngw0!_-3m#^mlx$$n$xyje643pz@%2&($9+jv%))2+i"
@@ -182,7 +182,7 @@ USE_TZ = True
 #     },
 # }
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 
 # STATICFILES_DIRS = (
 #    os.path.join(BASE_DIR, "dumps"),
