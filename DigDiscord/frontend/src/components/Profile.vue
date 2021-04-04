@@ -97,7 +97,6 @@ export default {
       var serviceUrl2 = 'http://127.0.0.1:8000/api/api-token-auth/'
       this.profileResponse = ''
       this.validToken = await this.post_get_token(serviceUrl2, 'username=' + this.email + '&password=' + this.password1)
-      console.log('this.validToken :' + this.validToken)
     }
   }
 }
