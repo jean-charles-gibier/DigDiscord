@@ -87,14 +87,14 @@ export default {
     async registerProfile () {
       if (this.profileResponse === undefined || this.profileResponse === '') {
         let payload = {'discord_nickname': this.pseudo, 'location': 'Paris', 'record_date': (new Date()).toISOString().split('T')[0], 'uzer': {'username': this.pseudo, 'email': this.email, 'first_name': this.first_name, 'last_name': this.last_name, 'password': this.password1}}
-        var serviceUrl1 = 'http://127.0.0.1:8000/api/profile/'
+        let serviceUrl1 = 'http://127.0.0.1:8000/api/profile/'
         this.profileResponse = await this.post_profile(serviceUrl1, payload)
       }
       // si OK rechercher le token
     },
     async getToken () {
       // recherche le token
-      var serviceUrl2 = 'http://127.0.0.1:8000/api/api-token-auth/'
+      let serviceUrl2 = 'http://127.0.0.1:8000/api/api-token-auth/'
       this.profileResponse = ''
       this.validToken = await this.post_get_token(serviceUrl2, 'username=' + this.email + '&password=' + this.password1)
     }
