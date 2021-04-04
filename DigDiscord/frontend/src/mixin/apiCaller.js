@@ -24,13 +24,15 @@ export default {
       try {
         axios.defaults.headers.common['Authorization'] =
           'Token 82bc819879697f1ee2503d3384c56dfc862bae3a'
-        await axios.post(request, data, {
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': 'Access-Control-Allow-Headers, Origin, X-Requested-With, Content-Type, Accept',
-            'contentType': 'application/json'
-          }
-        }).then(response => {
+        await axios.post(request, data
+          //          {
+          //            headers: {
+          //              'Access-Control-Allow-Origin': '*',
+          //              'Access-Control-Allow-Headers': 'Access-Control-Allow-Headers, Origin, X-Requested-With, Content-Type, Accept',
+          //              'contentType': 'application/json'
+          //            }
+          //          }
+        ).then(response => {
           return (response)
         }).catch((err) => {
           var errstr = JSON.stringify(err.response.data)
@@ -48,13 +50,15 @@ export default {
       try {
         axios.defaults.headers.common['Authorization'] =
           'Token 82bc819879697f1ee2503d3384c56dfc862bae3a'
-        await axios.post(request, data, {
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': 'Access-Control-Allow-Headers, Origin, X-Requested-With, Content-Type, Accept',
-            'contentType': 'application/json'
-          }
-        }).then(response => {
+        await axios.post(request, data
+        //          {
+        //            headers: {
+        //              'Access-Control-Allow-Origin': '*',
+        //              'Access-Control-Allow-Headers': 'Access-Control-Allow-Headers, Origin, X-Requested-With, Content-Type, Accept',
+        //              'contentType': 'application/json'
+        //            }
+        //          }
+        ).then(response => {
           finalRet = response.data['token']
           return (response.data['token'])
         }).catch((err) => {
