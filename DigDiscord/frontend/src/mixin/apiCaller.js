@@ -19,6 +19,7 @@ export default {
     },
     async post_profile (request, data) {
       let finalRet = ''
+      console.log('post_profile ==>', request)
       try {
         axios.defaults.headers.common['Authorization'] =
           'Token 82bc819879697f1ee2503d3384c56dfc862bae3a'
@@ -40,6 +41,7 @@ export default {
     },
     async post_get_token (request, data) {
       let finalRet = ''
+      console.log('post_get_token ==>', request)
       try {
         axios.defaults.headers.common['Authorization'] =
           'Token 82bc819879697f1ee2503d3384c56dfc862bae3a'
