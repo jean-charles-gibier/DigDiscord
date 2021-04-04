@@ -15,6 +15,7 @@ Vue.use(BootstrapVue)
 // install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
 
+Vue.config.devtools = true
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
