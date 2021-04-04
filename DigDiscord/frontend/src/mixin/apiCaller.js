@@ -6,6 +6,7 @@ export default {
   }),
   methods: {
     async get_stat (request, title, explain) {
+      console.log('get_stat ==>', request)
       try {
         axios.defaults.headers.common['Authorization'] =
           'Token 82bc819879697f1ee2503d3384c56dfc862bae3a'
