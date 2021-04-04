@@ -1,6 +1,9 @@
 from . import *
 import os
-import pprint
+
+MIDDLEWARE.append('whitenoise.middleware.WhiteNoiseMiddleware')
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Production
 DATABASES = {

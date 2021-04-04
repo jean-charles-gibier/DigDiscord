@@ -162,35 +162,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-# Place in your settings.py file, near the bottom
-# LOGGING = {
-#     "version": 1,
-#     "disable_existing_loggers": False,
-#     "handlers": {
-#         "my_log_handler": {
-#             "level": "DEBUG" if DEBUG else "INFO",
-#             "class": "logging.FileHandler",
-#             "filename": os.path.join(BASE_DIR, "django.log"),
-#         },
-#     },
-#     "loggers": {
-#         "django": {
-#             "handlers": ["my_log_handler"],
-#             "level": "DEBUG" if DEBUG else "INFO",
-#             "propagate": True,
-#         },
-#     },
-# }
-
 STATIC_URL = "/static/"
 
-# STATICFILES_DIRS = (
-#    os.path.join(BASE_DIR, "dumps"),
-# )
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "frontend/dist/static")]
 
 STATIC_ROOT = os.path.join(BASE_DIR, "dumps")
-# STATIC_ROOT = os.path.join(BASE_DIR, "../frontend/dist")
+
 # print("STATIC_ROOT =====> {}".format(STATIC_ROOT))
 
 AUTH_USER_MODEL = 'profileapp.CustomUser'
