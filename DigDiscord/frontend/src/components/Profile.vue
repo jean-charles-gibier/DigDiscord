@@ -49,7 +49,7 @@
                 {{ profileResponse }}
               </div>
             </div>
-            <div class="text-center" v-if="profileResponse === ''">
+            <div class="text-center" v-if="validToken !== undefined">
               <button class="btn btn-dark" @click="getToken()">Récupérez votre token</button>
               <input class="form-control text-center" v-model="validToken" />
             </div>
@@ -90,6 +90,7 @@ export default {
         let payload = {'discord_nickname': this.pseudo, 'location': 'Paris', 'record_date': (new Date()).toISOString().split('T')[0], 'uzer': {'username': this.pseudo, 'email': this.email, 'first_name': this.first_name, 'last_name': this.last_name, 'password': this.password1}}
         let serviceUrl1 = 'http://127.0.0.1:8000/api/profile/'
         this.profileResponse = await this.post_profile(serviceUrl1, payload)
+        this.validToken = undefined
       }
       // si OK rechercher le token
     },
