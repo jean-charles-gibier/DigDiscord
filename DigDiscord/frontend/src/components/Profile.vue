@@ -49,7 +49,7 @@
                 {{ profileResponse }}
               </div>
             </div>
-            <div class="text-center" v-if="validToken !== undefined">
+            <div class="text-center" v-if="profileResponse !== undefined || validToken !== undefined">
               <button class="btn btn-dark" @click="getToken()">Récupérez votre token</button>
               <input class="form-control text-center" v-model="validToken" />
             </div>
