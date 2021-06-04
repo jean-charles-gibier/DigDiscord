@@ -1,14 +1,14 @@
 {
   "name": "frontend",
   "version": "1.0.0",
+  "private": true,
   "description": "A Vue.js project",
   "author": "jean-charles-gibier <jeancharlesg@free.fr>",
-  "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-    "start": "npm run dev",
+    "build": "node build/build.js",
     "lint": "eslint --ext .js,.vue src",
-    "build": "node build/build.js"
+    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "start": "npm run dev"
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -20,9 +20,12 @@
     "postcss": "file:node_modules/PostCSS",
     "vue": "^2.6.12",
     "vue-chartjs": "^3.5.1",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vue-slider-component": "^3.2.11",
+    "vuex": "^3.4.0"
   },
   "devDependencies": {
+    "@vue/cli-plugin-vuex": "^4.5.12",
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
     "babel-eslint": "^8.2.1",

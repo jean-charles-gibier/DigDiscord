@@ -1,19 +1,19 @@
 from . import *
 import os
 
-MIDDLEWARE.append('whitenoise.middleware.WhiteNoiseMiddleware')
+MIDDLEWARE.append("whitenoise.middleware.WhiteNoiseMiddleware")
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Production
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": os.environ.get('PRODUCTION_BD_NAME'),
-        "USER": os.environ.get('PRODUCTION_BD_USER'),
-        "PASSWORD": os.environ.get('PRODUCTION_BD_PWD'),
-        "HOST": os.environ.get('PRODUCTION_BD_HOST'),
-        "PORT": os.environ.get('PRODUCTION_BD_PORT'),
+        "NAME": os.environ.get("PRODUCTION_BD_NAME"),
+        "USER": os.environ.get("PRODUCTION_BD_USER"),
+        "PASSWORD": os.environ.get("PRODUCTION_BD_PWD"),
+        "HOST": os.environ.get("PRODUCTION_BD_HOST"),
+        "PORT": os.environ.get("PRODUCTION_BD_PORT"),
         "OPTIONS": {
             "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
             "charset": "utf8mb4",

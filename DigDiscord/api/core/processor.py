@@ -11,11 +11,10 @@ from django.db.models import Max, Min
 
 logger = lg.getLogger(__name__)
 
+
 class Processor:
     def __init__(self, guild_id="NONE", discord_token="NONE"):
-        self.server_end_point = Configuration.findenv(
-            "GUILD_END_POINT", "NONE"
-        )
+        self.server_end_point = Configuration.findenv("GUILD_END_POINT", "NONE")
         self.channel_end_point = Configuration.findenv(
             "CHANNELS_GUILD_END_POINT", "NONE"
         )
@@ -23,9 +22,7 @@ class Processor:
             "MESSAGES_CHANNEL_END_POINT", "NONE"
         )
         self.guild_id = Configuration.findenv("GUILD_ID", guild_id)
-        self.discord_token = Configuration.findenv(
-            "DISCORD_USER_TOKEN", discord_token
-        )
+        self.discord_token = Configuration.findenv("DISCORD_USER_TOKEN", discord_token)
         self.local_path = Configuration.findenv("PATH_STORAGE", "data")
 
         self.channels_name = "fetch_{}.json".format(self.guild_id)
@@ -42,14 +39,9 @@ class Processor:
         # get from api discord
         self._refresh_channel_list(limit)
         # fetch results on local
-        data = json.load(
-            open(
-                self.channels_path,
-            )
-        )
+        data = json.load(open(self.channels_path,))
         # if it's not a list it's an error
         return [chan["id"] for chan in data] if type(data) is list else None
-
 
     def _refresh_channel_list(self, limit):
         """get all channel infos from current guild id
@@ -63,9 +55,7 @@ class Processor:
                 self.guild_id, sys.exc_info()[0]
             )
 
-        print(
-            'Successfully fetch channel list of guild : "%s"' % self.guild_id
-        )
+        print('Successfully fetch channel list of guild : "%s"' % self.guild_id)
 
     def get_messages_from_channels(self, limit, channels, complete_type):
         """get all messages and links from listed channels
@@ -89,11 +79,7 @@ class Processor:
         :return:
         """
         # fetch our results on local db
-        data = (
-            open(
-                self.guild_path,
-            )
-        ).read()
+        data = (open(self.guild_path,)).read()
         object_server = Builder.get_from_json(Server, data)[0]
         object_server.save()
         self.object_server = object_server
@@ -105,11 +91,7 @@ class Processor:
         """
         # fetch our results on local db
         print(self.channels_path)
-        data = (
-            open(
-                self.channels_path,
-            )
-        ).read()
+        data = (open(self.channels_path,)).read()
         channel_list = Builder.get_from_json(Channel, data)
         for channel in channel_list:
             try:
@@ -132,11 +114,7 @@ class Processor:
             messages_name = "fetch_{}.json".format(channel.identifier)
             messages_path = os.path.join(self.local_path, messages_name)
             # fetch our results on local db
-            data = (
-                open(
-                    messages_path,
-                )
-            ).read()
+            data = (open(messages_path,)).read()
             user_list = Builder.get_from_json(User, data)
             for user in user_list:
                 try:
@@ -148,7 +126,8 @@ class Processor:
                 except Exception as e:
                     #  (api.models.DoesNotExist, ValueError):
                     print(
-                        "Ne peut enregistrer user {} pour le channel {} raison :[{}] ".format(
+                        "Ne peut enregistrer user {} pour le channel {}"
+                        " raison :[{}] ".format(
                             user.identifiant, channel.identifier, str(e)
                         )
                     )
@@ -163,11 +142,7 @@ class Processor:
             messages_name = "fetch_{}.json".format(channel.identifier)
             messages_path = os.path.join(self.local_path, messages_name)
             # fetch our results on local db
-            data = (
-                open(
-                    messages_path,
-                )
-            ).read()
+            data = (open(messages_path,)).read()
             message_list = Builder.get_from_json(Message, data)
             print(
                 "Decompte du nb de msg pour le channel '{}' : {} ".format(
@@ -179,15 +154,14 @@ class Processor:
                 try:
                     message.save()
                     message.channel = channel
-                    message.user = User.objects.get(
-                        identifier=message.author_id
-                    )
+                    message.user = User.objects.get(identifier=message.author_id)
                     message.save()
 
                 except Exception as e:
                     #  (api.models.DoesNotExist, ValueError):
                     print(
-                        "Ne peut enregistrer message {} pour le channel {} auteur : {} raison :[{}] ".format(
+                        "Ne peut enregistrer message {} pour le channel "
+                        "{} auteur : {} raison :[{}] ".format(
                             message.identifier,
                             channel.identifier,
                             message.author_id,
@@ -204,28 +178,21 @@ class Processor:
             messages_name = "fetch_{}.json".format(channel.identifier)
             messages_path = os.path.join(self.local_path, messages_name)
             # fetch our results on local db
-            data = (
-                open(
-                    messages_path,
-                )
-            ).read()
+            data = (open(messages_path,)).read()
             message_list = Builder.get_from_json(Message, data)
 
             for message in message_list:
                 try:
-                    to_modify = Message.objects.get(
-                        identifier=message.identifier
-                    )
+                    to_modify = Message.objects.get(identifier=message.identifier)
                     for m in message.references_id:
-                        to_modify.references.add(
-                            Message.objects.get(identifier=m)
-                        )
+                        to_modify.references.add(Message.objects.get(identifier=m))
                     to_modify.save()
 
                 except Exception as e:
                     if hasattr("message", "references_id"):
                         print(
-                            "Ne peut enregistrer la reference: message {} lien(s) {} raison [{}] ".format(
+                            "Ne peut enregistrer la reference: message {} lien(s) {}"
+                            " raison [{}] ".format(
                                 message.identifiant,
                                 ",".join(message.references_id),
                                 str(e),
@@ -241,11 +208,7 @@ class Processor:
             messages_name = "fetch_{}.json".format(channel.identifier)
             messages_path = os.path.join(self.local_path, messages_name)
             # fetch our results on local db
-            data = (
-                open(
-                    messages_path,
-                )
-            ).read()
+            data = (open(messages_path,)).read()
             link_list = Builder.get_from_json(Link, data)
             link_uniq = list(
                 set([nn for nn in link_list if nn.link_content is not None])
@@ -254,14 +217,10 @@ class Processor:
 
                 try:
                     link.save()
-                    link.links.add(
-                        Message.objects.get(identifier=link.message_id)
-                    )
+                    link.links.add(Message.objects.get(identifier=link.message_id))
                     link.save()
                 except IntegrityError:
-                    link.links.add(
-                        Message.objects.get(identifier=link.message_id)
-                    )
+                    link.links.add(Message.objects.get(identifier=link.message_id))
                     link.save()
 
     def set_channel_id_messages(self):
@@ -275,7 +234,6 @@ class Processor:
             return
 
         for channel in list_channels:
-
             max_id = Message.objects.filter(channel=channel).aggregate(
                 Max("identifier")
             )["identifier__max"]

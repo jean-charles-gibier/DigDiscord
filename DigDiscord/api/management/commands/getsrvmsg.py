@@ -21,7 +21,8 @@ class Command(BaseCommand):
     ' "--all_channels" [flag] get all channels messages (nb limited by --limit option)'
     ' "--limit" limit nb of messages (default 100)'
     ' "--limit" limit nb of messages (default 100)'
-    ' "--complete" specify which part of the table messages will be completed (with the "newer" or the "older" messages)'
+    ' "--complete" specify which part of the table messages will be completed'
+    ' (with the "newer" or the "older" messages)'
 
     def add_arguments(self, parser):
         parser.add_argument("--id_channels", nargs="*", type=int)
@@ -51,6 +52,4 @@ class Command(BaseCommand):
         processor.get_messages_from_channels(limit, channels, complete_style)
         processor.create_server()
 
-        self.stdout.write(
-            self.style.SUCCESS("Successfully fetch msg of channel")
-        )
+        self.stdout.write(self.style.SUCCESS("Successfully fetch msg of channel"))

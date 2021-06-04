@@ -1,6 +1,7 @@
 <template>
   <div class="hello">
-    <h2>Brève note d'intention du projet 13</h2>
+  <!-- <h1>{{ value }}</h1> -->
+  <h2>Brève note d'intention du projet 13</h2>
     <em>
     Avec Digdiscord, je teste la mise en place d’un service web selon un principe architectural très simple :<br>
     le découplage entre le «front» et le «back».<br>
@@ -88,6 +89,10 @@ export default {
     return {
       msg: 'Bienvenue dans cabane du vieux developpeur'
     }
+  },
+  mounted () {
+  },
+  components: {
   }
 }
 </script>

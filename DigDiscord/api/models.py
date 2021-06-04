@@ -26,9 +26,7 @@ class Channel(models.Model):
 
 
 class Link(models.Model):
-    link_md5 = models.CharField(
-        max_length=32, editable=False, primary_key=True
-    )
+    link_md5 = models.CharField(max_length=32, editable=False, primary_key=True)
     link_content = models.URLField(max_length=400, blank=True, null=True)
     links = models.ManyToManyField("Message", related_name="messages")
 

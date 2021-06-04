@@ -6,15 +6,16 @@ from django.test import TransactionTestCase
 from unittest import skipIf
 from os import getenv
 
-class LoadSrvMsg(TransactionTestCase):
 
+class LoadSrvMsg(TransactionTestCase):
     def setUp(self):
         """ fixtures """
         print("testing LoadSrvMsg")
 
     @skipIf(
-        getenv('DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci',
-        reason="requires secret token")
+        getenv("DJANGO_SETTINGS_MODULE") == "DigDiscord.settings.deploy_ci",
+        reason="requires secret token",
+    )
     def test_loadsrvmsg_stores_in_db(self):
         """
         test if managed cmd loadsrvmsg is responding
@@ -28,8 +29,9 @@ class LoadSrvMsg(TransactionTestCase):
         # TODO verify that we get a channel object with the associated msg
 
     @skipIf(
-        getenv('DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci',
-        reason="requires secret token")
+        getenv("DJANGO_SETTINGS_MODULE") == "DigDiscord.settings.deploy_ci",
+        reason="requires secret token",
+    )
     def test_loadsrvmsg_all_channels(self):
         """ same test for all channels """
 

@@ -24,7 +24,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         guild_id = Configuration.findenv("GUILD_ID", "NONE")
 
-        if guild_id == 'ID_FROM_CONSTANT':
+        if guild_id == "ID_FROM_CONSTANT":
             print("Some variables are not set (ie :GUILD_ID) this test is avoided !")
             return 0
         processor = Processor(guild_id)
@@ -45,6 +45,4 @@ class Command(BaseCommand):
 
         processor.set_channel_id_messages()
 
-        self.stdout.write(
-            self.style.SUCCESS("Successfully load msg of channels")
-        )
+        self.stdout.write(self.style.SUCCESS("Successfully load msg of channels"))

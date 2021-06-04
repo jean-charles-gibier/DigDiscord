@@ -3,9 +3,11 @@
 import pprint
 import json
 import pdb
+
 # User => Uz for api.models/auth.models distinction
 # from django.contrib.auth.models import User as Uz
 from profileapp.models import CustomUser as cu
+
 # from django.contrib.auth.forms import UserCreationForm
 from profileapp.models import Profile
 from api.models import Channel, Link, Message, ModelReference, Server, User
@@ -55,9 +57,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         fields = ("name", "identifier")
 
 
-class ScoreUserGeneralMessageSerializer(
-    serializers.HyperlinkedModelSerializer
-):
+class ScoreUserGeneralMessageSerializer(serializers.HyperlinkedModelSerializer):
     """ serializer for user/message jointure """
 
     count_messages = serializers.SerializerMethodField()
@@ -135,9 +135,7 @@ class ChannelsFrequencySerializer(serializers.HyperlinkedModelSerializer):
         return obj["name"]
 
 
-class DistributionUserMessageSerializer(
-    serializers.HyperlinkedModelSerializer
-):
+class DistributionUserMessageSerializer(serializers.HyperlinkedModelSerializer):
     """ serializer for message aggregate distributions """
 
     identifier = serializers.SerializerMethodField()
@@ -157,6 +155,20 @@ class DistributionUserMessageSerializer(
 
     def get_aggregate_name(self, obj):
         return obj.aggregate_name
+
+
+class BoundaryDatesSerializer(serializers.HyperlinkedModelSerializer):
+    """serializer for Boundary Dates
+    """
+
+    first_date = serializers.SerializerMethodField()
+    last_date = serializers.SerializerMethodField()
+
+    def get_first_date(self, obj):
+        return obj.first_date
+
+    def get_last_date(self, obj):
+        return obj.last_date
 
 
 class WordBattleSerializer(serializers.HyperlinkedModelSerializer):
@@ -225,50 +237,88 @@ class SearchSerializer(serializers.HyperlinkedModelSerializer):
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = cu
-        exclude = ('groups', 'user_permissions',)
-
-    def validate_username(self, data):
-        return data
-
-    def validate_email(self, data):
-        return data
-
-    def validate_password(self, data):
-        return data
+        fields = ["username", "first_name", "last_name", "email", "password"]
 
     def create(self, profile_data):
-        # create user
         user = cu.objects.create(
-              username=profile_data['username'],
-              first_name=profile_data['first_name'],
-              last_name=profile_data['last_name'],
-              email=profile_data['email'],
-             )
-        user.set_password(profile_data['password'])
+            username=profile_data["username"],
+            first_name=profile_data["first_name"],
+            last_name=profile_data["last_name"],
+            email=profile_data["email"],
+        )
+        user.set_password(profile_data["password"])
         user.save()
+        return user
+
+    def update(self, instance, validated_data):
+        pprint.pprint(validated_data)
+        user = cu.objects.get(pk=instance.id)
         return user
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    uzer = CustomUserSerializer(required=True)
+    uzer = CustomUserSerializer(required=False)
 
     class Meta:
         model = Profile
-        fields = ['discord_nickname', 'location', 'record_date', 'uzer']
+        fields = [
+            "discord_nickname",
+            "location",
+            "record_date",
+            "uzer",
+            "date_debut",
+            "date_fin",
+            "nb_min_user_messages",
+        ]
 
     def create(self, validated_data):
         # pdb.set_trace()
-        profile_data = validated_data.pop('uzer')
+        profile_data = validated_data.pop("uzer")
 
         custuzer = CustomUserSerializer(required=True)
         objuzer = custuzer.create(profile_data)
 
         # create profile
         profile = Profile.objects.create(
-              uzer=objuzer,
-              discord_nickname= validated_data['discord_nickname'],
-              location= validated_data['location'],
-              record_date= validated_data['record_date'],
+            uzer=objuzer,
+            discord_nickname=validated_data["discord_nickname"],
+            location=validated_data["location"],
+            record_date=validated_data["record_date"],
+            date_debut=validated_data["date_debut"],
+            date_fin=validated_data["date_fin"],
+            nb_min_user_messages=validated_data["nb_min_user_messages"],
         )
 
         return profile
+
+    def update(self, instance, validated_data):
+        validated_uzer = validated_data.get("uzer")
+        if validated_uzer is not None:
+            instance.uzer.username = validated_uzer.get(
+                "username", instance.uzer.username
+            )
+            instance.uzer.first_name = validated_uzer.get(
+                "first_name", instance.uzer.first_name
+            )
+            instance.uzer.last_name = validated_uzer.get(
+                "last_name", instance.uzer.last_name
+            )
+            instance.uzer.last_name = validated_uzer.get(
+                "password", instance.uzer.password
+            )
+
+        instance.discord_nickname = validated_data.get(
+            "discord_nickname", instance.discord_nickname
+        )
+        instance.location = validated_data.get("location", instance.location)
+        instance.record_date = validated_data.get("record_date", instance.record_date)
+        instance.date_debut = validated_data.get("date_debut", instance.date_debut)
+        instance.date_fin = validated_data.get("date_fin", instance.date_fin)
+        instance.nb_min_user_messages = validated_data.get(
+            "nb_min_user_messages", instance.nb_min_user_messages
+        )
+
+        instance.uzer.save()
+        instance.save()
+
+        return instance

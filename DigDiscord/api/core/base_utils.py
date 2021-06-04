@@ -32,9 +32,7 @@ class Builder:
         self.channels = None
 
     @classmethod
-    def get_from_json(
-        cls, class_type: type, json_content: str, **kwargs
-    ) -> list:
+    def get_from_json(cls, class_type: type, json_content: str, **kwargs) -> list:
         """
         Get a list of objects defined by classtype
         based from json definition json_content

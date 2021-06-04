@@ -7,6 +7,8 @@ import wsgi as x
 """
 Test asgi / wsgi server
 """
+
+
 class WsgiTestCase(TestCase):
     """
     TODO mettre les fausses valeurs dans des fichiers ressources

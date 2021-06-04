@@ -132,7 +132,7 @@
                   <div class="pt-1">
                     <select v-model="userSelected">
                       <option v-for="result in this.userList[0].data.results" v-bind:value="result.identifier" :key="result.identifier">
-                        {{  result.name }}
+                        {{ result.name }}
                       </option>
                     </select>
                   </div>

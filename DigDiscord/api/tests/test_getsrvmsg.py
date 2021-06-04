@@ -9,14 +9,14 @@ from os import getenv
 
 
 class CommandsTestCase(TestCase):
-
     def setUp(self):
         """ nothing at the moment """
         print("testing CommandsTestCase")
 
     @skipIf(
-        getenv('DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci',
-        reason="requires secret token")
+        getenv("DJANGO_SETTINGS_MODULE") == "DigDiscord.settings.deploy_ci",
+        reason="requires secret token",
+    )
     def test_getsrvmsg_start(self):
         """ test if manage command getsrvmsg is responding """
         kwargs = {
@@ -24,7 +24,7 @@ class CommandsTestCase(TestCase):
             "limit": 10,
         }
 
-        if Configuration.findenv("GUILD_ID", "") == 'ID_FROM_CONSTANT':
+        if Configuration.findenv("GUILD_ID", "") == "ID_FROM_CONSTANT":
             print("Some variables are not set (ie :GUILD_ID) this test is avoided !")
             return 0
 
@@ -34,8 +34,9 @@ class CommandsTestCase(TestCase):
         self.assertGreaterEqual(10, 10)
 
     @skipIf(
-        getenv('DJANGO_SETTINGS_MODULE') == 'DigDiscord.settings.deploy_ci',
-        reason="requires secret token")
+        getenv("DJANGO_SETTINGS_MODULE") == "DigDiscord.settings.deploy_ci",
+        reason="requires secret token",
+    )
     def test_getsrvmsg_all_channels(self):
         """ test all channels option """
         kwargs = {
@@ -43,7 +44,7 @@ class CommandsTestCase(TestCase):
             "limit": 10,
         }
 
-        if Configuration.findenv("GUILD_ID", "") == 'ID_FROM_CONSTANT':
+        if Configuration.findenv("GUILD_ID", "") == "ID_FROM_CONSTANT":
             print("Some variables are not set (ie :GUILD_ID) this test is avoided !")
             return 0
 

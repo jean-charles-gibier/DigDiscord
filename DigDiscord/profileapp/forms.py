@@ -1,13 +1,22 @@
 from django import forms
-from django.contrib.auth.models import User
-from profileapp.models import Profile
+from profileapp.models import Profile, CustomUser
 
-class UserForm(forms.ModelForm):
+
+class UzerForm(forms.ModelForm):
     class Meta:
-        model = User
-        fields = ('username', 'first_name', 'last_name', 'email')
+        model = CustomUser
+        fields = ("username", "email")
+
 
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('discord_nickname', 'location', 'record_date')
+        fields = (
+            "uzer",
+            "discord_nickname",
+            "location",
+            "record_date",
+            "date_debut",
+            "date_fin",
+            "nb_min_user_messages",
+        )

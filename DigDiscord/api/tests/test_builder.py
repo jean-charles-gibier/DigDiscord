@@ -635,9 +635,7 @@ class BuilderGenerate(TransactionTestCase):
                 raise (
                     ValueError(
                         "error test msg [{}] with msg_id : {} author_id : {}".format(
-                            sys.exc_info()[0],
-                            message.identifier,
-                            message.author_id,
+                            sys.exc_info()[0], message.identifier, message.author_id,
                         )
                     )
                 )
@@ -678,9 +676,7 @@ class BuilderGenerate(TransactionTestCase):
                 raise (
                     ValueError(
                         "error test msg [{}] with msg_id : {} author_id : {}".format(
-                            sys.exc_info()[0],
-                            message.identifier,
-                            message.author_id,
+                            sys.exc_info()[0], message.identifier, message.author_id,
                         )
                     )
                 )

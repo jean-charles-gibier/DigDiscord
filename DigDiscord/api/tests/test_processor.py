@@ -7,7 +7,6 @@ from api.models import Channel, Link, Message, ModelReference, Server, User as u
 
 
 class ProcessorTest(TestCase):
-
     def setUp(self):
         """
         init conditions of profile management
@@ -17,38 +16,33 @@ class ProcessorTest(TestCase):
         print("testing ProcessorTest")
 
         environ["GUILD_ID"] = "GUILD_ID_FOR_TEST"
-        if environ.get('PATH_STORAGE') is None:
-            environ["PATH_STORAGE"] = '/tmp'
+        if environ.get("PATH_STORAGE") is None:
+            environ["PATH_STORAGE"] = "/tmp"
 
         creationDate = timezone.now()
 
         self.channel = Channel.objects.create(
-            identifier='identifier',
-            name='name',
-            topic='topic',
+            identifier="identifier",
+            name="name",
+            topic="topic",
             first_id_message=0,
             last_id_message=0,
-            server=Server.objects.create(
-                identifier='identifier_s',
-                name='name_s',
-                )
-            )
-
-        self.user = u.objects.create(
-            identifier='identifier_u',
-            name='name_u',
+            server=Server.objects.create(identifier="identifier_s", name="name_s",),
         )
 
+        self.user = u.objects.create(identifier="identifier_u", name="name_u",)
+
         self.message = Message.objects.create(
-            identifier='Identifier',
+            identifier="Identifier",
             date=creationDate,
             user=self.user,
-            channel=self.channel
-            )
-        self.message.references.set('references')
+            channel=self.channel,
+        )
+        self.message.references.set("references")
         # channels
         text_file = open(environ["PATH_STORAGE"] + "/fetch_GUILD_ID_FOR_TEST.json", "w")
-        text_file.write("""
+        text_file.write(
+            """
         [
             {
                 "id": "99999999999999999",
@@ -85,12 +79,14 @@ class ProcessorTest(TestCase):
                 "permission_overwrites": [],
                 "nsfw": false
             }
-        ]        
-        """)
+        ]
+        """
+        )
         text_file.close()
         # messages / users
         text_file = open(environ["PATH_STORAGE"] + "/fetch_99999999999999999.json", "w")
-        text_file.write("""
+        text_file.write(
+            """
         [
             {
                 "identifier": "799746676809269339",
@@ -113,13 +109,16 @@ class ProcessorTest(TestCase):
                 "url_md5": null
             }
         ]
-        """)
+        """
+        )
         text_file.close()
 
         text_file = open(environ["PATH_STORAGE"] + "/fetch_88888888888888888.json", "w")
-        text_file.write("""
+        text_file.write(
+            """
         []
-        """)
+        """
+        )
         text_file.close()
 
     def test_processor(self):
@@ -134,7 +133,7 @@ class ProcessorTest(TestCase):
         processor._refresh_channel_list(1)
         try:
             processor.get_messages_from_channels(
-                limit=1, channels=['identifier'], complete_type='older'
+                limit=1, channels=["identifier"], complete_type="older"
             )
         except InvalidHeader:
             pass

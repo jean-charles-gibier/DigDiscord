@@ -17,18 +17,15 @@ from .scrapper import Scrapper
 
 import pprint
 
+
 class Crawler:
     STATUS_HTTP_DOWN = 500
     MS_LATENCY = 300
 
-    def __init__(
-        self, guild_id: str = None, token: str = None, end_point: str = None
-    ):
+    def __init__(self, guild_id: str = None, token: str = None, end_point: str = None):
         """ defines crawler properties"""
         self._guild_id = Configuration.findenv("GUILD_ID", guild_id)
-        self.server_end_point = Configuration.findenv(
-            "GUILD_END_POINT", "NONE"
-        )
+        self.server_end_point = Configuration.findenv("GUILD_END_POINT", "NONE")
         self.channel_end_point = Configuration.findenv(
             "CHANNELS_GUILD_END_POINT", "NONE"
         )
@@ -51,9 +48,7 @@ class Crawler:
     #     """
     #     self.message_end_point = end_point
 
-    def _special_get(
-        self, url: str, payload: str, headers: dict, tries: int = 3
-    ):
+    def _special_get(self, url: str, payload: str, headers: dict, tries: int = 3):
         """
         special_get fetch with special strategy
         to handle http responses & possible errors
@@ -80,9 +75,7 @@ class Crawler:
 
         return response
 
-    def fetch_messages(
-        self, channel_id: str, nb_messages: int = 0, complete_type=None
-    ):
+    def fetch_messages(self, channel_id: str, nb_messages: int = 0, complete_type=None):
         """
         get specific nb msg from channel
         :param channel_id: id channel
@@ -96,13 +89,9 @@ class Crawler:
         self._msg_list = []
 
         if complete_type == "older":
-            payload["before"] = (
-                ContentAcessor.get_first_message_id(channel_id) or 0
-            )
+            payload["before"] = ContentAcessor.get_first_message_id(channel_id) or 0
         if complete_type == "newer":
-            payload["after"] = (
-                ContentAcessor.get_last_message_id(channel_id) or 0
-            )
+            payload["after"] = ContentAcessor.get_last_message_id(channel_id) or 0
 
         while True:
             url_end_point = self.message_end_point.format(channel_id)
@@ -181,8 +170,8 @@ class Crawler:
             if type(self._channel_list) is not list:
                 raise Exception(
                     'Erreur sur le "end point" {} : {}'.format(
-                                    url_end_point,
-                                    str(self._channel_list))
+                        url_end_point, str(self._channel_list)
+                    )
                 )
 
             # count channels
@@ -199,7 +188,9 @@ class Crawler:
             print("Error channel attribute : {0}".format(err))
 
         except Exception:
-            print("Unexpected error channel :", sys.exc_info()[0], ' ', sys.exc_info()[1])
+            print(
+                "Unexpected error channel :", sys.exc_info()[0], " ", sys.exc_info()[1]
+            )
 
         return self._channel_list
 
@@ -213,9 +204,7 @@ class Crawler:
         full_path = os.path.join(self._path, local_name)
         with open(full_path, "w") as myfile:
             myfile.write(
-                json.dumps(self._msg_list, ensure_ascii=False)
-                .encode("utf8")
-                .decode()
+                json.dumps(self._msg_list, ensure_ascii=False).encode("utf8").decode()
             )
 
     def store_server(self):
@@ -250,7 +239,5 @@ class Crawler:
         full_path = os.path.join(self._path, local_name)
         with open(full_path, "w") as myfile:
             myfile.write(
-                json.dumps(self._guild, ensure_ascii=False)
-                .encode("utf8")
-                .decode()
+                json.dumps(self._guild, ensure_ascii=False).encode("utf8").decode()
             )

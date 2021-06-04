@@ -13,12 +13,10 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Quick-start development settings - unsuitable for production
-    # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
+# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "9!m-#xwngw0!_-3m#^mlx$$n$xyje643pz@%2&($9+jv%))2+i"
@@ -26,8 +24,12 @@ SECRET_KEY = "9!m-#xwngw0!_-3m#^mlx$$n$xyje643pz@%2&($9+jv%))2+i"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "www.jean-charles-gibier.org",
-        "jean-charles-gibier.org"]
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "www.jean-charles-gibier.org",
+    "jean-charles-gibier.org",
+]
 # local only
 #
 CORS_ORIGIN_ALLOW_ALL = True
@@ -43,7 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'drf_yasg',
+    "drf_yasg",
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
@@ -110,17 +112,12 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME":
+            "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", },
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator", },
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator", },
 ]
 
 REST_FRAMEWORK = {
@@ -130,18 +127,11 @@ REST_FRAMEWORK = {
         "rest_framework.renderers.JSONRenderer",
         "rest_framework.renderers.BrowsableAPIRenderer",
     ],
-    "DEFAULT_PARSER_CLASSES": [
-        "rest_framework.parsers.JSONParser",
-    ],
+    "DEFAULT_PARSER_CLASSES": ["rest_framework.parsers.JSONParser", ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        #        "rest_framework.authentication.BasicAuthentication",
-        #        "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ],
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticated",
-    ],
-    #    'DEFAULT_FILTER_BACKENDS': ['rest_framework.filters.DjangoFilterBackend',],
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated", ],
     "PAGE_SIZE": 100,
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
 }
@@ -170,5 +160,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, "dumps")
 
 # print("STATIC_ROOT =====> {}".format(STATIC_ROOT))
 
-AUTH_USER_MODEL = 'profileapp.CustomUser'
-USER_DETAILS_SERIALIZER = 'api.serializer.UserProfileSerializer'
+AUTH_USER_MODEL = "profileapp.CustomUser"
+USER_DETAILS_SERIALIZER = "api.serializer.UserProfileSerializer"

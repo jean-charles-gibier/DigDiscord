@@ -17,7 +17,7 @@ class Scrapper:
         return [
             {
                 "identifier": msg["id"],
-                #                "date" a tranformer en datetime ex :'2006-10-25 14:30:59'
+                # date" a transformer en datetime ex :'2006-10-25 14:30:59'
                 "date": (msg["timestamp"][0:19]).replace("T", " "),
                 "author": msg["author"]["username"],
                 "author_id": msg["author"]["id"],

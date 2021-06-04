@@ -92,7 +92,6 @@ export default {
         this.profileResponse = await this.post_profile(serviceUrl1, payload)
         this.validToken = undefined
       }
-      // si OK rechercher le token
     },
     async getToken () {
       // recherche le token
