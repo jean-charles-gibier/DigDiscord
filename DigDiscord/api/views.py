@@ -59,12 +59,14 @@ class UserParameter:
             try:
                 print("OK Profile")
                 profile = Profile.objects.get(uzer=request.user)
-                tz_date_debut = datetime.combine(
-                    profile.date_debut, datetime.min.time()
-                ).astimezone(tz)
-                tz_date_fin = datetime.combine(
-                    profile.date_fin, datetime.min.time()
-                ).astimezone(tz)
+                if profile.date_debut is not None:
+                    tz_date_debut = datetime.combine(
+                        profile.date_debut, datetime.min.time()
+                    ).astimezone(tz)
+                if profile.date_fin is not None:
+                    tz_date_fin = datetime.combine(
+                        profile.date_fin, datetime.min.time()
+                    ).astimezone(tz)
 
             except Profile.DoesNotExist:
                 print(

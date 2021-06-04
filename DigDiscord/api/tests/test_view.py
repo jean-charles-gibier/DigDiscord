@@ -66,8 +66,8 @@ class ApiView(TestCase):
         request = self.APIfactory.get("/api/profile/")
         force_authenticate(request, user=self.user, token=self.user.auth_token)
         gc_view = ProfileManager.as_view()
-        response = gc_view(request)
-        self.assertEqual(response.status_code, 405)
+        response = gc_view(request, pk='')
+        self.assertEqual(response.status_code, 200)
 
     def test_generic_counter(self):
         """

@@ -71,7 +71,7 @@ class UserRegister(APITestCase):
         """
         Ensure we can create a new  profile object via the API.
         """
-        url = reverse("profile_manager")
+        url = reverse("profile_manager",  kwargs={'pk': 1})
         # on ne change que l'email
 
         factory = APIRequestFactory()
