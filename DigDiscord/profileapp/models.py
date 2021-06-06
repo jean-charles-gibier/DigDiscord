@@ -15,6 +15,9 @@ class CustomUser(AbstractUser):
 
 
 class Profile(models.Model):
+    '''
+    assciated to default model auth
+    '''
     USERNAME_FIELD = "discord_nickname"
     uzer = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     discord_nickname = models.CharField(unique=True, max_length=50, blank=True)
