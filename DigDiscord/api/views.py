@@ -6,6 +6,8 @@ caused by some raw sql commands
 import sys
 import pytz
 
+import inspect
+
 from api.models import Channel, Link, Message, ModelReference, Server, User
 from profileapp.models import Profile
 from datetime import datetime
@@ -37,7 +39,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
-# import pprint
+import pprint
 # from django.db import connection
 
 
@@ -99,9 +101,16 @@ class MessageViewSet(viewsets.ModelViewSet):
     """ viewset for Message object
         eligible for user search criteria : No
     """
-
-    queryset = Message.objects.all()
     serializer_class = MessageSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases
+        for the currently authenticated user.
+        """
+        # get dates limit
+        tz_date_debut, tz_date_fin = UserParameter.getDateLimits(self.request)
+        return Message.objects.all().filter(date__range=(tz_date_debut, tz_date_fin))
 
 
 class ModelReferenceViewSet(viewsets.ModelViewSet):
@@ -146,27 +155,33 @@ class ScoreUserGeneralMessage(viewsets.ReadOnlyModelViewSet):
     """
 
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    queryset = (
-        Message.objects.values("user_id")
-        .annotate(
-            count_messages=Count("user_id"),
-            channel__name=Max("channel__name"),
-            user__name=Max("user__name"),
-            channel_id=Max("channel_id"),
-        )
-        .order_by("-count_messages")
-    )
     serializer_class = ScoreUserGeneralMessageSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases
+        for the currently authenticated user.
+        """
+        # get dates limit
+        tz_date_debut, tz_date_fin = UserParameter.getDateLimits(self.request)
+
+        return Message.objects.values("user_id").filter(date__range=(tz_date_debut, tz_date_fin)).annotate(
+                    count_messages=Count("user_id"),
+                    channel__name=Max("channel__name"),
+                    user__name=Max("user__name"),
+                    channel_id=Max("channel_id"),
+                ).order_by("-count_messages")
+
 
     @action(detail=True, methods=["GET"])
     def by_channel(self, request, pk=None):
         # Perform the lookup filtering.
         lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
         assert lookup_url_kwarg in self.kwargs, (
-            "Expected view %s to be called with a URL keyword argument "
-            'named "%s". Fix your URL conf, or set the `.lookup_field` '
-            "attribute on the view correctly."
-            % (self.__class__.__name__, lookup_url_kwarg)
+                "Expected view %s to be called with a URL keyword argument "
+                'named "%s". Fix your URL conf, or set the `.lookup_field` '
+                "attribute on the view correctly."
+                % (self.__class__.__name__, lookup_url_kwarg)
         )
 
         # get dates limit
@@ -176,9 +191,9 @@ class ScoreUserGeneralMessage(viewsets.ReadOnlyModelViewSet):
             channel = Channel.objects.get(pk=self.kwargs[lookup_url_kwarg])
             queryset = (
                 Message.objects.values("user_id")
-                .filter(channel=channel)
-                .filter(date__range=(tz_date_debut, tz_date_fin))
-                .annotate(
+                    .filter(channel=channel)
+                    .filter(date__range=(tz_date_debut, tz_date_fin))
+                    .annotate(
                     count_messages=Count("user_id"),
                     channel__name=Max("channel__name"),
                     user__name=Max("user__name"),
@@ -201,10 +216,10 @@ class ScoreUserGeneralMessage(viewsets.ReadOnlyModelViewSet):
         # Perform the lookup filtering.
         lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
         assert lookup_url_kwarg in self.kwargs, (
-            "Expected view %s to be called with a URL keyword argument "
-            'named "%s". Fix your URL conf, or set the `.lookup_field` '
-            "attribute on the view correctly."
-            % (self.__class__.__name__, lookup_url_kwarg)
+                "Expected view %s to be called with a URL keyword argument "
+                'named "%s". Fix your URL conf, or set the `.lookup_field` '
+                "attribute on the view correctly."
+                % (self.__class__.__name__, lookup_url_kwarg)
         )
 
         # get dates limit
@@ -214,15 +229,15 @@ class ScoreUserGeneralMessage(viewsets.ReadOnlyModelViewSet):
             user = User.objects.get(pk=self.kwargs[lookup_url_kwarg])
             queryset = (
                 Message.objects.values("channel_id")
-                .filter(user=user)
-                .filter(date__range=(tz_date_debut, tz_date_fin))
-                .annotate(
+                    .filter(user=user)
+                    .filter(date__range=(tz_date_debut, tz_date_fin))
+                    .annotate(
                     count_messages=Count("user_id"),
                     channel__name=Max("channel__name"),
                     user__name=Max("user__name"),
                     user_id=Max("user_id"),
                 )
-                .order_by("-count_messages")
+                    .order_by("-count_messages")
             )
             obj = get_list_or_404(queryset)
             # May raise a permission denied
@@ -242,28 +257,41 @@ class LinksFrequency(viewsets.ReadOnlyModelViewSet):
     """
 
     # A modifier pour prendre en compte les limites de dates
-
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    queryset = (
-        Link.objects.values("link_md5")
-        .annotate(
-            count_links=Count("link_md5"),
-            link_content=Max("link_content"),
-            links=Max("links"),
-        )
-        .order_by("-count_links")
-    )
     serializer_class = LinksFrequencySerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of selected channels
+        """
+        # get dates limit
+        tz_date_debut, tz_date_fin = UserParameter.getDateLimits(self.request)
+
+        return Link.objects.values("link_md5")\
+            .filter(links__date__range=(tz_date_debut, tz_date_fin))\
+            .annotate(
+                count_links=Count("link_md5"),
+                link_content=Max("link_content"),
+                links=Max("links"),
+            ).order_by("-count_links")
 
 
 class ChannelsFrequency(viewsets.ReadOnlyModelViewSet):
+    # set dates limit here
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    queryset = (
-        Channel.objects.values("name", "identifier", "message__identifier")
-        .annotate(count_messages=Count("message__identifier"))
-        .order_by("-count_messages")
-    )
     serializer_class = ChannelsFrequencySerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of selected channels
+        """
+        # get dates limit
+        tz_date_debut, tz_date_fin = UserParameter.getDateLimits(self.request)
+
+        return Channel.objects.values("name", "identifier")\
+            .filter(message__date__range=(tz_date_debut, tz_date_fin))\
+            .annotate(count_messages=Count("message__identifier"))\
+            .order_by("-count_messages")
 
 
 class DistributionUserMessage(viewsets.ReadOnlyModelViewSet):
@@ -302,10 +330,10 @@ class DistributionUserMessage(viewsets.ReadOnlyModelViewSet):
         lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
 
         assert lookup_url_kwarg in self.kwargs, (
-            "Expected view %s to be called with a URL keyword argument "
-            'named "%s". Fix your URL conf, or set the `.lookup_field` '
-            "attribute on the view correctly."
-            % (self.__class__.__name__, lookup_url_kwarg)
+                "Expected view %s to be called with a URL keyword argument "
+                'named "%s". Fix your URL conf, or set the `.lookup_field` '
+                "attribute on the view correctly."
+                % (self.__class__.__name__, lookup_url_kwarg)
         )
 
         # get dates limit
@@ -363,10 +391,10 @@ class DistributionUserMessage(viewsets.ReadOnlyModelViewSet):
         lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
 
         assert lookup_url_kwarg in self.kwargs, (
-            "Expected view %s to be called with a URL keyword argument "
-            'named "%s". Fix your URL conf, or set the `.lookup_field` '
-            "attribute on the view correctly."
-            % (self.__class__.__name__, lookup_url_kwarg)
+                "Expected view %s to be called with a URL keyword argument "
+                'named "%s". Fix your URL conf, or set the `.lookup_field` '
+                "attribute on the view correctly."
+                % (self.__class__.__name__, lookup_url_kwarg)
         )
 
         # get dates limit
@@ -455,8 +483,8 @@ class GenericCounter(APIView):
             if uc_object == "Message":
                 content = {
                     key_object: eval(uc_object)
-                    .objects.filter(date__range=(tz_date_debut, tz_date_fin))
-                    .aggregate(count=Count("pk"))
+                        .objects.filter(date__range=(tz_date_debut, tz_date_fin))
+                        .aggregate(count=Count("pk"))
                 }
             else:
                 content = {

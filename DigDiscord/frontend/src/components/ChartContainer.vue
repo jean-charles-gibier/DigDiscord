@@ -152,7 +152,7 @@
                   <div class="pt-1">
                     <select v-model="channelSelected">
                       <option v-for="result in this.channelList[0].data.results" v-bind:value="result.identifier" :key="result.identifier">
-                        {{  result.name }}
+                        {{ result.name }}
                       </option>
                     </select>
                   </div>

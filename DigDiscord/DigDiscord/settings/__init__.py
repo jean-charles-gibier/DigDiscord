@@ -39,6 +39,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 INSTALLED_APPS = [
     "api.apps.ApiConfig",
     "profileapp.apps.ProfileappConfig",
+    "snapshot.apps.SnapshotConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

@@ -28,7 +28,7 @@ from drf_yasg import openapi
 router = routers.DefaultRouter()
 router.register(r"channel", ChannelViewSet)
 router.register(r"link", LinkViewSet)
-router.register(r"message", MessageViewSet)
+router.register(r"message", MessageViewSet, basename="messageviewset")
 router.register(r"modelreference", ModelReferenceViewSet)
 router.register(r"server", ServerViewSet)
 router.register(r"user", UserViewSet)

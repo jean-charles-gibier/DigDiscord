@@ -32,3 +32,5 @@ DigDiscord/frontend/.eslintignore
 DigDiscord/frontend/.eslintrc.js
 DigDiscord/frontend/.gitignore
 DigDiscord/frontend/.postcssrc.js
+DigDiscord/data/
+DigDiscord/frontend/__node_modules/
