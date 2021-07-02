@@ -1,5 +1,5 @@
 """
-bla
+pseudo test
 """
 import os
 import time
@@ -17,6 +17,7 @@ from django.test import LiveServerTestCase
 from unittest import skipIf
 from os import getenv
 
+
 class SnapshotTestCase(LiveServerTestCase):
 
     @classmethod
@@ -32,12 +33,10 @@ class SnapshotTestCase(LiveServerTestCase):
         cls.driver.implicitly_wait(10)
         super().setUpClass()
 
-
     @classmethod
     def tearDownClass(cls):
         cls.driver.quit()
         super().tearDownClass()
-
 
     @skipIf(
         getenv("DJANGO_SETTINGS_MODULE") == "DigDiscord.settings.deploy_ci",
@@ -114,7 +113,7 @@ class SnapshotTestCase(LiveServerTestCase):
         except:
             self.assertIsNotNone(btprofile)
 
-# --------------------------------- pk x 2 ?
+        # --------------------------------- pk x 2 ?
         # siginin avec compte de service dans l'environnement
         try:
             input_email = WebDriverWait(self.driver, 10).until(
@@ -145,7 +144,7 @@ class SnapshotTestCase(LiveServerTestCase):
         except:
             self.assertIsNotNone(btprofile)
 
-# ---------------------------------
+        # ---------------------------------
         # get token
         try:
             div_alert = WebDriverWait(self.driver, 10).until(
@@ -163,8 +162,8 @@ class SnapshotTestCase(LiveServerTestCase):
 
         date_debut = datetime.strftime(lastweek, '%Y-%m-%d')
         date_fin = datetime.strftime(today, '%Y-%m-%d')
-        data = json.dumps({"date_debut": date_debut, "date_fin": date_fin })
-        headers = {"Authorization": 'Token '+user_token,
+        data = json.dumps({"date_debut": date_debut, "date_fin": date_fin})
+        headers = {"Authorization": 'Token ' + user_token,
                    "content-type": 'application/json'}
         try:
             print(" url_endpoint : {}".format(url_endpoint))
@@ -216,7 +215,7 @@ class SnapshotTestCase(LiveServerTestCase):
         time.sleep(5)
 
         # secteurs
-        try :
+        try:
             secteurs = WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located(
                     (((By.XPATH, "//a[@id='__BVID__29__BV_toggle_']")))))
@@ -224,9 +223,8 @@ class SnapshotTestCase(LiveServerTestCase):
         except:
             self.assertIsNotNone(secteurs)
 
-
         # histogrammes
-        try :
+        try:
             histogrammes = WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located(
                     (((By.XPATH, "//a[contains(@class, 'dropdown-item') and text()='Histogrammes']")))))
@@ -252,8 +250,8 @@ class SnapshotTestCase(LiveServerTestCase):
         # crop image
         x = location['x']
         y = location['y']
-        width = location['x']+size['width']
-        height = location['y']+size['height'];
+        width = location['x'] + size['width']
+        height = location['y'] + size['height'];
         im = Image.open('pageImage.png')
         im = im.crop((int(x), int(y), int(width), int(height)))
         im.save('element.png')

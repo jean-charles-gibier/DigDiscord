@@ -608,7 +608,7 @@ class BuilderGenerate(TransactionTestCase):
 
         # préfiltrage de données normalement opéré par le crawler
         # dans ce test les "vrais" datas / fixtures ne sont pas filtrées séparément
-        # Cf le mock opérationel ci-dessous pour tests hors-ligne
+        # Cf le mock opérationel ci-dessous pour triggers hors-ligne
         self.dummy_messages = json.dumps(
             Scrapper.message_filter(json.loads(self.dummy_messages))
         )
