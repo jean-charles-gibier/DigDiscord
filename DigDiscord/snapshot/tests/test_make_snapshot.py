@@ -1,29 +1,26 @@
+"""
+bla
+"""
 import os
 import time
 import sys
 import requests
 import json
 
-# from selenium import webdriver
-# from django.conf import settings
-from unittest import skipIf
-from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from os import getenv
 from PIL import Image
 from datetime import datetime, timedelta
-# import pprint
-
+from django.test import LiveServerTestCase
+from unittest import skipIf
+from os import getenv
 
 class SnapshotTestCase(LiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
-        if getenv("DJANGO_SETTINGS_MODULE") == "DigDiscord.settings.deploy_ci":
-            return
         base_dir = \
             os.sep.join(os.path.dirname(os.path.abspath(__file__)).split(os.sep)[:-1])
         os.environ["PATH"] += os.pathsep + os.path.join(base_dir, 'driver')
@@ -38,8 +35,6 @@ class SnapshotTestCase(LiveServerTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        if getenv("DJANGO_SETTINGS_MODULE") == "DigDiscord.settings.deploy_ci":
-            return
         cls.driver.quit()
         super().tearDownClass()
 
@@ -88,7 +83,7 @@ class SnapshotTestCase(LiveServerTestCase):
             signin.click()
         except:
             self.assertIsNotNone(signin)
-         
+
         # siginin avec compte de service dans l'environnement
         try:
             input_email = WebDriverWait(self.driver, 10).until(
