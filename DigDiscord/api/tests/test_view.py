@@ -97,7 +97,7 @@ class ApiView(TestCase):
         from rest_framework import routers
 
         router = routers.DefaultRouter()
-        router.register(r"/api/score/", ScoreUserGeneralMessage)
+        router.register(r"/api/score/", ScoreUserGeneralMessage, basename="scoreusergeneralmessage")
 
         request = self.APIfactory.get("/api/score/")
         force_authenticate(request, user=self.user, token=self.user.auth_token)
