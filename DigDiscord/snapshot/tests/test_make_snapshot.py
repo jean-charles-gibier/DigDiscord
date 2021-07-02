@@ -22,6 +22,8 @@ class SnapshotTestCase(LiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
+        if getenv("DJANGO_SETTINGS_MODULE") == "DigDiscord.settings.deploy_ci":
+            return
         base_dir = \
             os.sep.join(os.path.dirname(os.path.abspath(__file__)).split(os.sep)[:-1])
         os.environ["PATH"] += os.pathsep + os.path.join(base_dir, 'driver')
@@ -36,13 +38,15 @@ class SnapshotTestCase(LiveServerTestCase):
 
     @classmethod
     def tearDownClass(cls):
+        if getenv("DJANGO_SETTINGS_MODULE") == "DigDiscord.settings.deploy_ci":
+            return
         cls.driver.quit()
         super().tearDownClass()
 
 
     @skipIf(
         getenv("DJANGO_SETTINGS_MODULE") == "DigDiscord.settings.deploy_ci",
-        reason="requires secret token",
+        reason="requires local driver",
     )
     def test_week_champion_snapshot(self):
         """
