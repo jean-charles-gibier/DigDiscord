@@ -59,7 +59,7 @@ class UserParameter:
         # get real user dates
         if request.user.is_authenticated:
             try:
-                print("OK Profile")
+                # print("OK Profile")
                 profile = Profile.objects.get(uzer=request.user)
                 if profile.date_debut is not None:
                     tz_date_debut = datetime.combine(
@@ -312,10 +312,30 @@ class DistributionUserMessage(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = Message.objects.raw(
         "SELECT identifier, HOUR(date) as aggregate_name, count(identifier) "
-        "as count FROM `api_message`  group by HOUR(date) order by 2"
+        "as count FROM `api_message` group by HOUR(date) order by 2"
     )
-    # print("all => {}".format(queryset.query))
     serializer_class = DistributionUserMessageSerializer
+
+    def get_queryset(self):
+        tz_date_debut, tz_date_fin = UserParameter.getDateLimits(self.request)
+        date_slice_clause = " and date between '{}' and '{}'".format(
+            tz_date_debut.strftime("%Y/%m/%d %H:%M:%S"),
+            tz_date_fin.strftime("%Y/%m/%d %H:%M:%S"),
+        )
+        time_slice = "by_hour"
+        sql_group = self.slice_translations[time_slice]
+
+        ttttt = Message.objects.raw(
+            "SELECT identifier, HOUR(date) as aggregate_name, count(identifier) "
+            "as count FROM `api_message` "
+            "where 1 "
+            "{} "
+            "group by {}(date) order by 2".format(
+                 date_slice_clause, sql_group
+            )
+        )
+        print("all => {}".format(ttttt.query))
+        return ttttt
 
     @action(
         detail=True, methods=["GET"], url_path="by_user(?:/(?P<time_slice>[a-z_]*))?",

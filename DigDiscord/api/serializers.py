@@ -293,6 +293,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         validated_uzer = validated_data.get("uzer")
+
         if validated_uzer is not None:
             instance.uzer.username = validated_uzer.get(
                 "username", instance.uzer.username

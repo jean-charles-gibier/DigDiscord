@@ -1,5 +1,5 @@
 """
-pseudo test
+pseudo test sur la génération de plot img
 """
 import os
 import time
