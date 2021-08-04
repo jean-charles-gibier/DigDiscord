@@ -1,0 +1,41 @@
+#! /bin/bash
+
+# this shell script shows howto plot charts from API and send file to related channel
+# ce script montre comment produire des graphiques via la commnde managée de DigDiscord
+
+# set variables / affectation des variables
+# Api call (one service among many others)
+var_url="https://<YOUR SITE>/api/score/"
+# column to aggregate
+var_name=user_name
+# value to agggregate
+var_value=count_messages
+date_fin=`date  +"%Y-%m-%d"`
+date_debut=`date -d '7 day ago' +"%Y-%m-%d"`
+var_title="Top contributeurs tous forums pour la semaine du $date_debut au $date_fin"
+# matplotlib lets you produce many types of file
+var_filetype="png"
+var_token="Your bot token here"
+var_img_name="${date_debut}_${date_fin}"
+var_filename="<ROOT>/DigDiscord/DigDiscord/frontend/dist/static/img/charts/$var_img_name"
+var_linkname="https://<YOUR SITE>/static/img/charts/${var_img_name}.${var_filetype}"
+
+# export values
+export BOT_CHANNEL=<YOUR CHANNEL ID>
+export BOT_TOKEN="<YOUR BOT TOKEN>"
+
+cd <ROOT>/DigDiscord/DigDiscord
+
+# creer un fichier via une commande managee et matplotlib du type suivant :
+python manage.py plot --url=$var_url --name=$var_name --value=$var_value --title="$var_title" --filetype=$var_filetype --startdate="$date_debut" --enddate="$date_fin" --token=$var_token --filename=$var_filename
+
+# collecter les statics
+echo yes | python manage.py collectstatic --noinput --clear
+
+# un reload web app pour indexer les nouveaux statics
+cloudlinux-selector restart --app-root repositories/DigDiscord/DigDiscord --json --interpreter python
+
+# on va dans le projet pour lancer le script qui balance le message sur discord
+cd /home/tgpa8220/repositories/DigDiscord/DigDiscord
+python sendmsg_bot.py $var_linkname
+                                                                                                                                                                          31,1          Bot
