@@ -64,8 +64,8 @@ export default {
       console.log('post_get_token ==>', request)
       console.log(' Current Token : ', this.$store.state.user_token)
       try {
-        axios.defaults.headers.common['Authorization'] =
-          'Token ' + this.$store.state.user_token
+        // axios.defaults.headers.common['Authorization'] =
+        //  'Token ' + this.$store.state.user_token
         await axios.post(request, data
         ).then(response => {
           finalRet = response.data['token']
