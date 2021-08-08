@@ -6,7 +6,7 @@ import os
 import sys
 
 my_token = os.environ.get('BOT_TOKEN')
-
+my_channel = os.environ.get('BOT_CHANNEL')
 class MyClient(discord.Client):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -16,11 +16,12 @@ class MyClient(discord.Client):
 
     async def on_ready(self):
         print('Logged in as')
-        print(self.user.name)
-        print(self.user.id)
-        print('------')
-        channel = self.get_channel(os.environ.get('BOT_CHANNEL')) # channel ID goes here
-        await channel.send(f"Top contributeurs de la semaine !\n {self.link}")
+        print('username: {}'.format(self.user.name))
+        print('user id : {}'.format(self.user.id))
+        print('channel : {}'.format(my_channel))
+        # await self.wait_until_ready()
+        channel = self.get_channel(int(my_channel)) # channel ID goes here
+                await channel.send(f"Top contributeurs de la semaine !\n {self.link}")
         await self.close()
 
 
