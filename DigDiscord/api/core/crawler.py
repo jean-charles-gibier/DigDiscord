@@ -95,16 +95,23 @@ class Crawler:
 
         while True:
             url_end_point = self.message_end_point.format(channel_id)
+            print("http req :[end_point='{}' pay_load = '{}' header='{}' ]".format(url_end_point, pprint.pformat(payload ), pprint.pformat(headers)))
             response = self._special_get(url_end_point, payload, headers)
             data = response.json()
             nb_read = len(data)
 
+            print("Recuperation de '{}' messages]".format(nb_read))
             # if empty or if we get an error
             if nb_read == 0 or type(data) is not list:
                 break
 
             data.reverse()
-            self._msg_list = Scrapper.message_filter(data) + self._msg_list
+
+            try:
+                self._msg_list = Scrapper.message_filter(data) + self._msg_list
+            except KeyError:
+                print("Donnee rejetee : [{}]".format(json.dumps(data)))
+
             if complete_type == "newer":
                 payload["after"] = data[-1]["id"]
             else:
@@ -163,6 +170,7 @@ class Crawler:
             payload = {}
             headers = {"Authorization": self._token}
             url_end_point = self.channel_end_point.format(guild_id)
+            print("http req :[end_point='{}' pay_load = '{}' header='{}']".format(url_end_point, pprint.pformat(payload ), pprint.pformat(headers)))
             response = self._special_get(url_end_point, str(payload), headers)
             self._channel_list = response.json()
 
@@ -176,6 +184,7 @@ class Crawler:
 
             # count channels
             channels_counter = len(self._channel_list)
+            print("Nombre de channels :{}]".format(channels_counter))
 
             # if empty or if we get an error
             if channels_counter == 0:
@@ -202,7 +211,7 @@ class Crawler:
         """
         local_name = "fetch_{}.json".format(self._channel_id)
         full_path = os.path.join(self._path, local_name)
-        with open(full_path, "w") as myfile:
+        with open(full_path, "w",  encoding='utf-8') as myfile:
             myfile.write(
                 json.dumps(self._msg_list, ensure_ascii=False).encode("utf8").decode()
             )
@@ -223,7 +232,8 @@ class Crawler:
         """
         local_name = "fetch_{}.json".format(self._guild_id)
         full_path = os.path.join(self._path, local_name)
-        with open(full_path, "w") as myfile:
+        print("full path store_channels : {}]".format(full_path))
+        with open(full_path, "w", encoding='utf-8') as myfile:
             myfile.write(
                 json.dumps(self._channel_list, ensure_ascii=False)
                 .encode("utf8")
