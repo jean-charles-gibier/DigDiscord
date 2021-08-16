@@ -23,7 +23,7 @@ class Scrapper:
                 "author_id": msg["author"]["id"],
                 "content": msg["content"],
                 "references_id": [msg["message_reference"]["message_id"]]
-                if "message_reference" in msg
+                if "message_reference" in msg and "message_id" in msg["message_reference"]
                 else [],
                 "url": msg["embeds"][0]["url"][0:400]
                 if len(msg["embeds"]) > 0
