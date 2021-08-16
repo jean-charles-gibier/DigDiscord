@@ -38,10 +38,13 @@ class Processor:
         from data repository"""
         # get from api discord
         self._refresh_channel_list(limit)
-        # fetch results on local
-        data = json.load(open(self.channels_path,))
-        # if it's not a list it's an error
-        return [chan["id"] for chan in data] if type(data) is list else None
+
+        if os.path.getsize(self.channels_path) > 0:
+            # fetch results on local
+            print("Read channel list : {} ".format(self.channels_path))
+            data = json.load(open(self.channels_path, encoding='utf-8'))
+            return [chan["id"] for chan in data]
+        # return []
 
     def _refresh_channel_list(self, limit):
         """get all channel infos from current guild id
@@ -63,6 +66,7 @@ class Processor:
         crawler = Crawler(self.guild_id)
 
         for channel_id in channels:
+            print("Read content channel : {} limit : {} completion type : {}".format(channel_id, limit, complete_type))
             crawler.fetch_messages(channel_id, limit, complete_type)
             crawler.store_messages()
             print('Successfully fetch msg of channel: "%s"' % channel_id)
