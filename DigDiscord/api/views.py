@@ -165,13 +165,23 @@ class ScoreUserGeneralMessage(viewsets.ReadOnlyModelViewSet):
         # get dates limit
         tz_date_debut, tz_date_fin = UserParameter.getDateLimits(self.request)
 
-        return Message.objects.values("user_id").filter(date__range=(tz_date_debut, tz_date_fin)).annotate(
+        try:
+            response = Message.objects.values("user_id").filter(date__range=(tz_date_debut, tz_date_fin)).annotate(
                     count_messages=Count("user_id"),
                     channel__name=Max("channel__name"),
                     user__name=Max("user__name"),
                     channel_id=Max("channel_id"),
                 ).order_by("-count_messages")
 
+#            f = open('/tmp/query_score', 'a+')
+#            f.write("------\n") 
+#            f.write(str(response.query)) 
+#            f.close()
+        except Exception:
+            f = open('/tmp/query_error', 'a+')
+            f.write("Error :{} / {}".format(sys.exc_info()[0], sys.exc_info()[1]))
+            f.close()
+        return response
 
     @action(detail=True, methods=["GET"])
     def by_channel(self, request, pk=None):
@@ -325,7 +335,7 @@ class DistributionUserMessage(viewsets.ReadOnlyModelViewSet):
         time_slice = "by_hour"
         sql_group = self.slice_translations[time_slice]
 
-        ttttt = Message.objects.raw(
+        response = Message.objects.raw(
             "SELECT identifier, HOUR(date) as aggregate_name, count(identifier) "
             "as count FROM `api_message` "
             "where 1 "
@@ -334,8 +344,8 @@ class DistributionUserMessage(viewsets.ReadOnlyModelViewSet):
                  date_slice_clause, sql_group
             )
         )
-        print("all => {}".format(ttttt.query))
-        return ttttt
+        print("all => {}".format(response.query))
+        return response
 
     @action(
         detail=True, methods=["GET"], url_path="by_user(?:/(?P<time_slice>[a-z_]*))?",
