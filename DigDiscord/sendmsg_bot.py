@@ -21,7 +21,7 @@ class MyClient(discord.Client):
         print('channel : {}'.format(my_channel))
         # await self.wait_until_ready()
         channel = self.get_channel(int(my_channel)) # channel ID goes here
-                await channel.send(f"Top contributeurs de la semaine !\n {self.link}")
+        await channel.send(f"Top contributeurs de la semaine !\n {self.link}")
         await self.close()
 
 
