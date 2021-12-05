@@ -4,6 +4,7 @@
 import discord
 import os
 import sys
+import asyncio
 
 my_token = os.environ.get('BOT_TOKEN')
 my_channel = os.environ.get('BOT_CHANNEL')
@@ -22,6 +23,7 @@ class MyClient(discord.Client):
         # await self.wait_until_ready()
         channel = self.get_channel(int(my_channel)) # channel ID goes here
         await channel.send(f"Top contributeurs de la semaine !\n {self.link}")
+        await asyncio.sleep(10)
         await self.close()
 
 
