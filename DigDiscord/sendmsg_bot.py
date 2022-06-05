@@ -20,10 +20,10 @@ class MyClient(discord.Client):
         print('username: {}'.format(self.user.name))
         print('user id : {}'.format(self.user.id))
         print('channel : {}'.format(my_channel))
-        # await self.wait_until_ready()
         channel = self.get_channel(int(my_channel)) # channel ID goes here
         await channel.send(f"Top contributeurs de la semaine !\n {self.link}")
-        await asyncio.sleep(10)
+        await self.wait_until_ready()
+        #  await asyncio.sleep(20)
         await self.close()
 
 
